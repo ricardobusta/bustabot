@@ -1,13 +1,13 @@
 {
-    "name": "appengine-hello-world",
-    "description": "Simple Hello World Node.js sample for Google App Engine Standard Environment.",
+    "name": "bustabot",
+    "description": "Telegram Chat Bot.",
     "version": "0.0.1",
     "private": true,
     "license": "Apache-2.0",
-    "author": "Google Inc.",
+    "author": "Ricardo Bustamante",
     "repository": {
       "type": "git",
-      "url": "https://github.com/GoogleCloudPlatform/nodejs-docs-samples.git"
+      "url": "https://github.com/RicardoBusta/BustaBotNode.git"
     },
     "engines": {
       "node": ">=8"

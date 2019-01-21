@@ -12,5 +12,6 @@
 # limitations under the License.
 
 # [START gae_quickstart_yaml]
+service: bustabot
 runtime: nodejs10
 # [END gae_quickstart_yaml]
