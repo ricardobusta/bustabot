@@ -33,13 +33,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/'+bot_key, (req, res) => {
-  var param = req.query.param;
-
   console.log(req.query)
 
   res
     .status(200)
-    .send(param)
+    .send("Bot Working!")
     .end();
 });
 
