@@ -18,12 +18,28 @@
 // [START gae_node_request_example]
 const express = require('express');
 
+const path = require('path');
+const bot_key = require(path.resolve( __dirname, "./botkey.js" ));
+
+const bot_url = 'https://api.telegram.org/'+bot_key.key+'/';
+
 const app = express();
 
 app.get('/', (req, res) => {
   res
     .status(200)
     .send('Hello, world!')
+    .end();
+});
+
+app.get('/webhook', (req, res) => {
+  var param = req.query.param;
+
+  console.log(bot_url);
+
+  res
+    .status(200)
+    .send(param)
     .end();
 });
 
