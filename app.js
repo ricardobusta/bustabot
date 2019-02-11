@@ -39,7 +39,7 @@ app.post('/' + botKey, (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  bot.init(botKey);
+  // bot.init(botKey);
 
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');

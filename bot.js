@@ -1,9 +1,9 @@
-module.exports = {
-    telegramApiURL = "",
+// telegramApiURL = "";
 
-    init = function(botKey){
-        telegramApiURL = "https://api.telegram.org/bot{0}/".format(botKey);
-    },
+module.exports = {
+    // init = function(botKey){
+    //     telegramApiURL = "https://api.telegram.org/bot{0}/".format(botKey);
+    // },
 
     handleRequest = function (reqBody) {
     /*
