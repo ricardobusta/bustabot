@@ -3,9 +3,9 @@
 const express = require('express');
 
 const path = require('path');
-const bot_key = require(path.resolve( __dirname, "./botkey.js" )).key;
+const botKey = require(path.resolve(__dirname, "./botkey.js")).key;
 
-const bot_url = 'https://api.telegram.org/'+bot_key+'/';
+const bot = require(path.resolve(__dirname, "./bot.js")); 
 
 const app = express();
 
@@ -18,28 +18,29 @@ app.get('/', (req, res) => {
     .end();
 });
 
-app.get('/'+bot_key, (req, res) => {
-  console.log(req.query)
-
+app.get('/' + botKey, (req, res) => {
   res
     .status(200)
     .send("Bot Working!")
     .end();
 });
 
-app.post('/'+bot_key, (req, res) => {
+app.post('/' + botKey, (req, res) => {
   console.log(req.body)
+
+  result = bot.handleRequest(req.body);
 
   res
     .status(200)
-    .send("Bot Working!")
+    .send(result)
     .end();
 });
 
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
+  bot.init(botKey);
+
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
-  console.log('bot path '+ '/'+bot_key)
 });
