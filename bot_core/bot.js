@@ -3,23 +3,36 @@ const telegramCommands = require('./telegram_commands');
 const bot_name = "@BustaBot";
 
 var commands = [
-    //require('../bot_commands/attr_command'), 
-    //require('../bot_commands/benedict_command'), 
-    //require('../bot_commands/birl_command'),
-    //require('../bot_commands/coin_command'),
-    //require('../bot_commands/grito_command'),
-    //require('../bot_commands/guess_command'),
-    //require('../bot_commands/mata_command'),
+    require('../bot_commands/attr_command'), 
+    require('../bot_commands/benedict_command'), 
+    require('../bot_commands/birl_command'),
+    require('../bot_commands/coin_command'),
+    require('../bot_commands/grito_command'),
+    require('../bot_commands/guess_command'),
+    require('../bot_commands/mata_command'),
     require('../bot_commands/roll_command'),
-    //require('../bot_commands/versus_command'),
+    require('../bot_commands/versus_command'),
 ];
 
 function printHelpCommand(reqBody){
     console.log("Logging Help!");
-    var helpString = "BustaBot Help:\n";
+    var helpString = "<b>BustaBot Help:</b>\n";
     for (var i in commands) {
         var command = commands[i];
-        helpString += "/" + command.keys[0] + " - " + command.help + "\n";
+        helpString += "/" + command.keys[0] + " - " + command.description + "\n";
+    }
+
+    telegramCommands.sendMessage(
+        reqBody.message.chat.id,
+        helpString);
+}
+
+function printCommandList(reqBody){
+    console.log("Logging Help!");
+    var helpString = "";
+    for (var i in commands) {
+        var command = commands[i];
+        helpString += command.keys[0] + " - " + command.description + "\n";
     }
 
     telegramCommands.sendMessage(
@@ -39,11 +52,6 @@ module.exports = {
        
         var commandSuffix = splitMessage[0].endsWith(bot_name)?bot_name:"";      
 
-        if (splitMessage[0] == "/help"+commandSuffix) {
-            printHelpCommand(reqBody);
-            return;
-        }
-
         for (var i in commands) {
             var command = commands[i];
             for(var j in command.keys){
@@ -53,6 +61,16 @@ module.exports = {
                     return;
                 }
             }
+        }
+
+        if (splitMessage[0] == "/help"+commandSuffix) {
+            printHelpCommand(reqBody);
+            return;
+        }
+
+        if (splitMessage[0] == "/getcom"+commandSuffix) {
+            printCommandList(reqBody);
+            return;
         }
     }
 }

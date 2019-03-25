@@ -1,8 +1,8 @@
 const telegramCommands = require('../bot_core/telegram_commands');
 
 module.exports = {
-    key: "coin",
-    help: "Coin",
+    keys: ["coin"],
+    description: "Coin",
     execute: function(params, req){
         telegramCommands.sendMessage(
             req.message.chat.id,

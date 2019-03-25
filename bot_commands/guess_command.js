@@ -1,7 +1,7 @@
 const telegramCommands = require('../bot_core/telegram_commands');
 
 module.exports = {
-    key: "guess",
+    keys: ["guess"],
     help: "Guess",
     execute: function(params, req){
         telegramCommands.sendMessage(
