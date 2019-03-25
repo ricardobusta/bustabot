@@ -2,17 +2,16 @@ const telegramCommands = require('./telegram_commands');
 
 const bot_name = "@BustaBot";
 
-const coin_command = require('../bot_commands/coin_command');
-const grito_command = require('../bot_commands/grito_command');
-const guess_command = require('../bot_commands/guess_command');
-const mata_command = require('../bot_commands/mata_command');
-const roll_command = require('../bot_commands/roll_command');
-const versus_command = require('../bot_commands/versus_command');
-
 var commands = [
     require('../bot_commands/attr_command'), 
     require('../bot_commands/benedict_command'), 
     require('../bot_commands/birl_command'),
+    require('../bot_commands/coin_command'),
+    require('../bot_commands/grito_command'),
+    require('../bot_commands/guess_command'),
+    require('../bot_commands/mata_command'),
+    require('../bot_commands/roll_command'),
+    require('../bot_commands/versus_command')
 ];
 
 function printHelpCommand(reqBody){
