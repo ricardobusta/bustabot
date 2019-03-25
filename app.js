@@ -1,11 +1,6 @@
-'use strict';
-
 const express = require('express');
-
-const botKey = require("./botkey.js").key;
-
-const bot = require("./bot.js");
-
+const botKey = require("./botkey").key;
+const bot = require("./bot_core/bot");
 const app = express();
 
 app.use(express.json());

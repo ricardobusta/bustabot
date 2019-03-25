@@ -1,4 +1,4 @@
-const botKey = require("./botkey.js").key;
+const botKey = require("../botkey.js").key;
 const telegramApiURL = "https://api.telegram.org/bot"+botKey+"/";
 const request = require('request');
 
@@ -17,8 +17,8 @@ module.exports = {
                 console.log(error);
                 return;
             }
-            console.log(res.statusCode);
-            //console.log(body);
+            //console.log(res.statusCode);
+            console.log(body);
         });
     }
 }
