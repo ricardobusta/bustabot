@@ -1,0 +1,1 @@
+gcloud app deploy ./app.yaml -q; gcloud app logs tail -s default
