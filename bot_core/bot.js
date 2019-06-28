@@ -11,6 +11,7 @@ var commands = [
     require('../bot_commands/guess_command'),
     require('../bot_commands/mata_command'),
     require('../bot_commands/roll_command'),
+    require('../bot_commands/rpg_command'),
     require('../bot_commands/versus_command'),
 ];
 
@@ -42,13 +43,19 @@ function printCommandList(reqBody){
 
 module.exports = {
     handleRequest: function (reqBody) {
+        console.log(reqBody);
+        if(!reqBody || !reqBody.message || !reqBody.message.text){
+            return;
+        }
         var message = reqBody.message.text;
         if (!message.startsWith("/")) {
             return;
         }
 
-        var splitMessage = message.split("\s+");
-        if(!splitMessage[0]) return;
+        var splitMessage = message.split(/\s+/);
+
+        if(!splitMessage) return;
+        if(splitMessage[0]==null || splitMessage[0]=="") return;
        
         var commandSuffix = splitMessage[0].endsWith(bot_name)?bot_name:"";      
 

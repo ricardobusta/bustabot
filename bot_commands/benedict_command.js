@@ -63,7 +63,7 @@ module.exports = {
         var fn = Math.floor(Math.random()*first_names.length);
         var ln = Math.floor(Math.random()*last_names.length);
 
-        var userName = "Usuario";
+        var userName = req.message.from.first_name;
         var result = first_names[fn] + " " + last_names[ln];
 
         telegramCommands.sendMessage(
