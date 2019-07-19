@@ -3,13 +3,13 @@ const telegramCommands = require('./telegram_commands');
 const bot_name = "@BustaBot";
 
 var commands = [
-    require('../bot_commands/attr_command'), 
+    //require('../bot_commands/attr_command'), 
     require('../bot_commands/benedict_command'), 
     require('../bot_commands/birl_command'),
-    require('../bot_commands/coin_command'),
-    require('../bot_commands/grito_command'),
-    require('../bot_commands/guess_command'),
-    require('../bot_commands/mata_command'),
+    //require('../bot_commands/coin_command'),
+    //require('../bot_commands/grito_command'),
+    //require('../bot_commands/guess_command'),
+    //require('../bot_commands/mata_command'),
     require('../bot_commands/roll_command'),
     require('../bot_commands/rpg_command'),
     require('../bot_commands/versus_command'),

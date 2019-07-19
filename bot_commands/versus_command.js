@@ -9,7 +9,7 @@ module.exports = {
             message = "Número de parâmetros insuficiente.";
             console.log("Invalid");
         } else {
-            var value = (Math.random()*(params.length-1))+1;
+            var value = Math.floor(Math.random()*(params.length-1))+1;
             console.log("Selected value: " + value);
             message = "O vencedor é: <code>" + params[value] + "</code>!";
         }
