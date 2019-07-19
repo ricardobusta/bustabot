@@ -6,7 +6,9 @@ var commands = [
     //require('../bot_commands/attr_command'), 
     require('../bot_commands/benedict_command'), 
     require('../bot_commands/birl_command'),
+    require('../bot_commands/cat_command'),
     //require('../bot_commands/coin_command'),
+    require('../bot_commands/describe_command'),
     //require('../bot_commands/grito_command'),
     //require('../bot_commands/guess_command'),
     //require('../bot_commands/mata_command'),
@@ -20,6 +22,9 @@ function printHelpCommand(reqBody){
     var helpString = "<b>BustaBot Help:</b>\n";
     for (var i in commands) {
         var command = commands[i];
+        if(command.wip){
+            continue;
+        }
         helpString += "/" + command.keys[0] + " - " + command.description + "\n";
     }
 

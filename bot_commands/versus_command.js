@@ -6,7 +6,8 @@ module.exports = {
     execute: function(params, req){
         var message = "";
         if(params.length <= 2){
-            message = "Número de parâmetros insuficiente.";
+            message = "Número de parâmetros insuficiente.\n"+
+            "/vs ";
             console.log("Invalid");
         } else {
             var value = Math.floor(Math.random()*(params.length-1))+1;

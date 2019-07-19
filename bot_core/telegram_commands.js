@@ -21,5 +21,24 @@ module.exports = {
                 //console.log(res.statusCode);
                 console.log(body);
             });
+    },
+
+    sendPhoto: function(chatId, photoId){
+        request.post(telegramApiURL + "sendPhoto",
+        {
+            json: {
+                method: "sendPhoto",
+                chat_id: chatId,
+                photo: photoId,
+                parse_mode: "HTML",
+            }
+        },
+        (error, res, body) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            console.log(body);
+        });
     }
 }
