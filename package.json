@@ -20,6 +20,7 @@
     "e2e-test": "repo-tools test deploy"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^2.2.7",
     "express": "^4.16.3",
     "request": "^2.88.0",
     "seedrandom": "^3.0.1"
