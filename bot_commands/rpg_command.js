@@ -19,12 +19,41 @@ const classes = [
     ["Cavaleiro", "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"],
 ]
 
+const syllabes = [
+    "ta", "te", "ti", "to", "tu",
+    "ja", "je", "ji", "jo", "ju",
+    "an", "en", "in", "on", "un",
+    "ka", "ke", "ki", "ko", "ku",
+    "ra", "re", "ri", "ro", "ru",
+    "pa", "pe", "pi", "po", "pu",
+    "sha", "she", "shi", "sho", "shu",
+    "gan", "gen", "gin", "gon", "gun",
+    "tam", "tem", "tim", "tom", "tum",
+    "wan", "wen", "win", "won", "wun",
+    "ha", "he", "hi", "ho", "hu",
+    "ya", "ye", "yi", "yo", "yu",
+    "'", "'", "'", "'", "'",
+    "ph", "kh", "gh", "th", "ch",
+    "x", "k",
+    "cca", "cce", "cci", "cco", "ccu",
+    "aa", "ee", "ii", "oo", "uu",
+    "da", "de", "di", "do", "du"
+]
+
 function getRange(rng, min, max) {
     return min + Math.floor(rng * (max - min + 1));
 }
 
+function getArrayRange(rng, arr) {
+    return arr[Math.floor(rng * arr.length)];
+}
+
 function getAttribute(rng) {
     return getRange(rng, 1, 10);
+}
+
+function firstLetterUcase(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 module.exports = {
@@ -46,10 +75,29 @@ module.exports = {
         let nameCountRng = rng();
         let surameCountRng = rng();
 
+        let genName = (function () {
+            let nameSyllabes = getRange(nameCountRng, 1, 6);
+            let surnameSyllabes = getRange(surameCountRng, 1, 6);
+
+            let name = "";
+
+            for (let i = 0; i < nameSyllabes; i++) {
+                name += getArrayRange(rng(), syllabes);
+            }
+            name = firstLetterUcase(name);
+
+            let surname = "";
+            for (let i = 0; i < surnameSyllabes; i++) {
+                surname += getArrayRange(rng(), syllabes);
+            }
+            surname = firstLetterUcase(surname);
+            return name + " " + surname;
+        })();
+
         let message =
             "Jogador: " + userName + "\n" +
-            "Personagem: RANDOM NAME\n" +
-            "Classe:" + classes[Math.floor(charClassRng * classes.length)][0] + "\n" +
+            "Personagem: " + genName + "\n" +
+            "Classe:" + getArrayRange(charClassRng, classes)[0] + "\n" +
             "Atributos: \n" +
             "  STR " + getAttribute(strRng) + "\n" +
             "  DEX " + getAttribute(dexRng) + "\n" +

@@ -32,8 +32,8 @@ function printHelpCommand(_, req) {
 
 //  Prints the command list using /getcom. Used to configure the bot auto completion list.
 function printCommandList(_, req) {
-    console.log("Logging Help!");
-    let helpString = "";
+    console.log("Logging Command list!");
+    let helpString = "help - Mostra a lista de comandos do bot.";
     for (let i in commands) {
         let command = commands[i];
         helpString += command.keys[0] + " - " + command.description + "\n";
@@ -46,24 +46,23 @@ function printCommandList(_, req) {
 
 // Creates a command dictionary for each command alias.
 const commandMap = (function () {
-    let result = [];
-    result.push({
+    let result = {
         "help": printHelpCommand,
         "getcom": printCommandList
-    })
+    };
 
     for (let i in commands) {
         let command = commands[i];
         for (let j in command.keys) {
             let key = command.keys[j];
-            if (result.indexOf(key) > -1) {
+            if (key in result) {
                 console.log("Duplicated command: " + key + ". Will ignore.");
                 continue;
             }
             result[key] = command.execute;
         }
     }
-
+    console.log(result);
     console.log("Created " + result.length + " aliases for commands.");
     return result;
 })();
@@ -96,21 +95,13 @@ module.exports = {
         splitMessage[0] = key = key.substring(1, key.endsWith(botName) ? key.length - botName.length : key.length)
 
         // Not a valid command or directed to another bot
-        if (commandMap.indexOf(key) == -1) {
+        if (!(key in commandMap)) {
             return;
         }
+
+        console.log("Command accepted: " + key);
 
         // Call the command
         commandMap[key](splitMessage, reqBody);
-
-        if (splitMessage[0] == "/help" + commandSuffix) {
-            printHelpCommand(reqBody);
-            return;
-        }
-
-        if (splitMessage[0] == "/getcom" + commandSuffix) {
-            printCommandList(reqBody);
-            return;
-        }
     }
 }
