@@ -1,0 +1,21 @@
+{
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "bot_commands"
+        },
+        {
+            "path": "bot_core"
+        }
+    ],
+    "settings": {
+        "files.eol": "\n",
+        "files.encoding": "utf8",
+        "editor.detectIndentation": false,
+        "editor.tabSize": 4,
+        "editor.tabCompletion": "on",
+        "editor.insertSpaces": true
+    },
+}

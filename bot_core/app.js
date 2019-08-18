@@ -8,37 +8,37 @@ const Firestore = require('@google-cloud/firestore');
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res
-    .status(200)
-    .send('Hello, world!')
-    .end();
+    res
+        .status(200)
+        .send('Hello, world!')
+        .end();
 });
 
 app.get('/' + telegramBotKey, (req, res) => {
-  res
-    .status(200)
-    .send("Bot Working!")
-    .end();
+    res
+        .status(200)
+        .send("Bot Working!")
+        .end();
 });
 
 app.post('/' + telegramBotKey, (req, res) => {
-  bot.handleRequest(req.body)
+    bot.handleRequest(req.body)
 
-  res
-    .status(200)
-    .end();
+    res
+        .status(200)
+        .end();
 });
 
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-  console.log('Press Ctrl+C to quit.');
+    console.log(`App listening on port ${PORT}`);
+    console.log('Press Ctrl+C to quit.');
 });
 
 var db = new Firestore({
-  projectId: projectId,
-  keyFilename: 'google_key.json',
+    projectId: googleProjectId,
+    keyFilename: 'google_key.json',
 });
 
 bot.init(db);

@@ -1,40 +1,40 @@
 {
-  "name": "bustabot",
-  "description": "Telegram Chat Bot.",
-  "version": "0.0.2",
-  "private": true,
-  "license": "Apache-2.0",
-  "author": "Ricardo Bustamante",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RicardoBusta/BustaBotNode.git"
-  },
-  "engines": {
-    "node": ">=8"
-  },
-  "scripts": {
-    "deploy": "gcloud app deploy",
-    "start": "node app.js",
-    "system-test": "repo-tools test app",
-    "test": "npm run system-test",
-    "e2e-test": "repo-tools test deploy"
-  },
-  "dependencies": {
-    "@google-cloud/firestore": "^2.2.7",
-    "express": "^4.17.1",
-    "request": "^2.88.0",
-    "seedrandom": "^3.0.3"
-  },
-  "devDependencies": {
-    "@google-cloud/nodejs-repo-tools": "^3.3.0"
-  },
-  "cloud-repo-tools": {
-    "test": {
-      "app": {
-        "msg": "Hello, world!"
-      }
+    "name": "bustabot",
+    "description": "Telegram Chat Bot.",
+    "version": "0.0.2",
+    "private": true,
+    "license": "Apache-2.0",
+    "author": "Ricardo Bustamante",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RicardoBusta/BustaBotNode.git"
     },
-    "requiresKeyFile": true,
-    "requiresProjectId": true
-  }
+    "engines": {
+        "node": ">=8"
+    },
+    "scripts": {
+        "deploy": "gcloud app deploy",
+        "start": "node bot_core/app.js",
+        "system-test": "repo-tools test app",
+        "test": "npm run system-test",
+        "e2e-test": "repo-tools test deploy"
+    },
+    "dependencies": {
+        "@google-cloud/firestore": "^2.2.7",
+        "express": "^4.17.1",
+        "request": "^2.88.0",
+        "seedrandom": "^3.0.3"
+    },
+    "devDependencies": {
+        "@google-cloud/nodejs-repo-tools": "^3.3.0"
+    },
+    "cloud-repo-tools": {
+        "test": {
+            "app": {
+                "msg": "Hello, world!"
+            }
+        },
+        "requiresKeyFile": true,
+        "requiresProjectId": true
+    }
 }
