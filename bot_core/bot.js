@@ -1,6 +1,5 @@
 const telegramCommands = require('./telegram_commands');
-
-const bot_name = "@BustaBot";
+const botName = require("../bot_info").name;
 
 var commands = [
     //require('../bot_commands/attr_command'), 
@@ -17,6 +16,7 @@ var commands = [
     require('../bot_commands/versus_command'),
 ];
 
+// Used to print the /help command.
 function printHelpCommand(reqBody){
     console.log("Logging Help!");
     var helpString = "<b>BustaBot Help:</b>\n";
@@ -33,6 +33,7 @@ function printHelpCommand(reqBody){
         helpString);
 }
 
+//  Prints the command list using /getcom. Used to configure the bot auto completion list.
 function printCommandList(reqBody){
     console.log("Logging Help!");
     var helpString = "";
@@ -47,6 +48,11 @@ function printCommandList(reqBody){
 }
 
 module.exports = {
+    // Initializes the bot internal state
+    init: function(db){
+
+    },
+    // The handler for the bot requests made by telegram webhook.
     handleRequest: function (reqBody) {
         console.log(reqBody);
         if(!reqBody || !reqBody.message || !reqBody.message.text){
@@ -62,7 +68,7 @@ module.exports = {
         if(!splitMessage) return;
         if(splitMessage[0]==null || splitMessage[0]=="") return;
        
-        var commandSuffix = splitMessage[0].endsWith(bot_name)?bot_name:"";      
+        var commandSuffix = splitMessage[0].endsWith(botName)?botName:"";      
 
         for (var i in commands) {
             var command = commands[i];

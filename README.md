@@ -1,6 +1,6 @@
 Setup:
 
-Create botkey.js file with the key.
+Create bot_info.js file with the proper information. Use the template as base.
 
 # GCloud Commands
 

@@ -1,7 +1,9 @@
 const express = require('express');
-const botKey = require("./botkey").key;
+const telegramBotKey = require("./bot_info").key;
+const googleProjectId = require("./bot_info").projectId;
 const bot = require("./bot_core/bot");
 const app = express();
+const Firestore = require('@google-cloud/firestore');
 
 app.use(express.json());
 
@@ -12,16 +14,14 @@ app.get('/', (req, res) => {
     .end();
 });
 
-app.get('/' + botKey, (req, res) => {
+app.get('/' + telegramBotKey, (req, res) => {
   res
     .status(200)
     .send("Bot Working!")
     .end();
 });
 
-app.post('/' + botKey, (req, res) => {
-  //console.log(req.body)
-
+app.post('/' + telegramBotKey, (req, res) => {
   bot.handleRequest(req.body)
 
   res
@@ -35,3 +35,10 @@ app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
+
+var db = new Firestore({
+  projectId: projectId,
+  keyFilename: 'google_key.json',
+});
+
+bot.init(db);
