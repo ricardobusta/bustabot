@@ -1,5 +1,5 @@
-const telegramCommands = require('../bot_core/telegram_commands');
-let seedrandom = require('seedrandom');
+const telegramCommands = require("../bot_core/telegram_commands");
+let seedrandom = require("seedrandom");
 
 const classes = [
     ["🧙‍ Mago", "https://pt.wikipedia.org/wiki/Mago_(RPG)"],
@@ -25,7 +25,7 @@ const races = [
     ["Elfo", 100, 750],
     ["Halfling", 20, 250],
     ["Gnomo", 20, 400],
-    ["Meio Orc", 14, 75]
+    ["Meio Orc", 14, 75],
     ["Meio Elfo", 20, 180]
 ];
 
@@ -109,8 +109,7 @@ module.exports = {
 
         let raceInfo = getArrayRange(raceRng, races);
 
-        let message =
-            "FICHA DO PERSONAGEM\n" +
+        let message = "FICHA DO PERSONAGEM\n" +
             "<b>Jogador:</b> " + userName + "\n" +
             "<b>Personagem:</b> " + genName + "\n" +
             "<b>Raça:</b> " + raceInfo[0] + "\n" +

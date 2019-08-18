@@ -1,4 +1,4 @@
-const telegramCommands = require('../bot_core/telegram_commands');
+const telegramCommands = require("../bot_core/telegram_commands");
 
 module.exports = {
     keys: ["grito"],

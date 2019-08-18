@@ -1,4 +1,4 @@
-const telegramCommands = require('../bot_core/telegram_commands');
+const telegramCommands = require("../bot_core/telegram_commands");
 
 const status = [
     100,101,200,201,202,204,206,207,300,301,302,303,304,

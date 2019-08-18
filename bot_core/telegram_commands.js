@@ -1,6 +1,6 @@
 const telegramBotKey = require("./bot_info").key;
 const telegramApiURL = "https://api.telegram.org/bot" + telegramBotKey + "/";
-const request = require('request');
+const request = require("request");
 
 module.exports = {
     sendMessage: function (chatId, message) {

@@ -1,4 +1,4 @@
-const telegramCommands = require('../bot_core/telegram_commands');
+const telegramCommands = require("../bot_core/telegram_commands");
 
 function RandomRange(min, max) {
     return Math.floor((Math.random() * (max - min + 1) + min));

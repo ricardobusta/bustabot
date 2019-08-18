@@ -1,16 +1,17 @@
-const telegramCommands = require('./telegram_commands');
+const telegramCommands = require("./telegram_commands");
 const botName = "@" + require("./bot_info").name;
 
 const commands = [
-    require('../bot_commands/benedict_command'),
-    require('../bot_commands/birl_command'),
-    require('../bot_commands/cat_command'),
-    require('../bot_commands/describe_command'),
-    //require('../bot_commands/grito_command'),
-    //require('../bot_commands/guess_command'),
-    require('../bot_commands/roll_command'),
-    require('../bot_commands/rpg_command'),
-    require('../bot_commands/versus_command'),
+    require("../bot_commands/benedict_command"),
+    require("../bot_commands/birl_command"),
+    require("../bot_commands/cat_command"),
+    require("../bot_commands/count_command"),
+    require("../bot_commands/describe_command"),
+    //require("../bot_commands/grito_command"),
+    //require("../bot_commands/guess_command"),
+    require("../bot_commands/roll_command"),
+    require("../bot_commands/rpg_command"),
+    require("../bot_commands/versus_command"),
 ];
 
 // Used to print the /help command.
@@ -69,7 +70,10 @@ const commandMap = (function () {
 module.exports = {
     // Initializes the bot internal state
     init: function (db) {
-
+        var data = db.collection("bot_data");
+        for (let i in commands) {
+            commands[i].data = data;
+        }
     },
     // The handler for the bot requests made by telegram webhook.
     handleRequest: function (reqBody) {
