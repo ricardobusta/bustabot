@@ -14,7 +14,7 @@ module.exports = {
         telegramCommands.sendMessage(req.message.chat.id, "Contagem Regressiva! " + value + "...");
         for (let i = 0; i < value; i++) {
             setTimeout(function () {
-                telegramCommands.sendMessage(req.message.chat.id, i + "!");
+                telegramCommands.sendMessage(req.message.chat.id, i + i == 0 ? "!" : "...");
                 console.log("Counting down: " + i);
             }, (value - i) * 1000);
         }
