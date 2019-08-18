@@ -1,4 +1,4 @@
-const telegramBotKey = require("../bot_info").key;
+const telegramBotKey = require("./bot_info").key;
 const telegramApiURL = "https://api.telegram.org/bot" + telegramBotKey + "/";
 const request = require('request');
 

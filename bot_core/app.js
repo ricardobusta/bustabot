@@ -1,7 +1,7 @@
 const express = require('express');
 const telegramBotKey = require("./bot_info").key;
 const googleProjectId = require("./bot_info").projectId;
-const bot = require("./bot_core/bot");
+const bot = require("./bot");
 const app = express();
 const Firestore = require('@google-cloud/firestore');
 

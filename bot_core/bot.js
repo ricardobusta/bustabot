@@ -1,5 +1,5 @@
 const telegramCommands = require('./telegram_commands');
-const botName = require("../bot_info").name;
+const botName = require("./bot_info").name;
 
 const commands = [
     //require('../bot_commands/attr_command'), 
