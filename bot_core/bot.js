@@ -1,5 +1,5 @@
 const telegramCommands = require('./telegram_commands');
-const botName = require("./bot_info").name;
+const botName = "@" + require("./bot_info").name;
 
 const commands = [
     require('../bot_commands/benedict_command'),
@@ -14,9 +14,9 @@ const commands = [
 ];
 
 // Used to print the /help command.
-function printHelpCommand(reqBody) {
+function printHelpCommand(_, req) {
     console.log("Logging Help!");
-    let helpString = "<b>BustaBot Help:</b>\n";
+    let helpString = "<b>" + botName + " Help:</b>\n";
     for (let i in commands) {
         let command = commands[i];
         if (command.wip) {
@@ -26,12 +26,12 @@ function printHelpCommand(reqBody) {
     }
 
     telegramCommands.sendMessage(
-        reqBody.message.chat.id,
+        req.message.chat.id,
         helpString);
 }
 
 //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-function printCommandList(reqBody) {
+function printCommandList(_, req) {
     console.log("Logging Help!");
     let helpString = "";
     for (let i in commands) {
@@ -40,9 +40,33 @@ function printCommandList(reqBody) {
     }
 
     telegramCommands.sendMessage(
-        reqBody.message.chat.id,
+        req.message.chat.id,
         helpString);
 }
+
+// Creates a command dictionary for each command alias.
+const commandMap = (function () {
+    let result = [];
+    result.push({
+        "help": printHelpCommand,
+        "getcom": printCommandList
+    })
+
+    for (let i in commands) {
+        let command = commands[i];
+        for (let j in command.keys) {
+            let key = command.keys[j];
+            if (result.indexOf(key) > -1) {
+                console.log("Duplicated command: " + key + ". Will ignore.");
+                continue;
+            }
+            result[key] = command.execute;
+        }
+    }
+
+    console.log("Created " + result.length + " aliases for commands.");
+    return result;
+})();
 
 module.exports = {
     // Initializes the bot internal state
@@ -65,23 +89,19 @@ module.exports = {
         // And it is a somewhat valid command
         let splitMessage = message.split(/\s+/);
         if (!splitMessage) return;
-        if (splitMessage[0] == null || splitMessage[0] == "") return;
+        let key = splitMessage[0];
+        if (key == null || key == "") return;
 
         // And that command is not directed to another bot
-        let commandSuffix = splitMessage[0].endsWith(botName) ? botName : "";
+        splitMessage[0] = key = key.substring(1, key.endsWith(botName) ? key.length - botName.length : key.length)
 
-        // Then check which command that is
-        for (let i in commands) {
-            let command = commands[i];
-            for (let j in command.keys) {
-                let key = command.keys[j];
-                if (splitMessage[0] == "/" + key + commandSuffix) {
-                    console.log(reqBody);
-                    command.execute(splitMessage, reqBody);
-                    return;
-                }
-            }
+        // Not a valid command or directed to another bot
+        if (commandMap.indexOf(key) == -1) {
+            return;
         }
+
+        // Call the command
+        commandMap[key](splitMessage, reqBody);
 
         if (splitMessage[0] == "/help" + commandSuffix) {
             printHelpCommand(reqBody);
