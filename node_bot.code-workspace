@@ -1,13 +1,16 @@
 {
     "folders": [
         {
+            "name": "Project",
             "path": "."
         },
         {
-            "path": "bot_commands"
+            "name": "Commands",
+            "path": "./bot_commands"
         },
         {
-            "path": "bot_core"
+            "name": "Core",
+            "path": "./bot_core"
         }
     ],
     "settings": {
