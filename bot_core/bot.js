@@ -62,7 +62,6 @@ const commandMap = (function () {
             result[key] = command.execute;
         }
     }
-    console.log(result);
     console.log("Created " + result.length + " aliases for commands.");
     return result;
 })();

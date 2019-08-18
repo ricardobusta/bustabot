@@ -2,22 +2,32 @@ const telegramCommands = require('../bot_core/telegram_commands');
 let seedrandom = require('seedrandom');
 
 const classes = [
-    ["Mago", "https://pt.wikipedia.org/wiki/Mago_(RPG)"],
-    ["Ladino", "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)"],
-    ["Druida", "https://pt.wikipedia.org/wiki/Druida_(RPG)"],
-    ["Ranger", "https://pt.wikipedia.org/wiki/Ranger_(classe_de_personagem)"],
-    ["Clérigo", "https://pt.wikipedia.org/wiki/Cl%C3%A9rigo_(classe_de_personagem)"],
-    ["Paladino", "https://pt.wikipedia.org/wiki/Paladino_(classe_de_personagem)"],
-    ["Feiticeiro", "https://pt.wikipedia.org/wiki/Feiticeiro_(RPG)"],
-    ["Bárbaro", "https://pt.wikipedia.org/wiki/B%C3%A1rbaro_(RPG)"],
-    ["Monge", "https://pt.wikipedia.org/wiki/Monge_(RPG)"],
-    ["Bardo", "https://pt.wikipedia.org/wiki/Bardo_(RPG)"],
-    ["Dançarino", "https://pt.wikipedia.org/wiki/Dan%C3%A7a"],
-    ["Mendigo", "https://pt.wikipedia.org/wiki/Mendigo"],
-    ["Algoz", "https://pt.wikipedia.org/wiki/Antipaladino"],
-    ["Alquimista", "https://pt.wikipedia.org/wiki/Alquimista_(classe_de_personagem)"],
-    ["Cavaleiro", "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"],
-]
+    ["🧙‍ Mago", "https://pt.wikipedia.org/wiki/Mago_(RPG)"],
+    ["🗡️ Ladino", "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)"],
+    ["🐺 Druida", "https://pt.wikipedia.org/wiki/Druida_(RPG)"],
+    ["🏹 Ranger", "https://pt.wikipedia.org/wiki/Ranger_(classe_de_personagem)"],
+    ["✝️ Clérigo", "https://pt.wikipedia.org/wiki/Cl%C3%A9rigo_(classe_de_personagem)"],
+    ["🛡️ Paladino", "https://pt.wikipedia.org/wiki/Paladino_(classe_de_personagem)"],
+    ["🧙‍♀️ Feiticeiro", "https://pt.wikipedia.org/wiki/Feiticeiro_(RPG)"],
+    ["⚔️ Bárbaro", "https://pt.wikipedia.org/wiki/B%C3%A1rbaro_(RPG)"],
+    ["☯️ Monge", "https://pt.wikipedia.org/wiki/Monge_(RPG)"],
+    ["🎸 Bardo", "https://pt.wikipedia.org/wiki/Bardo_(RPG)"],
+    ["💃 Dançarino", "https://pt.wikipedia.org/wiki/Dan%C3%A7a"],
+    ["💸 Mendigo", "https://pt.wikipedia.org/wiki/Mendigo"],
+    ["🗡️ Algoz", "https://pt.wikipedia.org/wiki/Antipaladino"],
+    ["⚗️ Alquimista", "https://pt.wikipedia.org/wiki/Alquimista_(classe_de_personagem)"],
+    ["🐴 Cavaleiro", "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"],
+];
+
+const races = [
+    ["Humano", 12, 90],
+    ["Anão", 18, 350],
+    ["Elfo", 100, 750],
+    ["Halfling", 20, 250],
+    ["Gnomo", 20, 400],
+    ["Meio Orc", 14, 75]
+    ["Meio Elfo", 20, 180]
+];
 
 const syllabes = [
     "ta", "te", "ti", "to", "tu",
@@ -32,13 +42,13 @@ const syllabes = [
     "wan", "wen", "win", "won", "wun",
     "ha", "he", "hi", "ho", "hu",
     "ya", "ye", "yi", "yo", "yu",
-    "'", "'", "'", "'", "'",
+    "'", "ptu", "xhu", "'", "'",
     "ph", "kh", "gh", "th", "ch",
     "x", "k",
     "cca", "cce", "cci", "cco", "ccu",
     "aa", "ee", "ii", "oo", "uu",
     "da", "de", "di", "do", "du"
-]
+];
 
 function getRange(rng, min, max) {
     return min + Math.floor(rng * (max - min + 1));
@@ -94,17 +104,25 @@ module.exports = {
             return name + " " + surname;
         })();
 
+        let ageRng = rng();
+        let raceRng = rng();
+
+        let raceInfo = getArrayRange(raceRng, races);
+
         let message =
-            "Jogador: " + userName + "\n" +
-            "Personagem: " + genName + "\n" +
-            "Classe:" + getArrayRange(charClassRng, classes)[0] + "\n" +
-            "Atributos: \n" +
-            "  STR " + getAttribute(strRng) + "\n" +
-            "  DEX " + getAttribute(dexRng) + "\n" +
-            "  CON " + getAttribute(conRng) + "\n" +
-            "  INT " + getAttribute(intRng) + "\n" +
-            "  WIS " + getAttribute(wisRng) + "\n" +
-            "  CHA " + getAttribute(chaRng);
+            "FICHA DO PERSONAGEM\n" +
+            "<b>Jogador:</b> " + userName + "\n" +
+            "<b>Personagem:</b> " + genName + "\n" +
+            "<b>Raça:</b> " + raceInfo[0] + "\n" +
+            "<b>Classe:</b> " + getArrayRange(charClassRng, classes)[0] + "\n" +
+            "<b>Idade:</b> " + getRange(ageRng, raceInfo[1], raceInfo[2]) + "\n" +
+            "<b>Atributos:</b> \n" +
+            "💪 <b>STR:</b> " + getAttribute(strRng) + "\n" +
+            "💨 <b>DEX:</b> " + getAttribute(dexRng) + "\n" +
+            "🔋 <b>CON:</b> " + getAttribute(conRng) + "\n" +
+            "🧠 <b>INT:</b> " + getAttribute(intRng) + "\n" +
+            "📖 <b>WIS:</b> " + getAttribute(wisRng) + "\n" +
+            "💋 <b>CHA:</b> " + getAttribute(chaRng) + "";
 
         console.log(message);
 
