@@ -6,6 +6,7 @@ const commands = [
     require("../bot_commands/birl_command"),
     require("../bot_commands/cat_command"),
     require("../bot_commands/count_command"),
+    require("../bot_commands/countdown_command"),
     require("../bot_commands/describe_command"),
     //require("../bot_commands/grito_command"),
     //require("../bot_commands/guess_command"),

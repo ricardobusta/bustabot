@@ -12,7 +12,6 @@ try {
         keyFilename: "google_key.json",
     });
 
-    console.log("Attempt to initialize bot with Firestore:");
     // Initializes the bot with database
     bot.init(db);
 } catch (error) {
