@@ -72,7 +72,10 @@ module.exports = {
     init: function (db) {
         var data = db.collection("bot_data");
         for (let i in commands) {
-            commands[i].data = data;
+            if ("setData" in commands[i]) {
+                console.log("Command data set: " + commands[i].keys[0]);
+                commands[i].setData(data);
+            }
         }
     },
     // The handler for the bot requests made by telegram webhook.
