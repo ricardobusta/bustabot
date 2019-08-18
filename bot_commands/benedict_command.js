@@ -60,11 +60,11 @@ module.exports = {
     keys: ["benedict"],
     description: "Descubra seu nome Benedict Cumberbatch.",
     execute: function (params, req) {
-        var fn = Math.floor(Math.random()*first_names.length);
-        var ln = Math.floor(Math.random()*last_names.length);
+        let fn = Math.floor(Math.random() * first_names.length);
+        let ln = Math.floor(Math.random() * last_names.length);
 
-        var userName = req.message.from.first_name;
-        var result = first_names[fn] + " " + last_names[ln];
+        let userName = req.message.from.first_name;
+        let result = first_names[fn] + " " + last_names[ln];
 
         telegramCommands.sendMessage(
             req.message.chat.id,

@@ -1,7 +1,7 @@
 const telegramCommands = require('../bot_core/telegram_commands');
-var seedrandom = require('seedrandom');
+let seedrandom = require('seedrandom');
 
-var classes = [
+const classes = [
     ["Mago", "https://pt.wikipedia.org/wiki/Mago_(RPG)"],
     ["Ladino", "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)"],
     ["Druida", "https://pt.wikipedia.org/wiki/Druida_(RPG)"],
@@ -19,27 +19,34 @@ var classes = [
     ["Cavaleiro", "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"],
 ]
 
+function getRange(rng, min, max) {
+    return min + Math.floor(rng * (max - min + 1));
+}
+
 function getAttribute(rng) {
-    return 1 + Math.floor(rng * 10);
+    return getRange(rng, 1, 10);
 }
 
 module.exports = {
     keys: ["rpg"],
     description: "Gera seu personagem de RPG",
     execute: function (params, req) {
-        var userName = req.message.from.first_name;
+        let userName = req.message.from.first_name;
 
         // Keep like this to avoid changing values when changing the text format and order.
-        var rng = seedrandom(req.message.from.id);
-        var charClassRng = rng();
-        var strRng = rng();
-        var dexRng = rng();
-        var conRng = rng();
-        var intRng = rng();
-        var wisRng = rng();
-        var chaRng = rng();
+        let rng = seedrandom(req.message.from.id);
+        let charClassRng = rng();
+        let strRng = rng();
+        let dexRng = rng();
+        let conRng = rng();
+        let intRng = rng();
+        let wisRng = rng();
+        let chaRng = rng();
 
-        var message =
+        let nameCountRng = rng();
+        let surameCountRng = rng();
+
+        let message =
             "Jogador: " + userName + "\n" +
             "Personagem: RANDOM NAME\n" +
             "Classe:" + classes[Math.floor(charClassRng * classes.length)][0] + "\n" +

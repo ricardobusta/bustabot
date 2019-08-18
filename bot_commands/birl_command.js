@@ -15,7 +15,7 @@ module.exports = {
     keys: ["birl"],
     description: "Birl.",
     execute: function (params, req) {
-        var index = Math.floor(Math.random() * phrases.length);
+        let index = Math.floor(Math.random() * phrases.length);
 
         telegramCommands.sendMessage(req.message.chat.id, phrases[index]);
     }
