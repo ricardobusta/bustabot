@@ -30,7 +30,7 @@ module.exports = {
                     });
                 }
 
-                let message = "Contei até " + currentCount + "!";
+                let message = "Contei até " + (currentCount + 1) + "!";
 
                 telegramCommands.sendMessage(
                     req.message.chat.id,

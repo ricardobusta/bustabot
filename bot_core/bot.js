@@ -1,6 +1,8 @@
 const telegramCommands = require("./telegram_commands");
 const botName = "@" + require("./bot_info").name;
 
+const docName = "statistics";
+
 const commands = [
     require("../bot_commands/benedict_command"),
     require("../bot_commands/birl_command"),
@@ -46,6 +48,34 @@ function printCommandList(_, req) {
         helpString);
 }
 
+function incrementCommandStatistics(data, command) {
+    let document = data.doc(docName);
+    document.get()
+        .then(doc => {
+            if (!doc.exists) {
+                console.log("Document not set. Creating empty one.")
+                document.set({
+                    total: 0
+                });
+            } else {
+                let totalKey = "total";
+                let commandKey = "command_" + command;
+
+                statistics = doc.data();
+                statistics[totalKey] = (totalKey in statistics) ? (statistics[totalKey] + 1) : 1;
+                statistics[commandKey] = (commandKey in statistics) ? (statistics[commandKey]) + 1 : 1;
+
+                console.log("Updating statistics for command " + command);
+                console.log(statistics);
+
+                document.set(statistics);
+            }
+        })
+        .catch(err => {
+            console.log("Error getting document", err);
+        })
+}
+
 // Creates a command dictionary for each command alias.
 const commandMap = (function () {
     let result = {
@@ -68,10 +98,12 @@ const commandMap = (function () {
     return result;
 })();
 
+var data = undefined;
+
 module.exports = {
     // Initializes the bot internal state
     init: function (db) {
-        var data = db.collection("bot_data");
+        data = db.collection("bot_data");
         for (let i in commands) {
             if ("setData" in commands[i]) {
                 console.log("Command data set: " + commands[i].keys[0]);
@@ -107,6 +139,8 @@ module.exports = {
         }
 
         console.log("Command accepted: " + key);
+
+        incrementCommandStatistics(data, key);
 
         // Call the command
         commandMap[key](splitMessage, reqBody);
