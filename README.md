@@ -1,6 +1,17 @@
+https://github.com/RicardoBusta/BustaBot
+
 Setup:
 
 Create bot_info.js file with the proper information. Use the template as base.
+    - Key: Provided on Bot Creation.
+    - BotName: The @ of your bot.
+    - Google Project ID: ProjectID on google cloud console.
+
+Get credential json file from https://console.cloud.google.com/apis/credentials and save it as google_key.json on project root.
+
+deploy your bot using gcloud app commands
+
+Set the bot webhook: https://api.telegram.org/bot{my_bot_token}/setWebhook?url=https://{your-service-name}.appspot.com/
 
 # GCloud Commands
 
