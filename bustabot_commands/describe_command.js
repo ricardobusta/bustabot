@@ -4,8 +4,9 @@ module.exports = {
     keys: ["desc", "descreve"],
     description: "Descreve uma imagem",
     wip: true,
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         telegramCommands.sendMessage(
+            key, 
             req.message.chat.id,
             "interp");
     }

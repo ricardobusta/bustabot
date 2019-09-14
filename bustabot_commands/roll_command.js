@@ -7,8 +7,9 @@ function RandomRange(min, max) {
 module.exports = {
     keys: ["roll", "dice"],
     description: "Rolls a dice.",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         telegramCommands.sendMessage(
+            key, 
             req.message.chat.id,
             "<code>Rolling Dice: " + RandomRange(1, 6) + "</code>");
     }

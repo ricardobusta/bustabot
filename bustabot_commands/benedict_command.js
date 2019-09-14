@@ -59,7 +59,7 @@ const last_names = [
 module.exports = {
     keys: ["benedict"],
     description: "Descubra seu nome Benedict Cumberbatch.",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         let fn = Math.floor(Math.random() * first_names.length);
         let ln = Math.floor(Math.random() * last_names.length);
 
@@ -67,6 +67,7 @@ module.exports = {
         let result = first_names[fn] + " " + last_names[ln];
 
         telegramCommands.sendMessage(
+            key, 
             req.message.chat.id,
             "O nome Benedict Cumberbatch de " +
             userName +

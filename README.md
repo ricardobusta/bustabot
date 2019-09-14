@@ -11,7 +11,7 @@ Get credential json file from https://console.cloud.google.com/apis/credentials 
 
 deploy your bot using gcloud app commands
 
-Set the bot webhook: https://api.telegram.org/bot{my_bot_token}/setWebhook?url=https://{your-service-name}.appspot.com/
+Set the bot webhook: https://api.telegram.org/bot{my_bot_token}/setWebhook?url=https://{my-service-name}.appspot.com/{my_bot_token}
 
 # GCloud Commands
 

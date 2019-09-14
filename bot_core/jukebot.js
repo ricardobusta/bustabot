@@ -1,23 +1,15 @@
 const telegramCommands = require("./telegram_commands");
-const botName = "@" + require("../bot_info").bustabot.name;
-const botKey = require("../bot_info").bustabot.key;
+const botName = "@" + require("../bot_info").jukebot.name;
+const botKey = require("../bot_info").jukebot.key;
 
 const docName = "statistics";
 
 const commands = [
-    require("../bustabot_commands/benedict_command"),
-    require("../bustabot_commands/birl_command"),
-    require("../bustabot_commands/cat_command"),
     require("../bustabot_commands/count_command"),
-    require("../bustabot_commands/countdown_command"),
-    require("../bustabot_commands/describe_command"),
-    require("../bustabot_commands/roll_command"),
-    require("../bustabot_commands/rpg_command"),
-    require("../bustabot_commands/versus_command"),
 ];
 
 // Used to print the /help command.
-function printHelpCommand(_ , _, req) {
+function printHelpCommand(_, _, req) {
     console.log("Logging Help!");
     let helpString = "<b>" + botName + " Help:</b>\n";
     for (let i in commands) {
@@ -104,7 +96,7 @@ var data = undefined;
 module.exports = {
     // Initializes the bot internal state
     init: function (db) {
-        data = db.collection("bustabot_data");
+        data = db.collection("jukebot_data");
         for (let i in commands) {
             if ("setData" in commands[i]) {
                 console.log("Command data set: " + commands[i].keys[0]);

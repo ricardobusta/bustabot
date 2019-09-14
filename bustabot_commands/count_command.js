@@ -9,7 +9,7 @@ module.exports = {
     setData: function (newData) {
         data = newData;
     },
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;
@@ -33,6 +33,7 @@ module.exports = {
                 let message = "Contei até " + (currentCount + 1) + "!";
 
                 telegramCommands.sendMessage(
+                    key, 
                     req.message.chat.id,
                     message);
             })
@@ -41,6 +42,7 @@ module.exports = {
                 console.log("Error getting document", err);
 
                 telegramCommands.sendMessage(
+                    key, 
                     req.message.chat.id,
                     message);
             });

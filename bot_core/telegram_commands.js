@@ -1,10 +1,12 @@
-const telegramBotKey = require("./bot_info").key;
-const telegramApiURL = "https://api.telegram.org/bot" + telegramBotKey + "/";
 const request = require("request");
 
+function getBotApiURL(botKey, command) {
+    return "https://api.telegram.org/bot" + botKey + "/" + command;
+}
+
 module.exports = {
-    sendMessage: function (chatId, message) {
-        request.post(telegramApiURL + "sendMessage",
+    sendMessage: function (botKey, chatId, message) {
+        request.post(getBotApiURL(botKey, "sendMessage"),
             {
                 json: {
                     method: "sendMessage",
@@ -23,8 +25,8 @@ module.exports = {
             });
     },
 
-    sendPhoto: function (chatId, photoId) {
-        request.post(telegramApiURL + "sendPhoto",
+    sendPhoto: function (botKey, chatId, photoId) {
+        request.post(getBotApiURL(botKey, "sendPhoto"),
             {
                 json: {
                     method: "sendPhoto",

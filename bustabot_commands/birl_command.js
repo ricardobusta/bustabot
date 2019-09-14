@@ -14,9 +14,9 @@ const phrases = [
 module.exports = {
     keys: ["birl"],
     description: "Birl.",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         let index = Math.floor(Math.random() * phrases.length);
 
-        telegramCommands.sendMessage(req.message.chat.id, phrases[index]);
+        telegramCommands.sendMessage(key, req.message.chat.id, phrases[index]);
     }
 }

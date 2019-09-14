@@ -69,7 +69,7 @@ function firstLetterUcase(str) {
 module.exports = {
     keys: ["rpg"],
     description: "Gera seu personagem de RPG",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         let userName = req.message.from.first_name;
 
         // Keep like this to avoid changing values when changing the text format and order.
@@ -126,6 +126,7 @@ module.exports = {
         console.log(message);
 
         telegramCommands.sendMessage(
+            key, 
             req.message.chat.id,
             message);
     }

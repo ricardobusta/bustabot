@@ -3,7 +3,7 @@ const telegramCommands = require("../bot_core/telegram_commands");
 module.exports = {
     keys: ["versus", "vs"],
     description: "Versus",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         let message = "";
         if (params.length <= 2) {
             message = "Número de parâmetros insuficiente.\n" +
@@ -16,6 +16,7 @@ module.exports = {
         }
 
         telegramCommands.sendMessage(
+            key, 
             req.message.chat.id,
             message);
     }

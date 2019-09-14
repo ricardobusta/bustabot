@@ -11,9 +11,10 @@ const status = [
 module.exports = {
     keys: ["cat"],
     description: "Rolls a dice.",
-    execute: function (params, req) {
+    execute: function (key, params, req) {
         if(params.length > 2){
             telegramCommands.sendMessage(
+                key, 
                 req.message.chat.id,
                 "Too many parameters.");
         }
@@ -25,6 +26,7 @@ module.exports = {
         }
 
         telegramCommands.sendPhoto(
+            key, 
             req.message.chat.id,
             "https://http.cat/"+code);
     }
