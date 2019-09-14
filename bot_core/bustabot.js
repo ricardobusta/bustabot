@@ -1,5 +1,5 @@
 const telegramCommands = require("./telegram_commands");
-const botName = "@" + require("./bot_info").name;
+const botName = "@" + require("../bot_info").bustabot.name;
 
 const docName = "statistics";
 
