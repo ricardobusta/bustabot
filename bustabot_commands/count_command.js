@@ -1,6 +1,6 @@
 const telegramCommands = require("../bot_core/telegram_commands");
 
-const documentName = "count_command";
+const documentName = "statistics";
 
 module.exports = {
     keys: ["count", "++"],
@@ -18,23 +18,17 @@ module.exports = {
         data.doc(documentName).get()
             .then(doc => {
                 let currentCount = 0;
-                if (!doc.exists) {
-                    data.doc(documentName).set({
-                        count: 0
-                    });
-                } else {
-                    currentCount = doc.data().count;
+                if (doc.exists) {
+                    currentCount = doc.data().command_count;
                     console.log("Current count: " + currentCount);
-                    data.doc(documentName).set({
-                        count: currentCount + 1
-                    });
                 }
 
                 let message = "Contei até " + (currentCount + 1) + "!";
 
                 telegramCommands.sendMessage(
-                    key, 
+                    key,
                     req.message.chat.id,
+                    req.message.message_id,
                     message);
             })
             .catch(err => {
@@ -42,8 +36,9 @@ module.exports = {
                 console.log("Error getting document", err);
 
                 telegramCommands.sendMessage(
-                    key, 
+                    key,
                     req.message.chat.id,
+                    req.message.message_id,
                     message);
             });
     }

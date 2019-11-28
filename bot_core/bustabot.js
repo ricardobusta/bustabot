@@ -11,6 +11,8 @@ const commands = [
     require("../bustabot_commands/count_command"),
     require("../bustabot_commands/countdown_command"),
     require("../bustabot_commands/describe_command"),
+    require("../bustabot_commands/match_command"),
+    require("../bustabot_commands/moo_command"),
     require("../bustabot_commands/roll_command"),
     require("../bustabot_commands/rpg_command"),
     require("../bustabot_commands/versus_command"),
@@ -31,6 +33,7 @@ function printHelpCommand(_ , _, req) {
     telegramCommands.sendMessage(
         botKey,
         req.message.chat.id,
+        null,
         helpString);
 }
 
@@ -46,6 +49,7 @@ function printCommandList(_, _, req) {
     telegramCommands.sendMessage(
         botKey,
         req.message.chat.id,
+        null,
         helpString);
 }
 

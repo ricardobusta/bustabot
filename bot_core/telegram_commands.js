@@ -5,7 +5,7 @@ function getBotApiURL(botKey, command) {
 }
 
 module.exports = {
-    sendMessage: function (botKey, chatId, message) {
+    sendMessage: function (botKey, chatId, replyId, message) {
         request.post(getBotApiURL(botKey, "sendMessage"),
             {
                 json: {
@@ -13,6 +13,7 @@ module.exports = {
                     chat_id: chatId,
                     text: message,
                     parse_mode: "HTML",
+                    reply_to_message_id: replyId != null ? replyId : ""
                 }
             },
             (error, res, body) => {
@@ -33,6 +34,7 @@ module.exports = {
                     chat_id: chatId,
                     photo: photoId,
                     parse_mode: "HTML",
+                    reply_to_message_id: replyId != null ? replyId : ""
                 }
             },
             (error, res, body) => {
