@@ -5,7 +5,11 @@ const botKey = require("../bot_info").jukebot.key;
 const docName = "statistics";
 
 const commands = [
-    require("../bustabot_commands/count_command"),
+    require("../jukebot_commands/musica_command"),
+    require("../jukebot_commands/proximo_command"),
+    require("../jukebot_commands/pular_command"),
+    require("../jukebot_commands/resetar_command"),
+    require("../jukebot_commands/rodada_command"),
 ];
 
 // Used to print the /help command.
