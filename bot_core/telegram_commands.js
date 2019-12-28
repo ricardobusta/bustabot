@@ -26,7 +26,7 @@ module.exports = {
             });
     },
 
-    sendPhoto: function (botKey, chatId, photoId) {
+    sendPhoto: function (botKey, chatId, replyId, photoId) {
         request.post(getBotApiURL(botKey, "sendPhoto"),
             {
                 json: {

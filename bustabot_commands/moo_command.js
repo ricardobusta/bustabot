@@ -9,15 +9,31 @@ module.exports = {
     description: "Moos",
     execute: function (key, params, req) {
 
-        let value = RandomRange(1, 10);
-        message = "M";
-        for(let i=0;i<value;i++){
-            message += "o";
-        }
 
-        var cowChance = RandomRange(1,10);
-        if(cowChance==1){
+        var cowChance = RandomRange(1, 20);
+        if (cowChance < 3) {
+            let value = RandomRange(1, 10);
+            message = "M";
+            for (let i = 0; i < value; i++) {
+                message += "o";
+            }
             message += " 🐮";
+        } else if (cowChance < 5) {
+            let value = RandomRange(1, 10);
+            message = "B";
+            for (let i = 0; i < value; i++) {
+                message += "a";
+            }
+            message += "h";
+        } else if (cowChance < 6) {
+            message = "Meow meow i'm a cow!";
+        } else {
+            let value = RandomRange(1, 10);
+            message = "M";
+
+            for (let i = 0; i < value; i++) {
+                message += "o";
+            }
         }
 
         telegramCommands.sendMessage(
