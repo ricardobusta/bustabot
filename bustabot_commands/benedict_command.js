@@ -69,6 +69,7 @@ module.exports = {
         telegramCommands.sendMessage(
             key, 
             req.message.chat.id,
+            req.message.message_id,
             "O nome Benedict Cumberbatch de " +
             userName +
             " é <code>" +

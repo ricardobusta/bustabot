@@ -6,8 +6,9 @@ module.exports = {
     wip: true,
     execute: function (key, params, req) {
         telegramCommands.sendMessage(
-            key, 
+            key,
             req.message.chat.id,
+            req.message.message_id,
             "interp");
     }
 }

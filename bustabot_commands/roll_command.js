@@ -11,6 +11,7 @@ module.exports = {
         telegramCommands.sendMessage(
             key, 
             req.message.chat.id,
+            req.message.message_id,
             "<code>Rolling Dice: " + RandomRange(1, 6) + "</code>");
     }
 }
