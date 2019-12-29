@@ -20,3 +20,9 @@ gcloud app deploy
 
 ## Logs
 gcloud app logs tail -s default
+
+## Check for compilation errors
+tsc -p .
+
+## Clean ts build files
+tsc --build --clean
