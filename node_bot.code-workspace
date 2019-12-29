@@ -3,14 +3,6 @@
         {
             "name": "Project",
             "path": "."
-        },
-        {
-            "name": "Commands",
-            "path": "./bot_commands"
-        },
-        {
-            "name": "Core",
-            "path": "./bot_core"
         }
     ],
     "settings": {
