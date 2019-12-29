@@ -1,4 +1,6 @@
-const telegramCommands = require("../bot_core/telegram_commands");
+import telegramCommands = require("../bot_core/telegram_commands");
+import BotCommand from "../bot_core/bot_command";
+import TelegramRequest from "../bot_core/telegram_request";
 
 const phrases = [
     "TÁ SAINDO DA JAULA, O <b>MONSTRO</b>!",
@@ -11,12 +13,14 @@ const phrases = [
     "É HORA DO SHOW, <b>PORRA</b>!"
 ];
 
-module.exports = {
-    keys: ["birl"],
-    description: "Birl.",
-    execute: function (key, params, req) {
+class Birl extends BotCommand {
+    keys = ["birl"];
+    description = "Birl.";
+    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
         let index = Math.floor(Math.random() * phrases.length);
-
         telegramCommands.sendMessage(key, req.message.chat.id, req.message.message_id, phrases[index]);
     }
+
 }
+
+export default new Birl();

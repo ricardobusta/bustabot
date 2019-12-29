@@ -1,21 +1,19 @@
-const telegramCommands = require("../bot_core/telegram_commands");
+import telegramCommands = require("../bot_core/telegram_commands");
+import BotCommand from "../bot_core/bot_command";
+import TelegramRequest from "../bot_core/telegram_request";
 
-const documentName = "statistics";
+const statisticsDocName = "statistics";
 
-module.exports = {
-    keys: ["count", "++"],
-    description: "Counts how many times the command was invoked",
-    data: null,
-    setData: function (newData) {
-        data = newData;
-    },
-    execute: function (key, params, req) {
+class Count extends BotCommand {
+    keys = ["count", "++"];
+    description = "Counts how many times the command was invoked";
+    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;
         }
 
-        data.doc(documentName).get()
+        data.doc(statisticsDocName).get()
             .then(doc => {
                 let currentCount = 0;
                 if (doc.exists) {
@@ -42,4 +40,7 @@ module.exports = {
                     message);
             });
     }
+
 }
+
+export default new Count();

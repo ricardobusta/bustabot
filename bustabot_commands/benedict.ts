@@ -1,4 +1,6 @@
-const telegramCommands = require("../bot_core/telegram_commands");
+import telegramCommands = require("../bot_core/telegram_commands");
+import BotCommand from "../bot_core/bot_command";
+import TelegramRequest from "../bot_core/telegram_request";
 
 const first_names = [
     "Blubberbutt",
@@ -56,10 +58,10 @@ const last_names = [
     "Chunkybap",
     "Candygram"];
 
-module.exports = {
-    keys: ["benedict"],
-    description: "Descubra seu nome Benedict Cumberbatch.",
-    execute: function (key, params, req) {
+class Benedict extends BotCommand {
+    keys = ["benedict"];
+    description = "Descubra seu nome Benedict Cumberbatch.";
+    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
         let fn = Math.floor(Math.random() * first_names.length);
         let ln = Math.floor(Math.random() * last_names.length);
 
@@ -67,7 +69,7 @@ module.exports = {
         let result = first_names[fn] + " " + last_names[ln];
 
         telegramCommands.sendMessage(
-            key, 
+            key,
             req.message.chat.id,
             req.message.message_id,
             "O nome Benedict Cumberbatch de " +
@@ -77,3 +79,5 @@ module.exports = {
             "</code>!");
     }
 }
+
+export default new Benedict();

@@ -1,14 +1,16 @@
-const telegramCommands = require("../bot_core/telegram_commands");
+import telegramCommands = require("../bot_core/telegram_commands");
+import BotCommand from "../bot_core/bot_command";
+import TelegramRequest from "../bot_core/telegram_request";
 let seedrandom = require("seedrandom");
 
 function RandomRange(min, max, rng) {
     return Math.floor((rng * (max - min + 1) + min));
 }
 
-module.exports = {
-    keys: ["match"],
-    description: "Match",
-    execute: function (key, params, req) {
+class Match extends BotCommand {
+    keys = ["match"];
+    description = "Match";
+    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
         let message = "";
         if (params.length != 3) {
             message = "Número de parâmetros errado.\n" +
@@ -30,4 +32,7 @@ module.exports = {
             req.message.message_id,
             message);
     }
+
 }
+
+export default new Match();

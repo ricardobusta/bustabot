@@ -1,4 +1,6 @@
-const telegramCommands = require("../bot_core/telegram_commands");
+import telegramCommands = require("../bot_core/telegram_commands");
+import BotCommand from "../bot_core/bot_command";
+import TelegramRequest from "../bot_core/telegram_request";
 
 const status = [
     100, 101, 200, 201, 202, 204, 206, 207, 300, 301, 302, 303, 304,
@@ -8,10 +10,10 @@ const status = [
     511, 599
 ];
 
-module.exports = {
-    keys: ["cat"],
-    description: "Rolls a dice.",
-    execute: function (key, params, req) {
+class Cat extends BotCommand {
+    keys = ["cat"];
+    description = "Rolls a dice.";
+    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
         if (params.length > 2) {
             telegramCommands.sendMessage(
                 key,
@@ -20,6 +22,7 @@ module.exports = {
                 "Too many parameters.");
         }
 
+        let code: number;
         if (params.length == 2) {
             code = parseInt(params[1]);
         } else {
@@ -32,4 +35,7 @@ module.exports = {
             req.message.message_id,
             "https://http.cat/" + code);
     }
+
 }
+
+export default new Cat();
