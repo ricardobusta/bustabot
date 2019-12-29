@@ -3,7 +3,7 @@ const telegramBotKey_bustabot = require("../bot_info").bustabot.key;
 const telegramBotKey_jukebot = require("../bot_info").jukebot.key;
 const googleProjectId = require("../bot_info").projectId;
 const bustabot = require("./bustabot");
-import * as jukebot from "./jukebot";
+import jukebot from "./jukebot";
 const app = express();
 const Firestore = require("@google-cloud/firestore");
 
