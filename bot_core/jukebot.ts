@@ -1,18 +1,27 @@
 import * as telegramCommands from "./telegram_commands";
 import * as botInfo from "../bot_info";
-import * as musica from "../jukebot_commands/musica";
+
+import adicionar from "../jukebot_commands/adicionar";
+import musica from "../jukebot_commands/musica";
+import pular from "../jukebot_commands/pular";
+import remover from "../jukebot_commands/remover";
+import resetar from "../jukebot_commands/resetar";
+import rodada from "../jukebot_commands/rodada";
+
+
+import BotCommand from "../bot_core/bot_command"
 
 const botName = "@" + botInfo.jukebot.name;
 const botKey = botInfo.jukebot.key;
 const docName = "statistics";
 
-const commands = [
-    require("../jukebot_commands/adicionar"),
+const commands: Array<BotCommand> = [
+    adicionar,
     musica,
-    require("../jukebot_commands/pular"),
-    require("../jukebot_commands/remover"),
-    require("../jukebot_commands/resetar"),
-    require("../jukebot_commands/rodada"),
+    pular,
+    remover,
+    resetar,
+    rodada
 ];
 
 // Used to print the /help command.
@@ -105,12 +114,6 @@ var data = undefined;
 // Initializes the bot internal state
 export function init(db: { collection: (id: string) => any; }) {
     data = db.collection("jukebot_data");
-    for (let i in commands) {
-        if ("setData" in commands[i]) {
-            console.log("Command data set: " + commands[i].keys[0]);
-            commands[i].setData(data);
-        }
-    }
 };
 // The handler for the bot requests made by telegram webhook.
 export function handleRequest(reqBody: { message: { text: string; }; }) {
@@ -144,5 +147,5 @@ export function handleRequest(reqBody: { message: { text: string; }; }) {
     incrementCommandStatistics(data, key);
 
     // Call the command
-    commandMap[key](botKey, splitMessage, reqBody);
+    commandMap[key](botKey, splitMessage, reqBody, data);
 };
