@@ -1,5 +1,5 @@
-const telegramCommands = require("../bot_core/telegram_commands");
-const jb = require("../bot_core/jukebot_common");
+import telegramCommands = require("../bot_core/telegram_commands");
+import jb = require("../bot_core/jukebot_common");
 
 function ValidURL(url: string) {
     return (url.startsWith("https://www.youtube.com/") || url.startsWith("https://youtu.be/"));
@@ -19,13 +19,13 @@ function GetNextUser(data, document) {
     }
 }
 
+let data = null;
+export function setData(newData) {
+    data = newData;
+};
 
 export const keys = ["musica"];
 export const description = "Musica link do YouTube(não sei se dá pra o bot add ela numa Playlist do YouTube) ";
-let data = null;
-export function setData(newData) {
-    this.data = newData;
-};
 export function execute(key: string, params, req) {
     let chatId = req.message.chat.id;
 
@@ -49,24 +49,24 @@ export function execute(key: string, params, req) {
         return;
     }
 
-    let document = this.data.doc(jb.docName + chatId);
+    let document = data.doc(jb.docName + chatId);
     document.get()
         .then(doc => {
-            let data = {
+            let docData = {
                 pool: [],
                 next: "",
                 timestamp: "1980-01-01"
             }
             if (doc.exists) {
-                data = doc.data();
-                if (!data.timestamp) {
-                    data.timestamp = "1980-01-01";
+                docData = doc.data();
+                if (!docData.timestamp) {
+                    docData.timestamp = "1980-01-01";
                 }
             }
 
             let from = req.message.from.username;
 
-            if (data.next != from) {
+            if (docData.next != from) {
                 sendMessage("Usuário " + from + " não é o próximo.");
                 return;
             }
@@ -74,22 +74,22 @@ export function execute(key: string, params, req) {
             let today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            if (!(new Date(data.timestamp) < today)) {
+            if (!(new Date(docData.timestamp) < today)) {
                 sendMessage("Música de hoje já enviada. Espere até amanhã.");
                 return;
             }
 
             sendMessage(vidURL);
 
-            data.timestamp = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+            docData.timestamp = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
 
-            GetNextUser(data, document);
+            GetNextUser(docData, document);
 
             let msg = "";
-            msg += "Próximo: @" + data.next + "\n";
+            msg += "Próximo: @" + docData.next + "\n";
             msg += "Em seguida: \n";
-            for (let i = 0; i < data.pool.length; i++) {
-                msg += data.pool[i] + "\n";
+            for (let i = 0; i < docData.pool.length; i++) {
+                msg += docData.pool[i] + "\n";
             }
             sendMessage(msg);
         })
