@@ -5,11 +5,12 @@ const botKey = require("../bot_info").jukebot.key;
 const docName = "statistics";
 
 const commands = [
-    require("../jukebot_commands/musica_command"),
-    require("../jukebot_commands/proximo_command"),
-    require("../jukebot_commands/pular_command"),
-    require("../jukebot_commands/resetar_command"),
-    require("../jukebot_commands/rodada_command"),
+    require("../jukebot_commands/adicionar"),
+    require("../jukebot_commands/musica"),
+    require("../jukebot_commands/pular"),
+    require("../jukebot_commands/remover"),
+    require("../jukebot_commands/resetar"),
+    require("../jukebot_commands/rodada"),
 ];
 
 // Used to print the /help command.
@@ -27,13 +28,14 @@ function printHelpCommand(_, _, req) {
     telegramCommands.sendMessage(
         botKey,
         req.message.chat.id,
+        null,
         helpString);
 }
 
 //  Prints the command list using /getcom. Used to configure the bot auto completion list.
 function printCommandList(_, _, req) {
     console.log("Logging Command list!");
-    let helpString = "help - Mostra a lista de comandos do bot.";
+    let helpString = "help - Mostra a lista de comandos do bot.\n";
     for (let i in commands) {
         let command = commands[i];
         helpString += command.keys[0] + " - " + command.description + "\n";
@@ -42,6 +44,7 @@ function printCommandList(_, _, req) {
     telegramCommands.sendMessage(
         botKey,
         req.message.chat.id,
+        null,
         helpString);
 }
 

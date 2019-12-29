@@ -19,7 +19,7 @@ const commands = [
 ];
 
 // Used to print the /help command.
-function printHelpCommand(_ , _, req) {
+function printHelpCommand(_, _, req) {
     console.log("Logging Help!");
     let helpString = "<b>" + botName + " Help:</b>\n";
     for (let i in commands) {
@@ -40,7 +40,7 @@ function printHelpCommand(_ , _, req) {
 //  Prints the command list using /getcom. Used to configure the bot auto completion list.
 function printCommandList(_, _, req) {
     console.log("Logging Command list!");
-    let helpString = "help - Mostra a lista de comandos do bot.";
+    let helpString = "help - Mostra a lista de comandos do bot.\n";
     for (let i in commands) {
         let command = commands[i];
         helpString += command.keys[0] + " - " + command.description + "\n";
