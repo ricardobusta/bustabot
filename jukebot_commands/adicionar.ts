@@ -41,8 +41,12 @@ class Adicionar extends BotCommand {
                     docData = doc.data();
                 }
 
-                docData.users.push(userName)
+                if (docData.users.indexOf(userName) > -1) {
+                    sendMessage("Usuário já adicionado.");
+                    return;
+                }
 
+                docData.users.push(userName)
                 document.set(docData);
 
                 let msg = "Usuário adicionado com sucesso.\n";
