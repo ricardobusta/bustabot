@@ -48,7 +48,7 @@ module.exports = {
                     }
                 }
 
-                msg += "Próximo: " + data.next + "\n";
+                msg += "Próximo: @" + data.next + "\n";
                 msg += "Em seguida: \n";
                 for (let i = 0; i < data.pool.length; i++) {
                     msg += data.pool[i] + "\n";
