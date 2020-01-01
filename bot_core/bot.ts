@@ -11,7 +11,7 @@ class Bot {
     commands: Array<BotCommand>;
     data: any;
 
-    commandMap: { [id: string]: any; };
+    commandMap: { [id: string]: (x: any, y: any, z: TelegramRequest, w: any) => void; };
 
     constructor(botAlias: string, botInfo: { key: string, name: string }, commands: Array<BotCommand>) {
         this.botAlias = botAlias;
@@ -39,7 +39,7 @@ class Bot {
     }
 
     // Used to print the /help command.
-    printHelpCommand(_: any, __: any, req: TelegramRequest) {
+    printHelpCommand(_key: any, _params: any, req: TelegramRequest, _data: any) {
         console.log("Logging Help!");
         let helpString = "<b>" + this.botName + " Help:</b>\n";
         for (let i in this.commands) {
@@ -58,7 +58,7 @@ class Bot {
     }
 
     //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-    printCommandList(_: any, __: any, req: TelegramRequest) {
+    printCommandList(_key: any, _params: any, req: TelegramRequest, _data: any) {
         console.log("Logging Command list!");
         let helpString = "help - Mostra a lista de comandos do bot.\n";
         for (let i in this.commands) {
