@@ -1,6 +1,6 @@
-import telegramCommands = require("../../bot_core/telegram_commands");
+import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/telegram_request";
+import TelegramMessage from "../../bot_core/Telegram/telegram_message";
 
 const phrases = [
     "TÁ SAINDO DA JAULA, O <b>MONSTRO</b>!",

@@ -4,7 +4,7 @@ function getBotApiURL(botKey: string, command: string) {
     return "https://api.telegram.org/bot" + botKey + "/" + command;
 }
 
-export function sendMessage(botKey: string, chatId: string, replyId: string, message: string, callBack: () => void = null): void {
+export function sendMessage(botKey: string, chatId: number, replyId: number, message: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
@@ -27,7 +27,7 @@ export function sendMessage(botKey: string, chatId: string, replyId: string, mes
         });
 };
 
-export function sendPhoto(botKey: string, chatId: string, replyId: string, photoId: string, callBack: () => void = null): void {
+export function sendPhoto(botKey: string, chatId: number, replyId: number, photoId: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendPhoto"),
         {
             json: {
@@ -50,7 +50,7 @@ export function sendPhoto(botKey: string, chatId: string, replyId: string, photo
         });
 }
 
-export function pinMessage(botKey: string, chatId: string, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
+export function pinMessage(botKey: string, chatId: number, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "pinChatMessage"),
         {
             json: {

@@ -1,4 +1,4 @@
-import telegramCommands = require("../../bot_core/telegram_commands");
+import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/bot_command";
 

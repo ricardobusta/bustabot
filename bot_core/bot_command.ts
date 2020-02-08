@@ -1,4 +1,4 @@
-import TelegramMessage from "./telegram_request"
+import TelegramMessage from "./Telegram/telegram_message"
 
 abstract class BotCommand {
     abstract keys: Array<string>;

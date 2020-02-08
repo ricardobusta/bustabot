@@ -1,6 +1,6 @@
 import BotCommand from "./bot_command"
-import TelegramMessage from "./telegram_request"
-import * as telegramCommands from "./telegram_commands";
+import TelegramMessage from "./Telegram/telegram_message"
+import * as telegramCommands from "./Telegram/telegram_commands";
 
 const statisticsDocumentName = "statistics";
 
