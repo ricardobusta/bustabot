@@ -1,6 +1,7 @@
 import telegramCommands = require("../../bot_core/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/bot_command";
+import JukebotDoc from "../jukebot_doc";
 
 class Remover extends BotCommand {
     keys = ["remover"];
@@ -34,9 +35,7 @@ class Remover extends BotCommand {
         let document = data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
-                let data = {
-                    users: [],
-                }
+                let data: JukebotDoc = new JukebotDoc();
                 if (doc.exists) {
                     data = doc.data();
                 }

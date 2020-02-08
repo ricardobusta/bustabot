@@ -1,6 +1,7 @@
 import telegramCommands = require("../../bot_core/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/bot_command";
+import JukebotDoc from "../jukebot_doc";
 
 class Rodada extends BotCommand {
     keys = ["rodada"];
@@ -19,10 +20,7 @@ class Rodada extends BotCommand {
         let document = data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
-                let data = {
-                    pool: [],
-                    next: ""
-                }
+                let data: JukebotDoc = new JukebotDoc();
                 if (doc.exists) {
                     data = doc.data();
                 }
@@ -32,6 +30,10 @@ class Rodada extends BotCommand {
                 msg += "Em seguida:\n"
                 for (let i = 0; i < data.pool.length; i++) {
                     msg += data.pool[i] + "\n";
+                }
+                msg += "Já foi:\n"
+                for (let i = 0; i < data.past.length; i++) {
+                    msg += data.past[i] + "\n";
                 }
                 sendMessage(msg);
             })

@@ -1,6 +1,7 @@
 import telegramCommands = require("../../bot_core/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/bot_command";
+import JukebotDoc from "../jukebot_doc";
 
 function ValidURL(url: string) {
     return (url.startsWith("https://www.youtube.com/") || url.startsWith("https://youtu.be/"));
@@ -9,6 +10,7 @@ function ValidURL(url: string) {
 function GetNextUser(docData, document) {
     if (docData.pool.length > 0) {
         let index = Math.floor(Math.random() * docData.pool.length);
+        docData.past.push(docData.next)
         docData.next = docData.pool[index];
         docData.pool.splice(index, 1);
         document.set(docData);
@@ -49,11 +51,7 @@ class Musica extends BotCommand {
         let document = data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
-                let docData = {
-                    pool: [],
-                    next: "",
-                    timestamp: "1980-01-01"
-                }
+                let docData: JukebotDoc = new JukebotDoc();
                 if (doc.exists) {
                     docData = doc.data();
                     if (!docData.timestamp) {
@@ -87,6 +85,10 @@ class Musica extends BotCommand {
                 msg += "Em seguida: \n";
                 for (let i = 0; i < docData.pool.length; i++) {
                     msg += docData.pool[i] + "\n";
+                }
+                msg += "Já foi:\n"
+                for (let i = 0; i < data.past.length; i++) {
+                    msg += data.past[i] + "\n";
                 }
                 sendMessage(msg);
             })

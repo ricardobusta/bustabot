@@ -4,7 +4,7 @@ function getBotApiURL(botKey: string, command: string) {
     return "https://api.telegram.org/bot" + botKey + "/" + command;
 }
 
-export function sendMessage(botKey: string, chatId: string, replyId: string, message: string) {
+export function sendMessage(botKey: string, chatId: string, replyId: string, message: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
@@ -15,17 +15,17 @@ export function sendMessage(botKey: string, chatId: string, replyId: string, mes
                 reply_to_message_id: replyId != null ? replyId : ""
             }
         },
-        (error, res, body) => {
+        (error, _res, body) => {
             if (error) {
                 console.log(error);
                 return;
             }
-            //console.log(res.statusCode);
-            console.log(body);
+            console.log("Message sent:\n" + body);
+            callBack();
         });
 };
 
-export function sendPhoto(botKey: string, chatId: string, replyId: string, photoId: string) {
+export function sendPhoto(botKey: string, chatId: string, replyId: string, photoId: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendPhoto"),
         {
             json: {
@@ -36,11 +36,32 @@ export function sendPhoto(botKey: string, chatId: string, replyId: string, photo
                 reply_to_message_id: replyId != null ? replyId : ""
             }
         },
-        (error, res, body) => {
+        (error, _res, body) => {
             if (error) {
                 console.log(error);
                 return;
             }
-            console.log(body);
+            console.log("Photo Sent:\n" + body);
+            callBack();
+        });
+}
+
+export function pinMessage(botKey: string, chatId: string, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
+    request.post(getBotApiURL(botKey, "pinChatMessage"),
+        {
+            json: {
+                method: "pinChatMessage",
+                chat_id: chatId,
+                message_id: messageId,
+                disable_notification: disableNotification,
+            }
+        },
+        (error, _res, body) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            console.log("Message pinned" + body);
+            callBack();
         });
 }
