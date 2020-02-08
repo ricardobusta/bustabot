@@ -1,11 +1,11 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 class Versus extends BotCommand {
     keys = ["versus", "vs"];
     description = "Versus";
-    execute(key: string, params: string[], req: TelegramRequest, _data: any): void {
+    execute(key: string, params: string[], req: TelegramMessage, _data: any): void {
         let message = "";
         if (params.length <= 2) {
             message = "Número de parâmetros insuficiente. Precisa de pelo menos dois.\n" +

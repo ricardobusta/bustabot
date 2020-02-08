@@ -1,6 +1,6 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 let seedrandom = require("seedrandom");
 
 function RandomRange(min, max, rng) {
@@ -10,7 +10,7 @@ function RandomRange(min, max, rng) {
 class Match extends BotCommand {
     keys = ["match"];
     description = "Match";
-    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
+    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
         let message = "";
         if (params.length != 3) {
             message = "Número de parâmetros errado.\n" +

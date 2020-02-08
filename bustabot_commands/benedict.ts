@@ -1,6 +1,6 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 const first_names = [
     "Blubberbutt",
@@ -61,7 +61,7 @@ const last_names = [
 class Benedict extends BotCommand {
     keys = ["benedict"];
     description = "Descubra seu nome Benedict Cumberbatch.";
-    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
+    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
         let fn = Math.floor(Math.random() * first_names.length);
         let ln = Math.floor(Math.random() * last_names.length);
 

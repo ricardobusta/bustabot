@@ -1,6 +1,6 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 let seedrandom = require("seedrandom");
 
 const classes = [
@@ -71,7 +71,7 @@ function firstLetterUcase(str) {
 class Rpg extends BotCommand {
     keys = ["rpg"];
     description = "Gera seu personagem de RPG";
-    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
+    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
         let userName = req.message.from.first_name;
 
         // Keep like this to avoid changing values when changing the text format and order.

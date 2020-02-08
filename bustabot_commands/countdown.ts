@@ -1,11 +1,11 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 class Countdown extends BotCommand {
     keys = ["countdown", "cd"];
     description = "Contagem regressiva até 10 segundos.";
-    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
+    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
         if (params.length != 2) {
             telegramCommands.sendMessage(key, req.message.chat.id, req.message.message_id,
                 "Número inválido de parâmetros. Tente:\n<code>/cd 3</code>");

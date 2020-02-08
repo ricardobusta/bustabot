@@ -1,5 +1,5 @@
 import BotCommand from "./bot_command"
-import TelegramRequest from "./telegram_request"
+import TelegramMessage from "./telegram_request"
 import * as telegramCommands from "./telegram_commands";
 
 const statisticsDocumentName = "statistics";
@@ -11,13 +11,13 @@ class Bot {
     commands: Array<BotCommand>;
     data: any;
 
-    commandMap: { [id: string]: (x: any, y: any, z: TelegramRequest, w: any) => void; };
+    commandMap: { [id: string]: (x: string, y: Array<string>, z: TelegramMessage, w: any) => void; };
 
     constructor(botAlias: string, botInfo: { key: string, name: string }, commands: Array<BotCommand>) {
         this.botAlias = botAlias;
         this.botName = "@" + botInfo.name;
         this.botKey = botInfo.key;
-        this.commands = commands;
+        this.commands = [...commands];
 
         this.commandMap = {
             "help": this.printHelpCommand,
@@ -36,11 +36,14 @@ class Bot {
             }
         }
         console.log("Created " + this.commandMap.length + " aliases for commands.");
+
+        console.log(this);
     }
 
     // Used to print the /help command.
-    printHelpCommand(_key: any, _params: any, req: TelegramRequest, _data: any) {
+    printHelpCommand(key: string, _params: Array<string>, req: TelegramMessage, _data: any) {
         console.log("Logging Help!");
+
         let helpString = "<b>" + this.botName + " Help:</b>\n";
         for (let i in this.commands) {
             let command = this.commands[i];
@@ -51,26 +54,27 @@ class Bot {
         }
 
         telegramCommands.sendMessage(
-            this.botKey,
+            key,
             req.message.chat.id,
             req.message.message_id,
             helpString);
     }
 
     //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-    printCommandList(_key: any, _params: any, req: TelegramRequest, _data: any) {
+    printCommandList(key: string, _params: Array<string>, req: TelegramMessage, _data: any) {
         console.log("Logging Command list!");
-        let helpString = "help - Mostra a lista de comandos do bot.\n";
+
+        let comString = "help - Mostra a lista de comandos do bot.\n";
         for (let i in this.commands) {
             let command = this.commands[i];
-            helpString += command.keys[0] + " - " + command.description + "\n";
+            comString += command.keys[0] + " - " + command.description + "\n";
         }
 
         telegramCommands.sendMessage(
-            this.botKey,
+            key,
             req.message.chat.id,
             req.message.message_id,
-            helpString);
+            comString);
     }
 
     incrementCommandStatistics(data, command) {
@@ -107,7 +111,7 @@ class Bot {
     };
 
     // The handler for the bot requests made by telegram webhook.
-    handleRequest(reqBody: { message: { text: string; }; }) {
+    handleTelegramMessage(reqBody: TelegramMessage) {
         // Ensure the message contains body
         if (!reqBody || !reqBody.message || !reqBody.message.text) {
             return;
@@ -138,7 +142,10 @@ class Bot {
         this.incrementCommandStatistics(this.data, key);
 
         // Call the command
-        this.commandMap[key](this.botKey, splitMessage, reqBody, this.data);
+        // Thanks @Danisson for figuring out.
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
+        let command = this.commandMap[key].bind(this);
+        command(this.botKey, splitMessage, reqBody, this.data);
     };
 }
 

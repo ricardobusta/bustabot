@@ -1,11 +1,11 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 class Stats extends BotCommand {
     keys = ["stats"];
     description = "Estatísticas do bot";
-    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
+    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
         telegramCommands.sendMessage(
             key,
             req.message.chat.id,

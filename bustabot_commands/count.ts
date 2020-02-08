@@ -1,13 +1,13 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 const statisticsDocName = "statistics";
 
 class Count extends BotCommand {
     keys = ["count", "++"];
     description = "Counts how many times the command was invoked";
-    execute(key: string, params: string[], req: TelegramRequest, data: any): void {
+    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;

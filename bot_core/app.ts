@@ -49,7 +49,7 @@ app.get("/" + telegramBotKey_jukebot, (req, res) => {
 
 // Actual bot requests.
 app.post("/" + telegramBotKey_bustabot, (req, res) => {
-    bustabot.handleRequest(req.body)
+    bustabot.handleTelegramMessage(req.body)
     res
         .status(200)
         .end();
@@ -57,7 +57,7 @@ app.post("/" + telegramBotKey_bustabot, (req, res) => {
 
 // Actual bot requests.
 app.post("/" + telegramBotKey_jukebot, (req, res) => {
-    jukebot.handleRequest(req.body)
+    jukebot.handleTelegramMessage(req.body)
     res
         .status(200)
         .end();

@@ -1,6 +1,6 @@
 import telegramCommands = require("../bot_core/telegram_commands");
 import BotCommand from "../bot_core/bot_command";
-import TelegramRequest from "../bot_core/telegram_request";
+import TelegramMessage from "../bot_core/telegram_request";
 
 function RandomRange(min, max) {
     return Math.floor((Math.random() * (max - min + 1) + min));
@@ -9,7 +9,7 @@ function RandomRange(min, max) {
 class Roll extends BotCommand {
     keys = ["roll", "dice"];
     description = "Rolls a dice.";
-    execute(key: string, _params: string[], req: TelegramRequest, _data: any): void {
+    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
         telegramCommands.sendMessage(
             key,
             req.message.chat.id,
