@@ -51,6 +51,7 @@ class Remover extends BotCommand {
                     msg = "Usuário não está na lista.\n";
                 }
 
+                msg += "Usuários na lista:\n";
                 for (let i = 0; i < data.users.length; i++) {
                     msg += data.users[i] + ",\n";
                 }

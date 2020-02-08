@@ -50,7 +50,7 @@ class Adicionar extends BotCommand {
                 document.set(docData);
 
                 let msg = "Usuário adicionado com sucesso.\n";
-
+                msg += "Usuários na lista:\n";
                 for (let i = 0; i < docData.users.length; i++) {
                     msg += docData.users[i] + ",\n";
                 }

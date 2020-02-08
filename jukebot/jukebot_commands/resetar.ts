@@ -40,9 +40,11 @@ class Resetar extends BotCommand {
 
                 let msg = "Nova rodada iniciada.\n";
                 msg += "Próximo: @" + data.next + "\n";
-                msg += "Em seguida: \n";
-                for (let i = 0; i < data.pool.length; i++) {
-                    msg += data.pool[i] + "\n";
+                if (data.pool.length > 0) {
+                    msg += "Em seguida: \n";
+                    for (let i = 0; i < data.pool.length; i++) {
+                        msg += data.pool[i] + "\n";
+                    }
                 }
                 sendMessage(msg);
             })

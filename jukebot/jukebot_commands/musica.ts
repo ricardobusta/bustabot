@@ -82,13 +82,18 @@ class Musica extends BotCommand {
 
                 let msg = "";
                 msg += "Próximo: @" + docData.next + "\n";
-                msg += "Em seguida: \n";
-                for (let i = 0; i < docData.pool.length; i++) {
-                    msg += docData.pool[i] + "\n";
+
+                if (docData.pool.length > 0) {
+                    msg += "Em seguida: \n";
+                    for (let i = 0; i < docData.pool.length; i++) {
+                        msg += docData.pool[i] + "\n";
+                    }
                 }
-                msg += "Já foi:\n"
-                for (let i = 0; i < data.past.length; i++) {
-                    msg += data.past[i] + "\n";
+                if (data.past.length > 0) {
+                    msg += "Já foi:\n"
+                    for (let i = 0; i < data.past.length; i++) {
+                        msg += data.past[i] + "\n";
+                    }
                 }
                 sendMessage(msg);
             })

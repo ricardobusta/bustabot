@@ -21,7 +21,9 @@ export function sendMessage(botKey: string, chatId: string, replyId: string, mes
                 return;
             }
             console.log("Message sent:\n" + body);
-            callBack();
+            if (callBack) {
+                callBack();
+            }
         });
 };
 
@@ -42,7 +44,9 @@ export function sendPhoto(botKey: string, chatId: string, replyId: string, photo
                 return;
             }
             console.log("Photo Sent:\n" + body);
-            callBack();
+            if (callBack) {
+                callBack();
+            }
         });
 }
 
@@ -62,6 +66,8 @@ export function pinMessage(botKey: string, chatId: string, messageId: number, di
                 return;
             }
             console.log("Message pinned" + body);
-            callBack();
+            if (callBack) {
+                callBack();
+            }
         });
 }

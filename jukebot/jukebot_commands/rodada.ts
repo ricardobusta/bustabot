@@ -27,13 +27,17 @@ class Rodada extends BotCommand {
 
                 let msg = "Próximo: @" + data.next + "\n";
 
-                msg += "Em seguida:\n"
-                for (let i = 0; i < data.pool.length; i++) {
-                    msg += data.pool[i] + "\n";
+                if (data.pool.length > 0) {
+                    msg += "Em seguida:\n"
+                    for (let i = 0; i < data.pool.length; i++) {
+                        msg += data.pool[i] + "\n";
+                    }
                 }
-                msg += "Já foi:\n"
-                for (let i = 0; i < data.past.length; i++) {
-                    msg += data.past[i] + "\n";
+                if (data.past.length > 0) {
+                    msg += "Já foi:\n"
+                    for (let i = 0; i < data.past.length; i++) {
+                        msg += data.past[i] + "\n";
+                    }
                 }
                 sendMessage(msg);
             })
