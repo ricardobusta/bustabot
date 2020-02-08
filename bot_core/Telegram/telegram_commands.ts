@@ -1,4 +1,5 @@
 import request = require("request");
+import TelegramMessage from "./telegram_message";
 
 function getBotApiURL(botKey: string, command: string) {
     return "https://api.telegram.org/bot" + botKey + "/" + command;
@@ -15,12 +16,13 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, mes
                 reply_to_message_id: replyId != null ? replyId : ""
             }
         },
-        (error, _res, body) => {
+        (error, res, body) => {
             if (error) {
                 console.log(error);
                 return;
             }
-            console.log("Message sent:\n" + body);
+            var msg = body.toString();
+            console.log("Res: " + msg);
             if (callBack) {
                 callBack();
             }
