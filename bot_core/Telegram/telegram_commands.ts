@@ -1,5 +1,4 @@
 import request = require("request");
-import TelegramMessage from "./telegram_message";
 
 function getBotApiURL(botKey: string, command: string) {
     return "https://api.telegram.org/bot" + botKey + "/" + command;
