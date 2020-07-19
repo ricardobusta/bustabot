@@ -1,7 +1,6 @@
 
-import * as botInfo from "../bot_info";
-import BotCommand from "../bot_core/bot_command"
-import Bot from "../bot_core/bot";
+import BotCommand from "../bot_core/Bot/bot_command"
+import Bot from "../bot_core/Bot/bot";
 
 import adicionar from "./jukebot_commands/adicionar";
 import musica from "./jukebot_commands/musica";
@@ -19,5 +18,5 @@ const commands: Array<BotCommand> = [
     rodada
 ];
 
-const jukebot = new Bot("jukebot", botInfo.jukebot, commands);
+const jukebot = new Bot("jukebot", commands);
 export default jukebot;

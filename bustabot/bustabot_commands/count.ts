@@ -1,13 +1,13 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import BotCommand from "../../bot_core/Bot/bot_command";
+import TelegramBot = require("node-telegram-bot-api");
 
 const statisticsDocName = "statistics";
 
 class Count extends BotCommand {
     keys = ["count", "++"];
     description = "Counts how many times the command was invoked";
-    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
+    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;
@@ -21,23 +21,23 @@ class Count extends BotCommand {
                     console.log("Current count: " + currentCount);
                 }
 
-                let message = "Contei até " + (currentCount + 1) + "!";
+                let text = "Contei até " + (currentCount + 1) + "!";
 
                 telegramCommands.sendMessage(
                     key,
-                    req.message.chat.id,
-                    req.message.message_id,
-                    message);
+                    message.chat.id,
+                    message.message_id,
+                    text);
             })
             .catch(err => {
-                let message = "Foi mal, esqueci..."
+                let text = "Foi mal, esqueci..."
                 console.log("Error getting document", err);
 
                 telegramCommands.sendMessage(
                     key,
-                    req.message.chat.id,
-                    req.message.message_id,
-                    message);
+                    message.chat.id,
+                    message.message_id,
+                    text);
             });
     }
 

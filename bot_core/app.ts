@@ -1,71 +1,77 @@
-const express = require("express");
-const telegramBotKey_bustabot = require("../bot_info").bustabot.key;
-const telegramBotKey_jukebot = require("../bot_info").jukebot.key;
+import Bot from "./Bot/bot";
+
+import express = require("express");
+const botGetInfo = require("../bot_info").getInfo;
 const googleProjectId = require("../bot_info").projectId;
-import bustabot from "../bustabot/bustabot";
-import jukebot from "../jukebot/jukebot";
-const app = express();
-const Firestore = require("@google-cloud/firestore");
+import FirebaseFirestore = require("@google-cloud/firestore");
+
+
+const bots: Array<Bot> = [
+    require("../bustabot/bustabot"),
+    require("../jukebot/jukebot"),
+];
 
 // Firestore integration
 try {
-    let db = new Firestore({
+    let db = new FirebaseFirestore.Firestore({
         projectId: googleProjectId,
         keyFilename: "google_key.json",
     });
 
     // Initializes the bot with database
-    bustabot.init(db);
-    jukebot.init(db);
+    bots.forEach(bot => {
+        bot.init(db, botGetInfo(false))
+    });
 } catch (error) {
     console.log(error);
 }
 
-app.use(express.json());
+let isProd: boolean = false;
 
-// Default request. Just to check if the bot is up.
-app.get("/", (req, res) => {
-    res
-        .status(200)
-        .send("Hello, world!")
-        .end();
-});
+process.argv.forEach(function name(val, index, arr) {
+    if (val === 'prod') {
+        isProd = true;
+    }
+})
 
-// Check if the proper key is set. Just make a request with the bot key appended.
-app.get("/" + telegramBotKey_bustabot, (req, res) => {
-    res
-        .status(200)
-        .send("Busta Bot Working!")
-        .end();
-});
+if (isProd) {
+    const app = express();
 
-// Check if the proper key is set. Just make a request with the bot key appended.
-app.get("/" + telegramBotKey_jukebot, (req, res) => {
-    res
-        .status(200)
-        .send("Juke Bot Working!")
-        .end();
-});
+    app.use(express.json());
 
-// Actual bot requests.
-app.post("/" + telegramBotKey_bustabot, (req, res) => {
-    bustabot.handleTelegramMessage(req.body)
-    res
-        .status(200)
-        .end();
-});
+    // Default request. Just to check if the bot is up.
+    app.get("/", (req, res) => {
+        res
+            .status(200)
+            .send("Hello, world!")
+            .end();
+    });
 
-// Actual bot requests.
-app.post("/" + telegramBotKey_jukebot, (req, res) => {
-    jukebot.handleTelegramMessage(req.body)
-    res
-        .status(200)
-        .end();
-});
+    bots.forEach(bot => {
+        if (!bot.initialized) {
+            return;
+        }
+        // Check if the proper key is set. Just make a request with the bot key appended.
+        app.get("/" + bot.botKey, (req, res) => {
+            res
+                .status(200)
+                .send(bot.botName + " is Working!")
+                .end();
+        });
 
-// Start the server
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log("App listening on port ${PORT}");
-    console.log("Press Ctrl+C to quit.");
-});
+        // Actual bot requests.
+        app.post("/" + bot.botName, (req, res) => {
+            bot.handleTelegramMessage(req.body)
+            res
+                .status(200)
+                .end();
+        });
+    });
+
+    // Start the server
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+        console.log("App listening on port ${PORT}");
+        console.log("Press Ctrl+C to quit.");
+    });
+}

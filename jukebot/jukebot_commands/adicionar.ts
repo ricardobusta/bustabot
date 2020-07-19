@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
-import BotCommand from "../../bot_core/bot_command";
+import BotCommand from "../../bot_core/Bot/bot_command";
 
 class Adicionar extends BotCommand {
     keys = ["adicionar"];

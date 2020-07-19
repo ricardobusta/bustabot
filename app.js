@@ -1,1 +1,1 @@
-require('bot_core/app.js');
+require('./bot_core/app');

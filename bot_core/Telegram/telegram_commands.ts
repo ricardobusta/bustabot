@@ -1,16 +1,17 @@
 import request = require("request");
+import TelegramBot = require("node-telegram-bot-api");
 
 function getBotApiURL(botKey: string, command: string) {
     return "https://api.telegram.org/bot" + botKey + "/" + command;
 }
 
-export function sendMessage(botKey: string, chatId: number, replyId: number, message: string, callBack: () => void = null): void {
+export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
                 method: "sendMessage",
                 chat_id: chatId,
-                text: message,
+                text: text,
                 parse_mode: "HTML",
                 reply_to_message_id: replyId != null ? replyId : ""
             }

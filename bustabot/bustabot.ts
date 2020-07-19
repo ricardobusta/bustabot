@@ -1,7 +1,5 @@
-import * as botInfo from "../bot_info";
-
-import BotCommand from "../bot_core/bot_command"
-import Bot from "../bot_core/bot";
+import BotCommand from "../bot_core/Bot/bot_command"
+import Bot from "../bot_core/Bot/bot";
 
 import benedict from "./bustabot_commands/benedict"
 import birl from "./bustabot_commands/birl"
@@ -25,5 +23,5 @@ const commands: Array<BotCommand> = [
     versus
 ];
 
-const bustabot = new Bot("bustabot", botInfo.bustabot, commands);
+const bustabot = new Bot("bustabot", commands);
 export default bustabot;
