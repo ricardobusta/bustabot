@@ -1,0 +1,1 @@
+require('bot_core/app.js');
