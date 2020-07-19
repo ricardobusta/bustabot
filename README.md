@@ -1,5 +1,7 @@
 https://github.com/RicardoBusta/BustaBot
 
+![Node.js CI](https://github.com/ricardobusta/bustabot/workflows/Node.js%20CI/badge.svg)
+
 Setup:
 
 Create bot_info.js file with the proper information. Use the template as base.
