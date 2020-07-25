@@ -29,7 +29,7 @@ try {
 let isProd: boolean = false;
 
 process.argv.forEach(function name(val, index, arr) {
-    if (val === 'prod') {
+    if (val === "prod") {
         isProd = true;
     }
 })
@@ -55,12 +55,12 @@ if (isProd) {
         app.get("/" + bot.botKey, (req, res) => {
             res
                 .status(200)
-                .send(bot.botName + " is Working!")
+                .send(`${bot.botName} is Working!`)
                 .end();
         });
 
         // Actual bot requests.
-        app.post("/" + bot.botName, (req, res) => {
+        app.post(`/${bot.botName}`, (req, res) => {
             bot.handleTelegramMessage(req.body)
             res
                 .status(200)
@@ -71,7 +71,7 @@ if (isProd) {
     // Start the server
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
-        console.log("App listening on port ${PORT}");
+        console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
 }

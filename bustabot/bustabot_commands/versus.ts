@@ -14,14 +14,15 @@ class Versus extends BotCommand {
         } else {
             let value = Math.floor(Math.random() * (params.length - 1)) + 1;
             console.log("Selected value: " + value);
-            text = "O vencedor é: <code>" + params[value] + "</code>!";
+            text = `O vencedor é: <code>${params[value]}</code>!`;
         }
 
         telegramCommands.sendMessage(
             key,
             message.chat.id,
             message.message_id,
-            text);
+            text
+        );
     }
 }
 

@@ -1,1 +1,0 @@
-require('./bot_core/app');

@@ -10,7 +10,8 @@ class Stats extends BotCommand {
             key,
             message.chat.id,
             message.message_id,
-            "Stats.");
+            "Stats."
+        );
     }
 
 }

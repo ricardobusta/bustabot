@@ -66,17 +66,13 @@ class Benedict extends BotCommand {
         let ln = Math.floor(Math.random() * last_names.length);
 
         let userName = message.from.first_name;
-        let result = first_names[fn] + " " + last_names[ln];
+        let result = `${first_names[fn]} ${last_names[ln]}`;
 
         telegramCommands.sendMessage(
             key,
             message.chat.id,
             message.message_id,
-            "O nome Benedict Cumberbatch de " +
-            userName +
-            " é <code>" +
-            result +
-            "</code>!");
+            `O nome Benedict Cumberbatch de ${userName} é <code>${result}</code>!`);
     }
 }
 

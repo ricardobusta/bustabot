@@ -30,13 +30,13 @@ class Bot {
             for (let j in command.keys) {
                 let key = command.keys[j];
                 if (key in this.commandMap) {
-                    console.log("Duplicated command: " + key + ". Will ignore.");
+                    console.log(`Duplicated command: ${key}. Will ignore.`);
                     continue;
                 }
                 this.commandMap[key] = command.execute;
             }
         }
-        console.log("Created " + this.commandMap.length + " aliases for commands.");
+        console.log(`Created ${this.commandMap.length} aliases for commands.`);
 
         console.log(this);
     }
@@ -45,13 +45,13 @@ class Bot {
     printHelpCommand(key: string, _params: Array<string>, message: TelegramBot.Message, _data: any) {
         console.log("Logging Help!");
 
-        let helpString = "<b>" + this.botName + " Help:</b>\n";
+        let helpString = `<b>${this.botName} Help:</b>\n`;
         for (let i in this.commands) {
             let command = this.commands[i];
             if (command.wip) {
                 continue;
             }
-            helpString += "/" + command.keys[0] + " - " + command.description + "\n";
+            helpString += `/${command.keys[0]} - ${command.description}\n`;
         }
 
         telegramCommands.sendMessage(
@@ -68,7 +68,7 @@ class Bot {
         let comString = "help - Mostra a lista de comandos do bot.\n";
         for (let i in this.commands) {
             let command = this.commands[i];
-            comString += command.keys[0] + " - " + command.description + "\n";
+            comString += `${command.keys[0]} - ${command.description}\n`;
         }
 
         telegramCommands.sendMessage(
@@ -78,10 +78,10 @@ class Bot {
             comString);
     }
 
-    incrementCommandStatistics(data, command) {
+    incrementCommandStatistics(data: { doc: (arg0: string) => any; }, command: string) {
         let document = data.doc(statisticsDocumentName);
         document.get()
-            .then(doc => {
+            .then((doc: { exists: any; data: () => any; }) => {
                 if (!doc.exists) {
                     console.log("Document not set. Creating empty one.")
                     document.set({

@@ -62,7 +62,7 @@ class Musica extends BotCommand {
                 let from = req.message.from.username;
 
                 if (docData.next != from) {
-                    sendMessage("Usuário " + from + " não é o próximo.");
+                    sendMessage(`Usuário ${from} não é o próximo.`);
                     return;
                 }
 
@@ -81,7 +81,7 @@ class Musica extends BotCommand {
                 GetNextUser(docData, document);
 
                 let msg = "";
-                msg += "Próximo: @" + docData.next + "\n";
+                msg += `Próximo: @${docData.next}\n`;
 
                 if (docData.pool.length > 0) {
                     msg += "Em seguida: \n";

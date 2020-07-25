@@ -2,7 +2,7 @@ import request = require("request");
 import TelegramBot = require("node-telegram-bot-api");
 
 function getBotApiURL(botKey: string, command: string) {
-    return "https://api.telegram.org/bot" + botKey + "/" + command;
+    return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
 export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: () => void = null): void {
@@ -45,7 +45,7 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
                 console.log(error);
                 return;
             }
-            console.log("Photo Sent:\n" + body);
+            console.log(`Photo Sent:\n${body}`);
             if (callBack) {
                 callBack();
             }
@@ -67,7 +67,7 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
                 console.log(error);
                 return;
             }
-            console.log("Message pinned" + body);
+            console.log(`Message pinned:\n${body}`);
             if (callBack) {
                 callBack();
             }
