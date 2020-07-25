@@ -3,3 +3,5 @@ appengine-generated/
 node_modules
 bot_info.ts
 google_key.json
+**/*.js
+**/*.js.map
