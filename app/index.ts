@@ -7,8 +7,8 @@ import FirebaseFirestore = require("@google-cloud/firestore");
 
 
 const bots: Array<Bot> = [
-    require("../bustabot/bustabot"),
-    require("../jukebot/jukebot"),
+    require("../bot/bustabot"),
+    require("../bot/jukebot"),
 ];
 
 // Firestore integration

@@ -15,7 +15,8 @@
     "scripts": {
         "deploy": "gcloud app deploy",
         "deploy-log": "gcloud app deploy ./app.yaml -q; gcloud app logs tail -s default",
-        "start": "node bot_core/app.js prod",
+        "start": "node app prod",
+        "start-dev": "node app dev",
         "build": "tsc -p .",
         "clean": "tsc --build --clean",
         "test": "mocha -r ts-node/register tests/**/*.test.ts",
