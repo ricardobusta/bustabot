@@ -36,9 +36,7 @@ class Bot {
                 this.commandMap[key] = command.execute;
             }
         }
-        console.log(`Created ${this.commandMap.length} aliases for commands.`);
-
-        console.log(this);
+        //console.log(this);
     }
 
     // Used to print the /help command.
@@ -107,7 +105,7 @@ class Bot {
     }
 
     // Initializes the bot internal state
-    init(db: { collection: (id: string) => any; }, botInfo: BotInfoEntry) {
+    init(db: any, botInfo: BotInfoEntry) {
         if (botInfo === undefined) {
             return;
         }

@@ -1,15 +1,15 @@
 import BotCommand from "../types/bot_command"
-import Bot from "..";
+import Bot from "../bot";
 
-import benedict from "./bustabot_commands/benedict"
-import birl from "./bustabot_commands/birl"
-import cat from "./bustabot_commands/cat"
-import count from "./bustabot_commands/count"
-import match from "./bustabot_commands/match"
-import moo from "./bustabot_commands/moo"
-import roll from "./bustabot_commands/roll"
-import rpg from "./bustabot_commands/rpg"
-import versus from "./bustabot_commands/versus"
+import benedict from "./commands/benedict"
+import birl from "./commands/birl"
+import cat from "./commands/cat"
+import count from "./commands/count"
+import match from "./commands/match"
+import moo from "./commands/moo"
+import roll from "./commands/roll"
+import rpg from "./commands/rpg"
+import versus from "./commands/versus"
 
 const commands: Array<BotCommand> = [
     benedict,

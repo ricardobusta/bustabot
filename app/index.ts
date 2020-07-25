@@ -1,14 +1,15 @@
-import Bot from "../bot";
+import Bot from "../bot/bot";
 
 import express = require("express");
 const botGetInfo = require("../bot_info").getInfo;
 const googleProjectId = require("../bot_info").projectId;
 import FirebaseFirestore = require("@google-cloud/firestore");
-
+import bustabot from "../bot/bustabot/bustabot";
+import jukebot from "../bot/jukebot/jukebot";
 
 const bots: Array<Bot> = [
-    require("../bot/bustabot"),
-    require("../bot/jukebot"),
+    bustabot,
+    jukebot,
 ];
 
 // Firestore integration
@@ -35,6 +36,7 @@ process.argv.forEach(function name(val, index, arr) {
 })
 
 if (isProd) {
+    console.log("Initializing bot in production environment");
     const app = express();
 
     app.use(express.json());
@@ -74,4 +76,6 @@ if (isProd) {
         console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
+} else {
+    console.log("Initializing bot in development environment");
 }
