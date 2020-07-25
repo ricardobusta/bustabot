@@ -1,4 +1,4 @@
-import BotInfoEntry from "./bot_core/Bot/bot_info_entry";
+import BotInfoEntry from "./bot/types/bot_info_entry";
 
 const botInfo: Map<string, BotInfoEntry> = new Map([
     ['bustabot', { name: 'TELEGRAM_BOT_NAME', key: 'TELEGRAM_BOT_KEY' }],
