@@ -39,7 +39,7 @@ try {
     console.log(error);
 }
 
-if (isProd) {
+function handleProdApp() {
     console.log("Initializing app in production environment");
     const app = express();
 
@@ -58,7 +58,7 @@ if (isProd) {
             return;
         }
         // Check if the proper key is set. Just make a request with the bot key appended.
-        app.get("/" + bot.botKey, (req, res) => {
+        app.get(`/${bot.botKey}`, (req, res) => {
             res
                 .status(200)
                 .send(`${bot.botName} is Working!`)
@@ -66,12 +66,14 @@ if (isProd) {
         });
 
         // Actual bot requests.
-        app.post(`/${bot.botName}`, (req, res) => {
+        app.post(`/${bot.botKey}${bot.botName}`, (req, res) => {
             bot.handleTelegramMessage(req.body)
             res
                 .status(200)
                 .end();
         });
+
+        bot.setWebhook(botInfo["host-url"]);
     });
 
     // Start the server
@@ -80,6 +82,19 @@ if (isProd) {
         console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
-} else {
+}
+
+function handleDevApp() {
     console.log("Initializing app in development environment");
+    setInterval(() => {
+        bots.forEach(bot => {
+            bot.getUpdates();
+        })
+    }, 1000);
+}
+
+if (isProd) {
+    handleProdApp();
+} else {
+    handleDevApp();
 }

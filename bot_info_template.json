@@ -1,4 +1,5 @@
 {
+    "host-url": "base-url-for-webhooks",
     "project-id": "busta-chatbots",
         "bustabot": {
         "dev": {

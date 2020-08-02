@@ -15,6 +15,8 @@ class Bot {
 
     commandMap: { [id: string]: (x: string, y: Array<string>, z: TelegramBot.Message, w: any) => void; };
 
+    private lastUpdate: number = 0;
+
     constructor(botAlias: string, commands: Array<BotCommand>) {
         this.initialized = false;
         this.botAlias = botAlias;
@@ -155,6 +157,20 @@ class Bot {
         let command = this.commandMap[key].bind(this);
         command(this.botKey, splitText, message, this.data);
     };
+
+    setWebhook(url: string) {
+        if (!this.initialized) return;
+        telegramCommands.setWebhook(url, this.botKey, this.botName);
+    }
+
+    getUpdates() {
+        if (!this.initialized) return;
+        telegramCommands.getUpdates(this.botKey, this.lastUpdate, this);
+    }
+
+    setLastUpdate(update: number) {
+        this.lastUpdate = Math.max(this.lastUpdate, update + 1);
+    }
 }
 
 export default Bot;
