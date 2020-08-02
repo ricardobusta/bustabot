@@ -1,7 +1,7 @@
 # Google App Engine generated folder
 appengine-generated/
 node_modules
-bot_info.ts
+bot_info.json
 google_key.json
 **/*.js
 **/*.js.map

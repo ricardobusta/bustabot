@@ -1,0 +1,23 @@
+{
+    "project-id": "busta-chatbots",
+        "bustabot": {
+        "dev": {
+            "name": "TELEGRAM_BOT_NAME",
+                "key": "TELEGRAM_BOT_KEY"
+        },
+        "prod": {
+            "name": "TELEGRAM_BOT_NAME",
+                "key": "TELEGRAM_BOT_KEY"
+        }
+    },
+    "jukebot": {
+        "-dev": {
+            "name": "TELEGRAM_BOT_NAME",
+                "key": "TELEGRAM_BOT_KEY"
+        },
+        "prod": {
+            "name": "TELEGRAM_BOT_NAME",
+                "key": "TELEGRAM_BOT_KEY"
+        }
+    }
+}

@@ -107,6 +107,7 @@ class Bot {
     // Initializes the bot internal state
     init(db: any, botInfo: BotInfoEntry) {
         if (botInfo === undefined) {
+            console.log("Bot info undefined. Skipping.")
             return;
         }
         this.botName = "@" + botInfo.name;
@@ -114,6 +115,7 @@ class Bot {
 
         this.data = db.collection(`${this.botAlias}_data`);
         this.initialized = true;
+        console.log(`Initializing Bot ${this.botAlias}`);
     };
 
     // The handler for the bot requests made by telegram webhook.

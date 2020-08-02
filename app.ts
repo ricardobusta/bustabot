@@ -1,31 +1,15 @@
-import Bot from "../bot/bot";
-
 import express = require("express");
-const botGetInfo = require("../bot_info").getInfo;
-const googleProjectId = require("../bot_info").projectId;
 import FirebaseFirestore = require("@google-cloud/firestore");
-import bustabot from "../bot/bustabot/bustabot";
-import jukebot from "../bot/jukebot/jukebot";
+import Bot from "./bot/bot";
+import botInfo from './bot_info.json';
+import bustabot from "./bot/bustabot/bustabot";
+import jukebot from "./bot/jukebot/jukebot";
+import BotInfoEntry from "./bot/types/bot_info_entry";
 
 const bots: Array<Bot> = [
     bustabot,
     jukebot,
 ];
-
-// Firestore integration
-try {
-    let db = new FirebaseFirestore.Firestore({
-        projectId: googleProjectId,
-        keyFilename: "google_key.json",
-    });
-
-    // Initializes the bot with database
-    bots.forEach(bot => {
-        bot.init(db, botGetInfo(false))
-    });
-} catch (error) {
-    console.log(error);
-}
 
 let isProd: boolean = false;
 
@@ -35,8 +19,28 @@ process.argv.forEach(function name(val, index, arr) {
     }
 })
 
+function getBotData(botAlias: string): BotInfoEntry {
+    let buildType = isProd ? "prod" : "dev";
+    return botInfo[botAlias][buildType];
+}
+
+// Firestore integration
+try {
+    let db = new FirebaseFirestore.Firestore({
+        projectId: botInfo["project-id"],
+        keyFilename: "google_key.json",
+    });
+
+    // Initializes the bot with database
+    bots.forEach(bot => {
+        bot.init(db, getBotData(bot.botAlias))
+    });
+} catch (error) {
+    console.log(error);
+}
+
 if (isProd) {
-    console.log("Initializing bot in production environment");
+    console.log("Initializing app in production environment");
     const app = express();
 
     app.use(express.json());
@@ -77,5 +81,5 @@ if (isProd) {
         console.log("Press Ctrl+C to quit.");
     });
 } else {
-    console.log("Initializing bot in development environment");
+    console.log("Initializing app in development environment");
 }
