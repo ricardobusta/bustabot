@@ -95,8 +95,7 @@ export function setWebhook(url: string, botKey: string, botName: string) {
 }
 
 export function getUpdates(botKey: string, offset: number, bot: Bot): void {
-    let requestUrl = `${getBotApiURL(botKey, "getUpdates")}?offset=${offset}&limit=10`;
-    console.log(`With request url: ${requestUrl}`)
+    let requestUrl = `${getBotApiURL(botKey, "getUpdates")}?offset=${offset}&limit=10&timeout=1`;
     request.get(requestUrl,
         {},
         (error, res, body) => {
@@ -109,10 +108,9 @@ export function getUpdates(botKey: string, offset: number, bot: Bot): void {
                     let updateObj = JSON.parse(body) as { ok: string; result: Array<TelegramBot.Update>; };
                     if (updateObj.ok) {
                         let result = updateObj.result;
-                        console.log(result);
                         result.forEach(update => {
-                            console.log("update: " + update.toString());
                             if (update.message) {
+                                console.log(update.message);
                                 bot.handleTelegramMessage(update.message);
                                 bot.setLastUpdate(update.update_id);
                             }

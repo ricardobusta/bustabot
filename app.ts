@@ -90,7 +90,7 @@ function handleDevApp() {
         bots.forEach(bot => {
             bot.getUpdates();
         })
-    }, 1000);
+    }, 2000);
 }
 
 if (isProd) {
