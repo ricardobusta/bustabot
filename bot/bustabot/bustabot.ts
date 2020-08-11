@@ -7,6 +7,7 @@ import cat from "./commands/cat"
 import count from "./commands/count"
 import match from "./commands/match"
 import moo from "./commands/moo"
+import ovo from "./commands/ovo"
 import roll from "./commands/roll"
 import rpg from "./commands/rpg"
 import versus from "./commands/versus"
@@ -18,6 +19,7 @@ const commands: Array<BotCommand> = [
     count,
     match,
     moo,
+    ovo,
     roll,
     rpg,
     versus
