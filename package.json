@@ -16,7 +16,7 @@
         "deploy": "gcloud app deploy",
         "start": "node bot_core/app.js",
         "gcp-build": "tsc -p .",
-        "system-test": "repo-tools test app",
+        "system-test": "repo-toolsn test app",
         "test": "npm run system-test",
         "e2e-test": "repo-tools test deploy"
     },
