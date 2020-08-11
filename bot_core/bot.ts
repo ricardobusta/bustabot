@@ -35,7 +35,7 @@ class Bot {
                 this.commandMap[key] = command.execute;
             }
         }
-        console.log("Created " + this.commandMap.length + " aliases for commands.");
+        //console.log("Created " + this.commandMap.length + " aliases for commands.");
 
         console.log(this);
     }

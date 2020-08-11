@@ -9,6 +9,7 @@ const Firestore = require("@google-cloud/firestore");
 
 // Firestore integration
 try {
+    console.log(`Will init project with ${googleProjectId}`);
     let db = new Firestore({
         projectId: googleProjectId,
         keyFilename: "google_key.json",
@@ -18,7 +19,7 @@ try {
     bustabot.init(db);
     jukebot.init(db);
 } catch (error) {
-    console.log(error);
+    console.log("Error on Firestore Initialization: " + error);
 }
 
 app.use(express.json());
@@ -39,13 +40,13 @@ app.get("/" + telegramBotKey_bustabot, (req, res) => {
         .end();
 });
 
-// Check if the proper key is set. Just make a request with the bot key appended.
-app.get("/" + telegramBotKey_jukebot, (req, res) => {
-    res
-        .status(200)
-        .send("Juke Bot Working!")
-        .end();
-});
+// // Check if the proper key is set. Just make a request with the bot key appended.
+// app.get("/" + telegramBotKey_jukebot, (req, res) => {
+//     res
+//         .status(200)
+//         .send("Juke Bot Working!")
+//         .end();
+// });
 
 // Actual bot requests.
 app.post("/" + telegramBotKey_bustabot, (req, res) => {
@@ -55,13 +56,13 @@ app.post("/" + telegramBotKey_bustabot, (req, res) => {
         .end();
 });
 
-// Actual bot requests.
-app.post("/" + telegramBotKey_jukebot, (req, res) => {
-    jukebot.handleTelegramMessage(req.body)
-    res
-        .status(200)
-        .end();
-});
+// // Actual bot requests.
+// app.post("/" + telegramBotKey_jukebot, (req, res) => {
+//     jukebot.handleTelegramMessage(req.body)
+//     res
+//         .status(200)
+//         .end();
+// });
 
 // Start the server
 const PORT = process.env.PORT || 8080;
