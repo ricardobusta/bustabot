@@ -75,7 +75,7 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
 }
 
 export function setWebhook(url: string, botKey: string) {
-    let hookUrl = encodeURIComponent(`${url}${botKey}`);
+    let hookUrl = encodeURIComponent(`${url}/bot${botKey}`);
     let requestUrl = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
     console.log(`With request url: ${requestUrl}`)
     request.post(requestUrl,

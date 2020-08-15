@@ -106,7 +106,7 @@ class Bot {
     }
 
     // Initializes the bot internal state
-    init(db: { collection: (id: string) => any; }, botInfo: BotInfoEntry) {
+    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string) {
         if (botInfo === undefined) {
             return;
         }
@@ -117,11 +117,13 @@ class Bot {
 
         this.initialized = true;
 
-        telegramCommands.setWebhook("https://busta-chatbots.ue.r.appspot.com/", this.botKey);
+        telegramCommands.setWebhook(url, this.botKey);
     };
 
     // The handler for the bot requests made by telegram webhook.
     handleTelegramMessage(message: TelegramBot.Message) {
+
+        console.log("Handling messages");
         // Ensure the message contains body
         if (!message || !message.text) {
             return;

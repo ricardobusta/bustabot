@@ -17,6 +17,7 @@
         "deploy": "gcloud app deploy",
         "deploy-and-log": "gcloud app deploy && gcloud app logs tail -s default",
         "start": "node ./app.js prod",
+        "start-dev": "tsc -p . && node ./app.js dev",
         "gcp-build": "tsc -p .",
         "gcp-clean": "tsc --build --clean",
         "test": "mocha -r ts-node/register tests/**/*.test.ts",
