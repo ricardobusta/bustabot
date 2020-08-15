@@ -9,6 +9,7 @@ import cat from "./bustabot_commands/cat"
 import count from "./bustabot_commands/count"
 import match from "./bustabot_commands/match"
 import moo from "./bustabot_commands/moo"
+import ovo from "./bustabot_commands/ovo"
 import roll from "./bustabot_commands/roll"
 import rpg from "./bustabot_commands/rpg"
 import versus from "./bustabot_commands/versus"
@@ -20,6 +21,7 @@ const commands: Array<BotCommand> = [
     count,
     match,
     moo,
+    ovo,
     roll,
     rpg,
     versus
