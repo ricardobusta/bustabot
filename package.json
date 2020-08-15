@@ -5,6 +5,7 @@
     "private": true,
     "license": "Apache-2.0",
     "author": "Ricardo Bustamante",
+    "main": "./bot_core/app.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/RicardoBusta/Bustabot"
@@ -15,9 +16,9 @@
     "scripts": {
         "deploy": "gcloud app deploy",
         "deploy-and-log": "gcloud app deploy && gcloud app logs tail -s default",
-        "start": "node app.js prod",
-        "ts-build": "tsc -p .",
-        "ts-clean": "tsc --build --clean",
+        "start": "node ./bot_core/app.js prod",
+        "gcp-build": "tsc -p .",
+        "gcp-clean": "tsc --build --clean",
         "test": "mocha -r ts-node/register tests/**/*.test.ts",
         "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
     },
