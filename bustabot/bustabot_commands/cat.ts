@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import BotCommand from "../../bot_core/Bot/bot_command";
+import TelegramBot = require("node-telegram-bot-api");
 
 const status = [
     100, 101, 200, 201, 202, 204, 206, 207, 300, 301, 302, 303, 304,
@@ -13,12 +13,12 @@ const status = [
 class Cat extends BotCommand {
     keys = ["cat"];
     description = "Rolls a dice.";
-    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
+    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
         if (params.length > 2) {
             telegramCommands.sendMessage(
                 key,
-                req.message.chat.id,
-                req.message.message_id,
+                message.chat.id,
+                message.message_id,
                 "Too many parameters.");
         }
 
@@ -31,8 +31,8 @@ class Cat extends BotCommand {
 
         telegramCommands.sendPhoto(
             key,
-            req.message.chat.id,
-            req.message.message_id,
+            message.chat.id,
+            message.message_id,
             "https://http.cat/" + code);
     }
 

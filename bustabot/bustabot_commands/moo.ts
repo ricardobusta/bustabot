@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import BotCommand from "../../bot_core/Bot/bot_command";
+import TelegramBot = require("node-telegram-bot-api");
 
 function RandomRange(min, max) {
     return Math.floor((Math.random() * (max - min + 1) + min));
@@ -9,41 +9,40 @@ function RandomRange(min, max) {
 class Moo extends BotCommand {
     keys = ["moo", "muu"];
     description = "Moos";
-    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
+    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
         var cowChance = RandomRange(1, 20);
-        let message: string;
+        let text: string;
         if (cowChance < 3) {
             let value = RandomRange(1, 10);
-            message = "M";
+            text = "M";
             for (let i = 0; i < value; i++) {
-                message += "o";
+                text += "o";
             }
-            message += " 🐮";
+            text += " 🐮";
         } else if (cowChance < 5) {
             let value = RandomRange(1, 10);
-            message = "B";
+            text = "B";
             for (let i = 0; i < value; i++) {
-                message += "a";
+                text += "a";
             }
-            message += "h";
+            text += "h";
         } else if (cowChance < 6) {
-            message = "Meow meow i'm a cow!";
+            text = "Meow meow i'm a cow!";
         } else {
             let value = RandomRange(1, 10);
-            message = "M";
+            text = "M";
 
             for (let i = 0; i < value; i++) {
-                message += "o";
+                text += "o";
             }
         }
 
         telegramCommands.sendMessage(
             key,
-            req.message.chat.id,
+            message.chat.id,
             null,
-            message);
+            text);
     }
-
 }
 
 export default new Moo();

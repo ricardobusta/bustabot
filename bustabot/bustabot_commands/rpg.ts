@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import BotCommand from "../../bot_core/Bot/bot_command";
+import TelegramBot = require("node-telegram-bot-api");
 let seedrandom = require("seedrandom");
 
 const classes = [
@@ -71,11 +71,11 @@ function firstLetterUcase(str) {
 class Rpg extends BotCommand {
     keys = ["rpg"];
     description = "Gera seu personagem de RPG";
-    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
-        let userName = req.message.from.first_name;
+    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+        let userName = message.from.first_name;
 
         // Keep like this to avoid changing values when changing the text format and order.
-        let rng = seedrandom(req.message.from.id);
+        let rng = seedrandom(message.from.id);
         let charClassRng = rng();
         let strRng = rng();
         let dexRng = rng();
@@ -111,7 +111,7 @@ class Rpg extends BotCommand {
 
         let raceInfo = getArrayRange(raceRng, races);
 
-        let message = "FICHA DO PERSONAGEM\n" +
+        let text = "FICHA DO PERSONAGEM\n" +
             "<b>Jogador:</b> " + userName + "\n" +
             "<b>Personagem:</b> " + genName + "\n" +
             "<b>Raça:</b> " + raceInfo[0] + "\n" +
@@ -125,13 +125,13 @@ class Rpg extends BotCommand {
             "📖 <b>WIS:</b> " + getAttribute(wisRng) + "\n" +
             "💋 <b>CHA:</b> " + getAttribute(chaRng) + "";
 
-        console.log(message);
+        console.log(text);
 
         telegramCommands.sendMessage(
             key,
-            req.message.chat.id,
-            req.message.message_id,
-            message);
+            message.chat.id,
+            message.message_id,
+            text);
     }
 
 }

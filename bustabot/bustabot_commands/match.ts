@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import BotCommand from "../../bot_core/Bot/bot_command";
+import TelegramBot = require("node-telegram-bot-api");
 let seedrandom = require("seedrandom");
 
 function RandomRange(min, max, rng) {
@@ -10,10 +10,10 @@ function RandomRange(min, max, rng) {
 class Match extends BotCommand {
     keys = ["match"];
     description = "Match";
-    execute(key: string, params: string[], req: TelegramMessage, data: any): void {
-        let message = "";
+    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
+        let text = "";
         if (params.length != 3) {
-            message = "Número de parâmetros errado.\n" +
+            text = "Número de parâmetros errado.\n" +
                 "/match @user1 @user2";
             console.log("Invalid");
         } else {
@@ -23,14 +23,14 @@ class Match extends BotCommand {
             let rng = seedrandom(seedStr);
             let value = RandomRange(0, 100, rng());
             console.log("Selected value: " + value + "from string: " + seedStr);
-            message = "O nível de match é <code>" + value + "%</code>. Deu match? " + (value > 60 ? "❤️ <code>Sim</code>!!!" : "💔 <code>Não</code>...");
+            text = "O nível de match é <code>" + value + "%</code>. Deu match? " + (value > 60 ? "❤️ <code>Sim</code>!!!" : "💔 <code>Não</code>...");
         }
 
         telegramCommands.sendMessage(
             key,
-            req.message.chat.id,
-            req.message.message_id,
-            message);
+            message.chat.id,
+            message.message_id,
+            text);
     }
 
 }
