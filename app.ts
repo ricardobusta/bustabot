@@ -4,6 +4,7 @@ import jukebot from './jukebot/jukebot';
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
+import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
 
@@ -57,7 +58,7 @@ if (isProd) {
 
         // Actual bot requests.
         app.post(`/bot${bot.botKey}`, (req, res) => {
-            bot.handleTelegramMessage(req.body)
+            bot.handleTelegramUpdate(req.body as TelegramBot.Update)
             res
                 .status(200)
                 .end();

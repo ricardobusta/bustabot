@@ -121,9 +121,8 @@ class Bot {
     };
 
     // The handler for the bot requests made by telegram webhook.
-    handleTelegramMessage(message: TelegramBot.Message) {
-
-        console.log("Handling messages");
+    handleTelegramUpdate(update: TelegramBot.Update) {
+        const message = update?.message;
         // Ensure the message contains body
         if (!message || !message.text) {
             return;
@@ -142,7 +141,7 @@ class Bot {
         if (key == null || key == "") return;
 
         // And that command is not directed to another bot
-        splitText[0] = key = key.substring(1, key.endsWith(this.botName) ? key.length - this.botName.length : key.length)
+        splitText[0] = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
 
         // Not a valid command or directed to another bot
         if (!(key in this.commandMap)) {
