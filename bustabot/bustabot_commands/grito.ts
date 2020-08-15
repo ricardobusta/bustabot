@@ -5,7 +5,7 @@ import TelegramBot = require("node-telegram-bot-api");
 class Grito extends BotCommand {
     keys = ["grito"];
     description = "Grido";
-    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
+    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         telegramCommands.sendMessage(
             key,
             message.chat.id,

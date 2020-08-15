@@ -7,7 +7,7 @@ const statisticsDocName = "statistics";
 class Count extends BotCommand {
     keys = ["count", "++"];
     description = "Counts how many times the command was invoked";
-    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
+    execute(key: string, _params: string[], message: TelegramBot.Message, data: any): void {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;

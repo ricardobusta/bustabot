@@ -142,14 +142,16 @@ class Rpg extends BotCommand {
     keys = ["rpg"];
     description = "Gera seu personagem de RPG";
     execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
-        let generator: (seed: string) => GeneratorOutput = generateCharV2;
-        if (params.length > 1) {
-            switch (params[1]) {
-                case "1":
+        let generator: (seed: string) => GeneratorOutput;
+        if (params.length == 2) {
+            console.log(`RPG param: ${params[1]}`)
+            switch (Number.parseInt(params[1])) {
+                case 1:
                     generator = generateCharV1;
-                case "2":
+                case 2:
                     generator = generateCharV2;
                 default:
+                    generator = generateCharV2;
             }
         }
         let userName = message.from.first_name;

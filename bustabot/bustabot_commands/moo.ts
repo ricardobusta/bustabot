@@ -9,7 +9,7 @@ function RandomRange(min, max) {
 class Moo extends BotCommand {
     keys = ["moo", "muu"];
     description = "Moos";
-    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
+    execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
         var cowChance = RandomRange(1, 20);
         let text: string;
         if (cowChance < 3) {

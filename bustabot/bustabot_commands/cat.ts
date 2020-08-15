@@ -12,7 +12,7 @@ const status = [
 
 class Cat extends BotCommand {
     keys = ["cat"];
-    description = "Rolls a dice.";
+    description = "Returns a HTTP status cat.";
     execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
         if (params.length > 2) {
             telegramCommands.sendMessage(
