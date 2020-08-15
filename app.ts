@@ -1,26 +1,8 @@
-const express = require("express");
-const telegramBotKey_bustabot = require("../bot_info").bustabot.key;
-const telegramBotKey_jukebot = require("../bot_info").jukebot.key;
-const googleProjectId = require("../bot_info").projectId;
-import bustabot from "../bustabot/bustabot";
-import jukebot from "../jukebot/jukebot";
-const app = express();
-const Firestore = require("@google-cloud/firestore");
-
-// Firestore integration
-try {
-    console.log(`Will init project with ${googleProjectId}`);
-    let db = new Firestore({
-        projectId: googleProjectId,
-        keyFilename: "google_key.json",
-    });
-
-    // Initializes the bot with database
-    bustabot.init(db);
-    jukebot.init(db);
-} catch (error) {
-    console.log("Error on Firestore Initialization: " + error);
-}
+import * as express from 'express';
+import Bot from "./bot_core/Bot/bot";
+import bustabot from './bustabot/bustabot';
+import jukebot from './jukebot/jukebot';
+import BotInfo from './bot_core/Bot/bot_info';
 
 let isProd: boolean = false;
 
@@ -29,6 +11,15 @@ process.argv.forEach(function name(val, index, arr) {
         isProd = true;
     }
 })
+
+const bots: Array<Bot> = [
+    bustabot,
+    jukebot
+];
+
+bots.forEach(bot => {
+    bot.init(db, BotInfo[isProd ? "prod" : "dev"][bot.botAlias]);
+});
 
 if (isProd) {
     const app = express();
@@ -70,4 +61,6 @@ if (isProd) {
         console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
+} else {
+
 }

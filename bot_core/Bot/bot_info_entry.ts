@@ -1,6 +1,6 @@
 class BotInfoEntry {
-    key: string;
-    name: string;
+    token: string;
+    username: string;
 }
 
 export default BotInfoEntry;

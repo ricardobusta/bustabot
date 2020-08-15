@@ -15,5 +15,10 @@
         "editor.tabSize": 4,
         "editor.tabCompletion": "on",
         "editor.insertSpaces": true,
+        "files.exclude": {
+            "node_modules/": true,
+            "**/*.js": true,
+            "**/*.js.map": true,
+        }
     },
 }

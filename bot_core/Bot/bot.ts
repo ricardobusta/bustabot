@@ -110,8 +110,8 @@ class Bot {
         if (botInfo === undefined) {
             return;
         }
-        this.botName = "@" + botInfo.name;
-        this.botKey = botInfo.key;
+        this.botName = "@" + botInfo.username;
+        this.botKey = botInfo.token;
 
         this.data = db.collection(this.botAlias + "_data");
 

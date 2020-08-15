@@ -1,6 +1,6 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/bot_command";
-import TelegramMessage from "../../bot_core/Telegram/telegram_message";
+import TelegramBot = require("node-telegram-bot-api");
+import BotCommand from "../../bot_core/Bot/bot_command";
 
 const phrases = [
     "30 ovos por 10 reais!",
@@ -17,9 +17,10 @@ const phrases = [
 class Ovo extends BotCommand {
     keys = ["ovo"];
     description = "Cocorecocoooo.";
-    execute(key: string, _params: string[], req: TelegramMessage, _data: any): void {
+    wip = false;
+    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         let index = Math.floor(Math.random() * phrases.length);
-        telegramCommands.sendMessage(key, req.message.chat.id, req.message.message_id, phrases[index]);
+        telegramCommands.sendMessage(key, message.chat.id, message.message_id, phrases[index]);
     }
 
 }
