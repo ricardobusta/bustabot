@@ -108,6 +108,8 @@ class Bot {
     // Initializes the bot internal state
     init(db: { collection: (id: string) => any; }) {
         this.data = db.collection(this.botAlias + "_data");
+
+        telegramCommands.setWebhook("https://busta-chatbots.ue.r.appspot.com/", this.botKey);
     };
 
     // The handler for the bot requests made by telegram webhook.
