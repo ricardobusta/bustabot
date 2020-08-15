@@ -14,10 +14,13 @@
     },
     "scripts": {
         "deploy": "gcloud app deploy",
-        "start": "node bot_core/app.js",
-        "gcp-build": "tsc -p .",
+        "deploy-and-log": "gcloud app deploy && gcloud app logs tail -s default",
+        "start": "node app.js",
+        "ts-build": "tsc -p .",
+        "ts-clean": "tsc --build --clean",
         "system-test": "repo-toolsn test app",
-        "test": "npm run system-test",
+        "test": "mocha -r ts-node/register tests/**/*.test.ts",
+        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
         "e2e-test": "repo-tools test deploy"
     },
     "dependencies": {
@@ -27,8 +30,14 @@
         "seedrandom": "^3.0.3"
     },
     "devDependencies": {
+        "@types/chai": "^4.2.12",
+        "@types/mocha": "^8.0.2",
         "@types/request": "^2.48.5",
+        "chai": "^4.2.0",
+        "mocha": "^8.1.1",
+        "nyc": "^15.1.0",
         "source-map-support": "^0.5.19",
+        "ts-node": "^8.10.2",
         "typescript": "^3.9.7"
     },
     "cloud-repo-tools": {
