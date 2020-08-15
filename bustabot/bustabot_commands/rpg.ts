@@ -66,12 +66,6 @@ function generateCharV1(seed: string): GeneratorOutput {
     // Keep like this to avoid changing values when changing the text format and order.
     let rng = new Random(seed);
     let job = rng.getArrayRange(classes);
-    let strRng = rng.getRng();
-    let dexRng = rng.getRng();
-    let conRng = rng.getRng();
-    let intRng = rng.getRng();
-    let wisRng = rng.getRng();
-    let chaRng = rng.getRng();
     let attributes: CharAttributes = [
         rng.getRangeInt(1, 10),
         rng.getRangeInt(1, 10),
@@ -101,7 +95,7 @@ function generateCharV1(seed: string): GeneratorOutput {
     let race = rng.getArrayRange(races);
     let age = rng.getFixedInt(ageRng, race.min_age, race.max_age);
 
-    return { version: 1, race, job, age, attributes, name: firstName }
+    return { version: 1, race, job, age, attributes, name }
 }
 
 function generateCharV2(seed: string): GeneratorOutput {
@@ -139,21 +133,11 @@ function generateCharV2(seed: string): GeneratorOutput {
 }
 
 class Rpg extends BotCommand {
-    keys = ["rpg"];
+    keys = ["rpg", "rpgv1", "rpgv2"];
     description = "Gera seu personagem de RPG";
     execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
-        let generator: (seed: string) => GeneratorOutput;
-        if (params.length == 2) {
-            console.log(`RPG param: ${params[1]}`)
-            switch (Number.parseInt(params[1])) {
-                case 1:
-                    generator = generateCharV1;
-                case 2:
-                    generator = generateCharV2;
-                default:
-                    generator = generateCharV2;
-            }
-        }
+        let generator: (seed: string) => GeneratorOutput = (params[0] == "rpgv1") ? generateCharV1 : generateCharV2;
+
         let userName = message.from.first_name;
 
         let { version, race, job, age, attributes, name } = generator(message.from.id.toString());

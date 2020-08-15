@@ -135,8 +135,9 @@ class Bot {
         }
 
         // And it is a somewhat valid command
-        let splitText = text.split(/\s+/);
+        let splitText = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
         if (!splitText) return;
+        splitText = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
         let key = splitText[0];
         if (key == null || key == "") return;
 
