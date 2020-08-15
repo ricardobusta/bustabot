@@ -2,7 +2,7 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
 import Random from "../../bot_core/random";
-import { version } from "chai";
+import rpgv1 from "./rpgv1";
 
 type CharJob = { name: string, url: string };
 type CharRace = { name: string, min_age: number, max_age: number };
@@ -62,56 +62,21 @@ function firstLetterUcase(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-function generateCharV1(seed: string): GeneratorOutput {
-    // Keep like this to avoid changing values when changing the text format and order.
-    let rng = new Random(seed);
-    let job = rng.getArrayRange(classes);
-    let attributes: CharAttributes = [
-        rng.getRangeInt(1, 10),
-        rng.getRangeInt(1, 10),
-        rng.getRangeInt(1, 10),
-        rng.getRangeInt(1, 10),
-        rng.getRangeInt(1, 10),
-        rng.getRangeInt(1, 10),
-    ]
-    let nameCountRng = rng.getRng();
-    let surameCountRng = rng.getRng();
-
-    let nameSyllabes = rng.getFixedInt(nameCountRng, 1, 6);
-    let surnameSyllabes = rng.getFixedInt(surameCountRng, 1, 6);
-    let firstName = "";
-    for (let i = 0; i < nameSyllabes; i++) {
-        firstName += rng.getArrayRange(syllabes);
-    }
-    firstName = firstLetterUcase(firstName);
-    let secondName = "";
-    for (let i = 0; i < surnameSyllabes; i++) {
-        secondName += rng.getArrayRange(syllabes);
-    }
-    secondName = firstLetterUcase(secondName);
-    let name = `${firstName} ${secondName}`;
-
-    let ageRng = rng.getRng();
-    let race = rng.getArrayRange(races);
-    let age = rng.getFixedInt(ageRng, race.min_age, race.max_age);
-
-    return { version: 1, race, job, age, attributes, name }
-}
-
-function generateCharV2(seed: string): GeneratorOutput {
-    let statRng = new Random(seed);
+function generateCharV2(seed: number): GeneratorOutput {
+    let seedStr = seed.toString();
+    let statRng = new Random(seedStr);
     let attributes: CharAttributes = new Array<number>(6);
     let totalAtrib = statRng.getRangeInt(25, 35);
     for (let i = 0; i < totalAtrib; i++) {
         attributes[i] = statRng.getRangeInt(1, 10);
     }
 
-    let infoRng = new Random(seed);
+    let infoRng = new Random(seedStr);
     let job = infoRng.getArrayRange(classes);
     let race = infoRng.getArrayRange(races);
     let age = infoRng.getRangeInt(race.min_age, race.max_age);
 
-    let nameRng = new Random(seed);
+    let nameRng = new Random(seedStr);
 
     let transform = function (t: number): number { return Math.sin(t * Math.PI); };
     let nameSyllabes = nameRng.getTransformInt(1, 5, transform);
@@ -136,27 +101,30 @@ class Rpg extends BotCommand {
     keys = ["rpg", "rpgv1", "rpgv2"];
     description = "Gera seu personagem de RPG";
     execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
-        let generator: (seed: string) => GeneratorOutput = (params[0] == "rpgv1") ? generateCharV1 : generateCharV2;
+        let text: string;
+        if (params[0] == "rpgv1") {
+            text = rpgv1.execute(message, races, classes);
+        } else {
+            let userName = message.from.first_name;
 
-        let userName = message.from.first_name;
+            let { version, race, job, age, attributes, name } = generateCharV2(message.from.id);
 
-        let { version, race, job, age, attributes, name } = generator(message.from.id.toString());
+            text = `FICHA DO PERSONAGEM (v${version})\n` +
+                `<b>Jogador:</b> ${userName}\n` +
+                `<b>Personagem:</b> ${name}\n` +
+                `<b>Raça:</b> ${race.name}\n` +
+                `<b>Classe:</b> ${job.name}\n` +
+                `<b>Idade:</b> ${age}\n` +
+                "<b>Atributos: </b>\n" +
+                `💪 <b>STR: </b> ${attributes[0]}\n` +
+                `💨 <b>DEX: </b> ${attributes[1]}\n` +
+                `🔋 <b>CON: </b> ${attributes[2]}\n` +
+                `🧠 <b>INT: </b> ${attributes[3]}\n` +
+                `📖 <b>WIS: </b> ${attributes[4]}\n` +
+                `💋 <b>CHA: </b> ${attributes[5]}\n`;
 
-        let text = `FICHA DO PERSONAGEM (v${version})\n` +
-            `<b>Jogador:</b> ${userName}\n` +
-            `<b>Personagem:</b> ${name}\n` +
-            `<b>Raça:</b> ${race.name}\n` +
-            `<b>Classe:</b> ${job.name}\n` +
-            `<b>Idade:</b> ${age}\n` +
-            "<b>Atributos: </b>\n" +
-            `💪 <b>STR: </b> ${attributes[0]}\n` +
-            `💨 <b>DEX: </b> ${attributes[1]}\n` +
-            `🔋 <b>CON: </b> ${attributes[2]}\n` +
-            `🧠 <b>INT: </b> ${attributes[3]}\n` +
-            `📖 <b>WIS: </b> ${attributes[4]}\n` +
-            `💋 <b>CHA: </b> ${attributes[5]}\n`;
-
-        console.log(text);
+            console.log(text);
+        }
 
         telegramCommands.sendMessage(
             key,
