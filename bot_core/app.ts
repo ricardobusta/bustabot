@@ -40,14 +40,6 @@ app.get("/" + telegramBotKey_bustabot, (req, res) => {
         .end();
 });
 
-// // Check if the proper key is set. Just make a request with the bot key appended.
-// app.get("/" + telegramBotKey_jukebot, (req, res) => {
-//     res
-//         .status(200)
-//         .send("Juke Bot Working!")
-//         .end();
-// });
-
 // Actual bot requests.
 app.post("/" + telegramBotKey_bustabot, (req, res) => {
     bustabot.handleTelegramMessage(req.body)
@@ -55,14 +47,6 @@ app.post("/" + telegramBotKey_bustabot, (req, res) => {
         .status(200)
         .end();
 });
-
-// // Actual bot requests.
-// app.post("/" + telegramBotKey_jukebot, (req, res) => {
-//     jukebot.handleTelegramMessage(req.body)
-//     res
-//         .status(200)
-//         .end();
-// });
 
 // Start the server
 const PORT = process.env.PORT || 8080;
