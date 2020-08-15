@@ -22,35 +22,52 @@ try {
     console.log("Error on Firestore Initialization: " + error);
 }
 
-app.use(express.json());
+let isProd: boolean = false;
 
-// Default request. Just to check if the bot is up.
-app.get("/", (req, res) => {
-    res
-        .status(200)
-        .send("Hello, world!")
-        .end();
-});
+process.argv.forEach(function name(val, index, arr) {
+    if (val === "prod") {
+        isProd = true;
+    }
+})
 
-// Check if the proper key is set. Just make a request with the bot key appended.
-app.get("/" + telegramBotKey_bustabot, (req, res) => {
-    res
-        .status(200)
-        .send("Busta Bot Working!")
-        .end();
-});
+if (isProd) {
+    const app = express();
 
-// Actual bot requests.
-app.post("/" + telegramBotKey_bustabot, (req, res) => {
-    bustabot.handleTelegramMessage(req.body)
-    res
-        .status(200)
-        .end();
-});
+    app.use(express.json());
 
-// Start the server
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log("App listening on port ${PORT}");
-    console.log("Press Ctrl+C to quit.");
-});
+    // Default request. Just to check if the bot is up.
+    app.get("/", (req, res) => {
+        res
+            .status(200)
+            .send("Hello, world!")
+            .end();
+    });
+
+    bots.forEach(bot => {
+        if (!bot.initialized) {
+            return;
+        }
+        // Check if the proper key is set. Just make a request with the bot key appended.
+        app.get("/" + bot.botKey, (req, res) => {
+            res
+                .status(200)
+                .send(`${bot.botName} is Working!`)
+                .end();
+        });
+
+        // Actual bot requests.
+        app.post(`/${bot.botName}`, (req, res) => {
+            bot.handleTelegramMessage(req.body)
+            res
+                .status(200)
+                .end();
+        });
+    });
+
+    // Start the server
+    const PORT = process.env.PORT || 8080;
+    app.listen(PORT, () => {
+        console.log(`App listening on port ${PORT}`);
+        console.log("Press Ctrl+C to quit.");
+    });
+}

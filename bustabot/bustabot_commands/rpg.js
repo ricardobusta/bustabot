@@ -1,8 +1,8 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const telegramCommands = require("../../bot_core/Telegram/telegram_commands");
+const bot_command_1 = require("../../bot_core/Bot/bot_command");
 let seedrandom = require("seedrandom");
-
 const classes = [
     ["🧙‍ Mago", "https://pt.wikipedia.org/wiki/Mago_(RPG)"],
     ["🗡️ Ladino", "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)"],
@@ -20,7 +20,6 @@ const classes = [
     ["⚗️ Alquimista", "https://pt.wikipedia.org/wiki/Alquimista_(classe_de_personagem)"],
     ["🐴 Cavaleiro", "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"],
 ];
-
 const races = [
     ["Humano", 12, 90],
     ["Anão", 18, 350],
@@ -30,7 +29,6 @@ const races = [
     ["Meio Orc", 14, 75],
     ["Meio Elfo", 20, 180]
 ];
-
 const syllabes = [
     "ta", "te", "ti", "to", "tu",
     "ja", "je", "ji", "jo", "ju",
@@ -51,29 +49,26 @@ const syllabes = [
     "aa", "ee", "ii", "oo", "uu",
     "da", "de", "di", "do", "du"
 ];
-
 function getRange(rng, min, max) {
     return min + Math.floor(rng * (max - min + 1));
 }
-
 function getArrayRange(rng, arr) {
     return arr[Math.floor(rng * arr.length)];
 }
-
-function getAttribute(rng: any) {
+function getAttribute(rng) {
     return getRange(rng, 1, 10);
 }
-
-function firstLetterUcase(str: string) {
+function firstLetterUcase(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
-
-class Rpg extends BotCommand {
-    keys = ["rpg"];
-    description = "Gera seu personagem de RPG";
-    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+class Rpg extends bot_command_1.default {
+    constructor() {
+        super(...arguments);
+        this.keys = ["rpg"];
+        this.description = "Gera seu personagem de RPG";
+    }
+    execute(key, _params, message, _data) {
         let userName = message.from.first_name;
-
         // Keep like this to avoid changing values when changing the text format and order.
         let rng = seedrandom(message.from.id);
         let charClassRng = rng();
@@ -83,21 +78,16 @@ class Rpg extends BotCommand {
         let intRng = rng();
         let wisRng = rng();
         let chaRng = rng();
-
         let nameCountRng = rng();
         let surameCountRng = rng();
-
         let genName = (function () {
             let nameSyllabes = getRange(nameCountRng, 1, 6);
             let surnameSyllabes = getRange(surameCountRng, 1, 6);
-
             let name = "";
-
             for (let i = 0; i < nameSyllabes; i++) {
                 name += getArrayRange(rng(), syllabes);
             }
             name = firstLetterUcase(name);
-
             let surname = "";
             for (let i = 0; i < surnameSyllabes; i++) {
                 surname += getArrayRange(rng(), syllabes);
@@ -105,12 +95,9 @@ class Rpg extends BotCommand {
             surname = firstLetterUcase(surname);
             return name + " " + surname;
         })();
-
         let ageRng = rng();
         let raceRng = rng();
-
         let raceInfo = getArrayRange(raceRng, races);
-
         let text = "FICHA DO PERSONAGEM" +
             `<b>Jogador:</b> ${userName}\n` +
             `<b>Personagem:</b> ${genName}\n` +
@@ -123,18 +110,10 @@ class Rpg extends BotCommand {
             `🔋 <b>CON: </b> ${getAttribute(conRng)}\n` +
             `🧠 <b>INT: </b> ${getAttribute(intRng)}\n` +
             `📖 <b>WIS: </b> ${getAttribute(wisRng)}\n` +
-            `💋 <b>CHA: </b> ${getAttribute(chaRng)};\n`
-
+            `💋 <b>CHA: </b> ${getAttribute(chaRng)};\n`;
         console.log(text);
-
-        telegramCommands.sendMessage(
-            key,
-            message.chat.id,
-            message.message_id,
-            text
-        );
+        telegramCommands.sendMessage(key, message.chat.id, message.message_id, text);
     }
-
 }
-
-export default new Rpg();
+exports.default = new Rpg();
+//# sourceMappingURL=rpg.js.map

@@ -18,10 +18,10 @@ class Count extends BotCommand {
                 let currentCount = 0;
                 if (doc.exists) {
                     currentCount = doc.data().command_count;
-                    console.log("Current count: " + currentCount);
+                    console.log(`Current count: ${currentCount}`);
                 }
 
-                let text = "Contei até " + (currentCount + 1) + "!";
+                let text = `Contei até ${currentCount + 1}!`;
 
                 telegramCommands.sendMessage(
                     key,

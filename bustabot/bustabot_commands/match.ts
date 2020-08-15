@@ -13,8 +13,7 @@ class Match extends BotCommand {
     execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
         let text = "";
         if (params.length != 3) {
-            text = "Número de parâmetros errado.\n" +
-                "/match @user1 @user2";
+            text = "Número de parâmetros errado.\n/match @user1 @user2";
             console.log("Invalid");
         } else {
             let nameA = params[1].toLowerCase();
@@ -22,8 +21,8 @@ class Match extends BotCommand {
             let seedStr = nameA.charAt(0) < nameB.charAt(0) ? nameA + nameB : nameB + nameA;
             let rng = seedrandom(seedStr);
             let value = RandomRange(0, 100, rng());
-            console.log("Selected value: " + value + "from string: " + seedStr);
-            text = "O nível de match é <code>" + value + "%</code>. Deu match? " + (value > 60 ? "❤️ <code>Sim</code>!!!" : "💔 <code>Não</code>...");
+            console.log(`Selected value: ${value}from string: ${seedStr}`);
+            text = `O nível de match é <code>${value}%</code>. Deu match? ${value > 60 ? "❤️ <code>Sim</code>!!!" : "💔 <code>Não</code>..."}`;
         }
 
         telegramCommands.sendMessage(

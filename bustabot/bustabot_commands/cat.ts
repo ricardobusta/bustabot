@@ -33,7 +33,7 @@ class Cat extends BotCommand {
             key,
             message.chat.id,
             message.message_id,
-            "https://http.cat/" + code);
+            `https://http.cat/${code}`);
     }
 
 }
