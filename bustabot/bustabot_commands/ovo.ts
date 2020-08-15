@@ -3,15 +3,15 @@ import BotCommand from "../../bot_core/bot_command";
 import TelegramMessage from "../../bot_core/Telegram/telegram_message";
 
 const phrases = [
-    "30 ovos por 10 reais</br>!",
-    "Chegou o carro do ovo</br>",
-    "Olha o carro do ovo</br>",
-    "São ovos graúdos, ovos de <b>qualidade<b></br>",
-    "O melhor preço é <b>aqui<b></br>",
-    "Dez reais, freguesa! Dez reais é a cartela com 30 ovos</br>",
-    "Ovos branquinhos!<br>",
-    "🥚🥚🥚</br>",
-    "Vai passando o carro do ovo na sua rua 🚚</br>"
+    "30 ovos por 10 reais!",
+    "Chegou o carro do ovo",
+    "Olha o carro do ovo",
+    "São ovos graúdos, ovos de <b>qualidade</b>",
+    "O melhor preço é <b>aqui</b>",
+    "Dez reais, freguesa! Dez reais é a cartela com 30 ovos",
+    "Ovos branquinhos!",
+    "🥚🥚🥚",
+    "Vai passando o carro do ovo na sua rua 🚚"
 ];
 
 class Ovo extends BotCommand {
