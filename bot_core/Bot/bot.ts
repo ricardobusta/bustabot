@@ -22,7 +22,6 @@ class Bot {
 
         this.commandMap = {
             "help": this.printHelpCommand,
-            "getcom": this.printCommandList
         };
 
         for (let i in commands) {
@@ -118,6 +117,7 @@ class Bot {
         this.initialized = true;
 
         telegramCommands.setWebhook(url, this.botKey);
+        telegramCommands.setCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
     };
 
     // The handler for the bot requests made by telegram webhook.

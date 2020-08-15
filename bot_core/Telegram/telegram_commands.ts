@@ -81,12 +81,34 @@ export function setWebhook(url: string, botKey: string) {
     request.post(requestUrl,
         {},
         (error, res, body) => {
-            if (res) {
-                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
-            }
             if (error) {
                 console.log(error);
                 return;
+            }
+            if (res) {
+                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
+            }
+        });
+}
+
+export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>) {
+    let requestUrl = `${getBotApiURL(botKey, "setMyCommands")}`;
+    let commands = JSON.stringify(botCommands);
+    console.log(`Setting bot commands: ${commands}`);
+    request.post(requestUrl,
+        {
+            json: {
+                method: "setMyCommands",
+                commands: commands
+            }
+        },
+        (error, res, body) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            if (res) {
+                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
             }
         });
 }

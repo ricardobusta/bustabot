@@ -116,14 +116,14 @@ class Rpg extends BotCommand {
             `<b>Personagem:</b> ${genName}\n` +
             `<b>Raça:</b> ${raceInfo[0]}\n` +
             `<b>Classe:</b> ${getArrayRange(charClassRng, classes)[0]}\n` +
-            `< b > Idade:</b> ${getRange(ageRng, raceInfo[1], raceInfo[2])}\n` +
-            "< b > Atributos: </b>\n" +
+            `<b>Idade:</b> ${getRange(ageRng, raceInfo[1], raceInfo[2])}\n` +
+            "<b>Atributos: </b>\n" +
             `💪 <b>STR: </b> ${getAttribute(strRng)}\n` +
             `💨 <b>DEX: </b> ${getAttribute(dexRng)}\n` +
             `🔋 <b>CON: </b> ${getAttribute(conRng)}\n` +
             `🧠 <b>INT: </b> ${getAttribute(intRng)}\n` +
             `📖 <b>WIS: </b> ${getAttribute(wisRng)}\n` +
-            `💋 <b>CHA: </b> ${getAttribute(chaRng)};\n`
+            `💋 <b>CHA: </b> ${getAttribute(chaRng)}\n`;
 
         console.log(text);
 

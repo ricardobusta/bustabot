@@ -5,6 +5,10 @@ abstract class BotCommand {
     abstract description: string;
     abstract execute(key: string, params: Array<string>, req: TelegramBot.Message, data: any): void;
 
+    GetTelegramCommand(): TelegramBot.BotCommand {
+        return { description: this.description, command: this.keys[0] };
+    }
+
     wip = false;
 }
 
