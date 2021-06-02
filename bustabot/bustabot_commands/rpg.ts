@@ -100,9 +100,9 @@ function generateCharV2(seed: number): GeneratorOutput {
 class Rpg extends BotCommand {
     keys = ["rpg", "rpgv1", "rpgv2"];
     description = "Gera seu personagem de RPG";
-    execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         let text: string;
-        if (params[0] == "rpgv1") {
+        if (commandKey == "rpgv1") {
             text = rpgv1.execute(message, races, classes);
         } else {
             let userName = message.from.first_name;
@@ -127,7 +127,7 @@ class Rpg extends BotCommand {
         }
 
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             text

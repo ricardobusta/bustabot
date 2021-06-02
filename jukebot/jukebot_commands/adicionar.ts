@@ -5,12 +5,12 @@ import BotCommand from "../../bot_core/Bot/bot_command";
 class Adicionar extends BotCommand {
     keys = ["adicionar"];
     description = "Adicionar usuário ao pool.";
-    execute(key: string, params: string[], req: any, data: any): void {
+    execute = function (_commandKey: string, botKey: string, params: string[], req: any, data: any): void {
         let chatId = req.message.chat.id;
 
         let sendMessage = function (message) {
             telegramCommands.sendMessage(
-                key,
+                botKey,
                 chatId,
                 req.message.message_id,
                 message);

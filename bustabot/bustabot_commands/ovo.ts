@@ -18,9 +18,9 @@ class Ovo extends BotCommand {
     keys = ["ovo"];
     description = "Cocorecocoooo.";
     wip = false;
-    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         let index = Math.floor(Math.random() * phrases.length);
-        telegramCommands.sendMessage(key, message.chat.id, message.message_id, phrases[index]);
+        telegramCommands.sendMessage(botKey, message.chat.id, message.message_id, phrases[index]);
     }
 
 }

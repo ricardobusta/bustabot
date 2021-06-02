@@ -10,7 +10,7 @@ function RandomRange(min, max, rng) {
 class Match extends BotCommand {
     keys = ["match"];
     description = "Match";
-    execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, _data: any): void {
         let text = "";
         if (params.length != 3) {
             text = "Número de parâmetros errado.\n/match @user1 @user2";
@@ -26,7 +26,7 @@ class Match extends BotCommand {
         }
 
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             text);

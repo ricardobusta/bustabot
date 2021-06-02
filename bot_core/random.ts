@@ -1,7 +1,7 @@
 import seedrandom = require('seedrandom');
 
 class Random {
-    private randomGenerator: seedrandom.prng;
+    private randomGenerator;
 
     constructor(seed: string) {
         this.randomGenerator = seedrandom(seed);

@@ -1,4 +1,4 @@
-import BotCommand from "./bot_command"
+import BotCommand, { BotCommandExecute } from "./bot_command"
 import * as telegramCommands from "../Telegram/telegram_commands";
 import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
@@ -13,7 +13,7 @@ class Bot {
     data: any;
     initialized: boolean;
 
-    commandMap: { [id: string]: (x: string, y: Array<string>, z: TelegramBot.Message, w: any) => void; };
+    commandMap: { [id: string]: BotCommandExecute };
 
     constructor(botAlias: string, commands: Array<BotCommand>) {
         this.initialized = false;
@@ -40,7 +40,7 @@ class Bot {
     }
 
     // Used to print the /help command.
-    printHelpCommand(key: string, _params: Array<string>, message: TelegramBot.Message, _data: any) {
+    printHelpCommand(_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         console.log("Logging Help!");
 
         let helpString = `<b>${this.botName} Help:</b>\n`;
@@ -53,14 +53,14 @@ class Bot {
         }
 
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             helpString);
     }
 
     //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-    printCommandList(key: string, _params: Array<string>, message: TelegramBot.Message, _data: any) {
+    printCommandList (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         console.log("Logging Command list!");
 
         let comString = "help - Mostra a lista de comandos do bot.\n";
@@ -70,7 +70,7 @@ class Bot {
         }
 
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             comString);
@@ -142,7 +142,7 @@ class Bot {
         if (key == null || key == "") return;
 
         // And that command is not directed to another bot
-        splitText[0] = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
+        let commandKey = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
 
         // Not a valid command or directed to another bot
         if (!(key in this.commandMap)) {
@@ -154,10 +154,10 @@ class Bot {
         this.incrementCommandStatistics(this.data, key);
 
         // Call the command
-        // Thanks @Danisson for figuring out.
+        // Thanks github.com/spectraldani for figuring out.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
         let command = this.commandMap[key].bind(this);
-        command(this.botKey, splitText, message, this.data);
+        command(commandKey, this.botKey, splitText, message, this.data);
     };
 }
 

@@ -13,10 +13,10 @@ const status = [
 class Cat extends BotCommand {
     keys = ["cat"];
     description = "Returns a HTTP status cat.";
-    execute(key: string, params: string[], message: TelegramBot.Message, data: any): void {
+    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, data: any): void {
         if (params.length > 2) {
             telegramCommands.sendMessage(
-                key,
+                botKey,
                 message.chat.id,
                 message.message_id,
                 "Too many parameters.");
@@ -30,7 +30,7 @@ class Cat extends BotCommand {
         }
 
         telegramCommands.sendPhoto(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             `https://http.cat/${code}`);

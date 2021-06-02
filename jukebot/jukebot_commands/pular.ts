@@ -6,12 +6,12 @@ import JukebotDoc from "../jukebot_doc";
 class Pular extends BotCommand {
     keys = ["pular"];
     description = "Pular (também com confirmação)";
-    execute(key: string, params: string[], req: any, data: any): void {
+    execute = function (_commandKey: string, botKey: string, _params: string[], req: any, data: any): void {
         let chatId = req.message.chat.id;
 
         let sendMessage = function (message) {
             telegramCommands.sendMessage(
-                key,
+                botKey,
                 chatId,
                 req.message.message_id,
                 message);

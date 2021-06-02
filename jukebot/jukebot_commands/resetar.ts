@@ -10,12 +10,12 @@ export function execute(key: string, params, req) {
 class Resetar extends BotCommand {
     keys = ["resetar"];
     description = "Resetar (possivelmente pedindo uma confirmação?)";
-    execute(key: string, params: string[], req: any, data: any): void {
+    execute = function (_commandKey: string, botKey: string, _params: string[], req: any, data: any): void {
         let chatId = req.message.chat.id;
 
         let sendMessage = function (message: string) {
             telegramCommands.sendMessage(
-                key,
+                botKey,
                 chatId,
                 req.message.message_id,
                 message);

@@ -9,9 +9,9 @@ function RandomRange(min: number, max: number) {
 class Roll extends BotCommand {
     keys = ["roll", "dice"];
     description = "Rolls a dice.";
-    execute(key: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             `<code>Rolling Dice: ${RandomRange(1, 6)}</code>`);

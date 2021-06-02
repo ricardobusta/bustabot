@@ -5,7 +5,7 @@ import TelegramBot = require("node-telegram-bot-api");
 class Versus extends BotCommand {
     keys = ["versus", "vs"];
     description = "Versus";
-    execute(key: string, params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, _data: any): void {
         let text = "";
         if (params.length <= 2) {
             text = "Número de parâmetros insuficiente. Precisa de pelo menos dois.\n" +
@@ -18,7 +18,7 @@ class Versus extends BotCommand {
         }
 
         telegramCommands.sendMessage(
-            key,
+            botKey,
             message.chat.id,
             message.message_id,
             text

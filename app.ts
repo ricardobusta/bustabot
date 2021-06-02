@@ -7,6 +7,7 @@ import Bot from './bot_core/Bot/bot';
 import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
+let debugString: string = "1";
 
 process.argv.forEach(function name(val, index, arr) {
     if (val === "prod") {
@@ -40,7 +41,7 @@ if (isProd) {
     app.get("/", (req, res) => {
         res
             .status(200)
-            .send("Hello, world!")
+            .send(debugString)
             .end();
     });
 

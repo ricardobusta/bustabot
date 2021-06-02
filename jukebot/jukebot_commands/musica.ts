@@ -25,12 +25,12 @@ function GetNextUser(docData, document) {
 class Musica extends BotCommand {
     keys = ["musica"];
     description = "Musica link do YouTube(não sei se dá pra o bot add ela numa Playlist do YouTube) ";
-    execute(key: string, params: string[], req: any, data: any): void {
+    execute = function (_commandKey: string, botKey: string, params: string[], req: any, data: any): void {
         let chatId = req.message.chat.id;
 
         let sendMessage = function (message: string) {
             telegramCommands.sendMessage(
-                key,
+                botKey,
                 chatId,
                 req.message.message_id,
                 message);

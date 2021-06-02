@@ -7,7 +7,7 @@ const statisticsDocName = "statistics";
 class Count extends BotCommand {
     keys = ["count", "++"];
     description = "Counts how many times the command was invoked";
-    execute(key: string, _params: string[], message: TelegramBot.Message, data: any): void {
+    execute = function (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, data: any): void {
         if (data == undefined || data == null) {
             console.log("Data not set.");
             return;
@@ -24,7 +24,7 @@ class Count extends BotCommand {
                 let text = `Contei até ${currentCount + 1}!`;
 
                 telegramCommands.sendMessage(
-                    key,
+                    botKey,
                     message.chat.id,
                     message.message_id,
                     text);
@@ -34,7 +34,7 @@ class Count extends BotCommand {
                 console.log("Error getting document", err);
 
                 telegramCommands.sendMessage(
-                    key,
+                    botKey,
                     message.chat.id,
                     message.message_id,
                     text);
