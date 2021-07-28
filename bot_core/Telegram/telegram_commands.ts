@@ -5,6 +5,19 @@ function getBotApiURL(botKey: string, command: string) {
     return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
+export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
+    const urlExists = checkUrl => new Promise((resolve, reject) =>
+        request.head(checkUrl).on("response", res => resolve(res.statusCode.toString()[0] === "2")));
+
+    urlExists(url).then(exists => {
+        if (exists) {
+            onExist();
+        } else {
+            onNotExist();
+        }
+    });
+};
+
 export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {

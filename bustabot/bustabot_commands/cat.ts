@@ -29,11 +29,23 @@ class Cat extends BotCommand {
             code = status[Math.floor(Math.random() * status.length)]
         }
 
-        telegramCommands.sendPhoto(
-            botKey,
-            message.chat.id,
-            message.message_id,
-            `https://http.cat/${code}`);
+        let url = `https://http.cat/${code}`;
+
+        telegramCommands.executeIfUrlExist(
+            url,
+            function () {
+                telegramCommands.sendPhoto(
+                    botKey,
+                    message.chat.id,
+                    message.message_id,
+                    url);
+            }, function () {
+                telegramCommands.sendMessage(
+                    botKey,
+                    message.chat.id,
+                    message.message_id,
+                    "404 cat not found");
+            });
     }
 
 }
