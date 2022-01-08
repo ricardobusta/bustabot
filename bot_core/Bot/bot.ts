@@ -2,6 +2,7 @@ import BotCommand, { BotCommandExecute } from "./bot_command"
 import * as telegramCommands from "../Telegram/telegram_commands";
 import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "./bot_execute_data";
 
 const statisticsDocumentName = "statistics";
 
@@ -40,7 +41,7 @@ class Bot {
     }
 
     // Used to print the /help command.
-    printHelpCommand(_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    printHelpCommand(context: BotExecuteContext): void {
         console.log("Logging Help!");
 
         let helpString = `<b>${this.botName} Help:</b>\n`;
@@ -53,14 +54,14 @@ class Bot {
         }
 
         telegramCommands.sendMessage(
-            botKey,
-            message.chat.id,
-            message.message_id,
+            context.botKey,
+            context.message.chat.id,
+            context.message.message_id,
             helpString);
     }
 
     //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-    printCommandList (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    printCommandList(context: BotExecuteContext): void {
         console.log("Logging Command list!");
 
         let comString = "help - Mostra a lista de comandos do bot.\n";
@@ -70,9 +71,9 @@ class Bot {
         }
 
         telegramCommands.sendMessage(
-            botKey,
-            message.chat.id,
-            message.message_id,
+            context.botKey,
+            context.message.chat.id,
+            context.message.message_id,
             comString);
     }
 
@@ -157,7 +158,14 @@ class Bot {
         // Thanks github.com/spectraldani for figuring out.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
         let command = this.commandMap[key].bind(this);
-        command(commandKey, this.botKey, splitText, message, this.data);
+        let context: BotExecuteContext = {
+            commandKey: commandKey,
+            botKey: this.botKey,
+            params: splitText,
+            message: message,
+            data: this.data
+        };
+        command(context);
     };
 }
 

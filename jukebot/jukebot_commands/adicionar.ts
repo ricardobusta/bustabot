@@ -1,27 +1,28 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/Bot/bot_command";
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Adicionar extends BotCommand {
     keys = ["adicionar"];
     description = "Adicionar usuário ao pool.";
-    execute = function (_commandKey: string, botKey: string, params: string[], req: any, data: any): void {
-        let chatId = req.message.chat.id;
+    execute = function (ctx: BotExecuteContext): void {
+        let chatId = ctx.message.chat.id;
 
         let sendMessage = function (message) {
             telegramCommands.sendMessage(
-                botKey,
+                ctx.botKey,
                 chatId,
-                req.message.message_id,
+                ctx.message.message_id,
                 message);
         }
 
-        if (params.length != 2) {
+        if (ctx.params.length != 2) {
             sendMessage("Argumentos inválidos.\n/adicionar @usuario");
             return;
         }
 
-        let userName = params[1];
+        let userName = ctx.params[1];
 
         // validate userName
         if (!jb.ValidUser(userName)) {
@@ -31,7 +32,7 @@ class Adicionar extends BotCommand {
 
         userName = userName.substr(1);
 
-        let document = data.doc(jb.docName + chatId);
+        let document = ctx.data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
                 let docData = {

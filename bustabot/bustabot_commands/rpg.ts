@@ -3,6 +3,7 @@ import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
 import Random from "../../bot_core/random";
 import rpgv1 from "./rpgv1";
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 type CharJob = { name: string, url: string };
 type CharRace = { name: string, min_age: number, max_age: number };
@@ -100,14 +101,14 @@ function generateCharV2(seed: number): GeneratorOutput {
 class Rpg extends BotCommand {
     keys = ["rpg", "rpgv1", "rpgv2"];
     description = "Gera seu personagem de RPG";
-    execute = function (commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (ctx: BotExecuteContext): void {
         let text: string;
-        if (commandKey == "rpgv1") {
-            text = rpgv1.execute(message, races, classes);
+        if (ctx.commandKey == "rpgv1") {
+            text = rpgv1.execute(ctx.message, races, classes);
         } else {
-            let userName = message.from.first_name;
+            let userName = ctx.message.from.first_name;
 
-            let { version, race, job, age, attributes, name } = generateCharV2(message.from.id);
+            let { version, race, job, age, attributes, name } = generateCharV2(ctx.message.from.id);
 
             text = `FICHA DO PERSONAGEM (v${version})\n` +
                 `<b>Jogador:</b> ${userName}\n` +
@@ -127,9 +128,9 @@ class Rpg extends BotCommand {
         }
 
         telegramCommands.sendMessage(
-            botKey,
-            message.chat.id,
-            message.message_id,
+            ctx.botKey,
+            ctx.message.chat.id,
+            ctx.message.message_id,
             text
         );
     }

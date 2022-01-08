@@ -1,6 +1,8 @@
 import TelegramBot = require("node-telegram-bot-api");
+import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
+import BotExecuteContext from "./bot_execute_data";
 
-export type BotCommandExecute = (commandKey: string, botKey: string, params: Array<string>, req: TelegramBot.Message, data: any) => void;
+export type BotCommandExecute = (context: BotExecuteContext) => void;
 
 abstract class BotCommand {
     abstract keys: Array<string>;
@@ -9,6 +11,22 @@ abstract class BotCommand {
 
     GetTelegramCommand(): TelegramBot.BotCommand {
         return { description: this.description, command: this.keys[0] };
+    }
+
+    GetParamMessage(message: TelegramBot.Message, params0: string): string {
+        return message.text.substring(params0.length, params0.length + 20).trim().toUpperCase();
+    }
+
+    HaveMinParamAmount(context: BotExecuteContext, paramAmout: number, errorMessage: string): boolean {
+        if (context.params.length - 1 < paramAmout) {
+            telegramCommands.sendMessage(
+                context.botKey,
+                context.message.chat.id,
+                context.message.message_id,
+                errorMessage);
+            return false;
+        }
+        return true;
     }
 
     wip = false;

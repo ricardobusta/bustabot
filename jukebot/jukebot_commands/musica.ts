@@ -2,6 +2,7 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import JukebotDoc from "../jukebot_doc";
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 function ValidURL(url: string) {
     return (url.startsWith("https://www.youtube.com/") || url.startsWith("https://youtu.be/"));
@@ -25,30 +26,30 @@ function GetNextUser(docData, document) {
 class Musica extends BotCommand {
     keys = ["musica"];
     description = "Musica link do YouTube(não sei se dá pra o bot add ela numa Playlist do YouTube) ";
-    execute = function (_commandKey: string, botKey: string, params: string[], req: any, data: any): void {
-        let chatId = req.message.chat.id;
+    execute = function (ctx: BotExecuteContext): void {
+        let chatId = ctx.message.chat.id;
 
         let sendMessage = function (message: string) {
             telegramCommands.sendMessage(
-                botKey,
+                ctx.botKey,
                 chatId,
-                req.message.message_id,
+                ctx.message.message_id,
                 message);
         }
 
-        if (params.length != 2) {
+        if (ctx.params.length != 2) {
             sendMessage("Parâmetros inválidos. É preciso enviar um link do youtube.\n/musica vid");
             return;
         }
 
-        let vidURL = params[1];
+        let vidURL = ctx.params[1];
 
         if (!ValidURL(vidURL)) {
             sendMessage("O video enviado não é uma URL de YouTube válida.");
             return;
         }
 
-        let document = data.doc(jb.docName + chatId);
+        let document = ctx.data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
                 let docData: JukebotDoc = new JukebotDoc();
@@ -59,7 +60,7 @@ class Musica extends BotCommand {
                     }
                 }
 
-                let from = req.message.from.username;
+                let from = ctx.message.from.username;
 
                 if (docData.next != from) {
                     sendMessage(`Usuário ${from} não é o próximo.`);
@@ -89,10 +90,10 @@ class Musica extends BotCommand {
                         msg += docData.pool[i] + "\n";
                     }
                 }
-                if (data.past.length > 0) {
+                if (ctx.data.past.length > 0) {
                     msg += "Já foi:\n"
-                    for (let i = 0; i < data.past.length; i++) {
-                        msg += data.past[i] + "\n";
+                    for (let i = 0; i < ctx.data.past.length; i++) {
+                        msg += ctx.data.past[i] + "\n";
                     }
                 }
                 sendMessage(msg);

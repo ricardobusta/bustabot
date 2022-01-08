@@ -1,36 +1,37 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 const fusionSpriteUrl = "https://raw.githubusercontent.com/Aegide/FusionSprites/master/Japeal/3/3.3.png";
 
 class Birl extends BotCommand {
     keys = ["merge"];
     description = "Merge Pokemon";
-    execute = function (_commandKey: string, botKey: string, _params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (ctx: BotExecuteContext): void {
         function sendMessage(text: string) {
             telegramCommands.sendMessage(
-                botKey,
-                message.chat.id,
+                ctx.botKey,
+                ctx.message.chat.id,
                 null,
                 text);
         }
 
         function sendPicture(url: string) {
             telegramCommands.sendPhoto(
-                botKey,
-                message.chat.id,
+                ctx.botKey,
+                ctx.message.chat.id,
                 null,
                 url);
         }
 
-        if (_params.length != 3) {
+        if (ctx.params.length != 3) {
             sendMessage("You must enter 2 numbers as parameters");
             return;
         }
 
-        let n1 = parseInt(_params[1]);
-        let n2 = parseInt(_params[2]);
+        let n1 = parseInt(ctx.params[1]);
+        let n2 = parseInt(ctx.params[2]);
         if (isNaN(n1) || isNaN(n2)) {
             sendMessage("Both parameters must be valid numbers.");
             return;

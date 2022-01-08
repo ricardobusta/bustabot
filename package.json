@@ -3,7 +3,7 @@
     "description": "Telegram Chat Bot.",
     "version": "1.0.0",
     "private": true,
-    "license": "Apache-2.0",
+    "license": "MIT",
     "author": "Ricardo Bustamante",
     "main": "./app.js",
     "repository": {

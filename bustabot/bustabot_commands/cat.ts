@@ -1,6 +1,7 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 const status = [
     100, 101, 200, 201, 202, 204, 206, 207, 300, 301, 302, 303, 304,
@@ -13,18 +14,18 @@ const status = [
 class Cat extends BotCommand {
     keys = ["cat"];
     description = "Returns a HTTP status cat.";
-    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, data: any): void {
-        if (params.length > 2) {
+    execute = function (ctx: BotExecuteContext): void {
+        if (ctx.params.length > 2) {
             telegramCommands.sendMessage(
-                botKey,
-                message.chat.id,
-                message.message_id,
+                ctx.botKey,
+                ctx.message.chat.id,
+                ctx.message.message_id,
                 "Too many parameters.");
         }
 
         let code: number;
-        if (params.length == 2) {
-            code = parseInt(params[1]);
+        if (ctx.params.length == 2) {
+            code = parseInt(ctx.params[1]);
         } else {
             code = status[Math.floor(Math.random() * status.length)]
         }
@@ -35,15 +36,15 @@ class Cat extends BotCommand {
             url,
             function () {
                 telegramCommands.sendPhoto(
-                    botKey,
-                    message.chat.id,
-                    message.message_id,
+                    ctx.botKey,
+                    ctx.message.chat.id,
+                    ctx.message.message_id,
                     url);
             }, function () {
                 telegramCommands.sendMessage(
-                    botKey,
-                    message.chat.id,
-                    message.message_id,
+                    ctx.botKey,
+                    ctx.message.chat.id,
+                    ctx.message.message_id,
                     "404 cat not found");
             });
     }

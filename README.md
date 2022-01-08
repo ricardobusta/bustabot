@@ -31,3 +31,6 @@ tsc -p .
 
 ## Clean ts build files
 tsc --build --clean
+
+## Run Npm Commands
+npm run <_command_>

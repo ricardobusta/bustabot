@@ -1,21 +1,22 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Grito extends BotCommand {
     keys = ["grito", "shout"];
     description = "Shout a phrase";
-    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, _data: any): void {
-        if (params.length < 2) {
+    execute = function (ctx: BotExecuteContext): void {
+        if (ctx.params.length < 2) {
             telegramCommands.sendMessage(
-                botKey,
-                message.chat.id,
-                message.message_id,
+                ctx.botKey,
+                ctx.message.chat.id,
+                ctx.message.message_id,
                 "Shout something.");
             return;
         }
 
-        let msg = message.text.substring(params[0].length, params[0].length + 20).trim().toUpperCase();
+        let msg = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
 
         let text = "<code>" + msg.split('').join(' ');
 
@@ -26,9 +27,9 @@ class Grito extends BotCommand {
         text += "</code>"
 
         telegramCommands.sendMessage(
-            botKey,
-            message.chat.id,
-            message.message_id,
+            ctx.botKey,
+            ctx.message.chat.id,
+            ctx.message.message_id,
             text);
     }
 }

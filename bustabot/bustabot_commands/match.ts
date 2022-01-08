@@ -1,6 +1,7 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 let seedrandom = require("seedrandom");
 
 function RandomRange(min, max, rng) {
@@ -10,14 +11,14 @@ function RandomRange(min, max, rng) {
 class Match extends BotCommand {
     keys = ["match"];
     description = "Match";
-    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, _data: any): void {
+    execute = function (ctx: BotExecuteContext): void {
         let text = "";
-        if (params.length != 3) {
+        if (ctx.params.length != 3) {
             text = "Número de parâmetros errado.\n/match @user1 @user2";
             console.log("Invalid");
         } else {
-            let nameA = params[1].toLowerCase();
-            let nameB = params[2].toLowerCase();
+            let nameA = ctx.params[1].toLowerCase();
+            let nameB = ctx.params[2].toLowerCase();
             let seedStr = nameA.charAt(0) < nameB.charAt(0) ? nameA + nameB : nameB + nameA;
             let rng = seedrandom(seedStr);
             let value = RandomRange(0, 100, rng());
@@ -26,9 +27,9 @@ class Match extends BotCommand {
         }
 
         telegramCommands.sendMessage(
-            botKey,
-            message.chat.id,
-            message.message_id,
+            ctx.botKey,
+            ctx.message.chat.id,
+            ctx.message.message_id,
             text);
     }
 

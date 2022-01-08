@@ -1,22 +1,23 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Countdown extends BotCommand {
     keys = ["countdown", "cd"];
     description = "Contagem regressiva até 10 segundos.";
-    execute = function (_commandKey: string, botKey: string, params: string[], message: TelegramBot.Message, _data: any): void {
-        if (params.length != 2) {
-            telegramCommands.sendMessage(botKey, message.chat.id, message.message_id,
+    execute = function (ctx: BotExecuteContext): void {
+        if (ctx.params.length != 2) {
+            telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id,
                 "Número inválido de parâmetros. Tente:\n<code>/cd 3</code>");
             return;
         }
-        let value = Math.max(Math.min(+params[1], 10), 1);
+        let value = Math.max(Math.min(+ctx.params[1], 10), 1);
 
-        telegramCommands.sendMessage(botKey, message.chat.id, message.message_id, `Contagem Regressiva! ${value}...`);
+        telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, `Contagem Regressiva! ${value}...`);
         for (let i = 0; i < value; i++) {
             setTimeout(function () {
-                telegramCommands.sendMessage(botKey, message.chat.id, null, i + (i == 0 ? "!" : "..."));
+                telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, null, i + (i == 0 ? "!" : "..."));
                 console.log(`Counting down: ${i}`);
             }, (value - i) * 1000);
         }

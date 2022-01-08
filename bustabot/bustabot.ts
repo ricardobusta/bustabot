@@ -13,6 +13,7 @@ import ovo from "./bustabot_commands/ovo"
 import roll from "./bustabot_commands/roll"
 import rpg from "./bustabot_commands/rpg"
 import versus from "./bustabot_commands/versus"
+import word from "./bustabot_commands/word"
 
 const commands: Array<BotCommand> = [
     benedict,
@@ -26,7 +27,8 @@ const commands: Array<BotCommand> = [
     ovo,
     roll,
     rpg,
-    versus
+    versus,
+    word
 ];
 
 const bustabot = new Bot("bustabot", commands);

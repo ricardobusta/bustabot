@@ -2,22 +2,23 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import JukebotDoc from "../jukebot_doc";
+import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Pular extends BotCommand {
     keys = ["pular"];
     description = "Pular (também com confirmação)";
-    execute = function (_commandKey: string, botKey: string, _params: string[], req: any, data: any): void {
-        let chatId = req.message.chat.id;
+    execute = function (ctx: BotExecuteContext): void {
+        let chatId = ctx.message.chat.id;
 
         let sendMessage = function (message) {
             telegramCommands.sendMessage(
-                botKey,
+                ctx.botKey,
                 chatId,
-                req.message.message_id,
+                ctx.message.message_id,
                 message);
         }
 
-        let document = data.doc(jb.docName + chatId);
+        let document = ctx.data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
                 let data: JukebotDoc = new JukebotDoc();
