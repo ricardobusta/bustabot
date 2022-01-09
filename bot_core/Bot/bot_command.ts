@@ -17,18 +17,6 @@ abstract class BotCommand {
         return message.text.substring(params0.length, params0.length + 20).trim().toUpperCase();
     }
 
-    HaveMinParamAmount(context: BotExecuteContext, paramAmout: number, errorMessage: string): boolean {
-        if (context.params.length - 1 < paramAmout) {
-            telegramCommands.sendMessage(
-                context.botKey,
-                context.message.chat.id,
-                context.message.message_id,
-                errorMessage);
-            return false;
-        }
-        return true;
-    }
-
     wip = false;
 }
 
