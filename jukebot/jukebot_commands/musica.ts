@@ -54,7 +54,7 @@ class Musica extends BotCommand {
             .then(doc => {
                 let docData: JukebotDoc = new JukebotDoc();
                 if (doc.exists) {
-                    docData = doc.data();
+                    docData = doc.data() as JukebotDoc;
                     if (!docData.timestamp) {
                         docData.timestamp = "1980-01-01";
                     }
@@ -90,10 +90,10 @@ class Musica extends BotCommand {
                         msg += docData.pool[i] + "\n";
                     }
                 }
-                if (ctx.data.past.length > 0) {
+                if (docData.past.length > 0) {
                     msg += "Já foi:\n"
-                    for (let i = 0; i < ctx.data.past.length; i++) {
-                        msg += ctx.data.past[i] + "\n";
+                    for (let i = 0; i < docData.past.length; i++) {
+                        msg += docData.past[i] + "\n";
                     }
                 }
                 sendMessage(msg);

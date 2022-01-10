@@ -18,7 +18,7 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
     });
 };
 
-export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: () => void = null): void {
+export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
@@ -29,18 +29,35 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
                 reply_to_message_id: replyId != null ? replyId : ""
             }
         },
-        (error, res, body) => {
+        (error, _res, body) => {
             if (error) {
                 console.log(error);
                 return;
             }
-            var msg = body.toString();
-            console.log("Res: " + msg);
+            const response = (body && body.ok) ? (body.result as TelegramBot.Message) : null;
+            console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
             if (callBack) {
-                callBack();
+                callBack(response);
             }
         });
 };
+
+export function deleteMessage(botKey: string, chatId: number, messageId: number) {
+    request.post(getBotApiURL(botKey, "deleteMessage"),
+        {
+            json: {
+                method: "deleteMessage",
+                chat_id: chatId,
+                message_id: messageId
+            }
+        },
+        (error, _res, _body) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+        });
+}
 
 export function sendPhoto(botKey: string, chatId: number, replyId: number, photoId: string, callBack: () => void = null): void {
     request.post(getBotApiURL(botKey, "sendPhoto"),

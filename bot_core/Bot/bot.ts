@@ -11,7 +11,7 @@ class Bot {
     botName: string;
     botKey: string;
     commands: Array<BotCommand>;
-    data: any;
+    data: FirebaseFirestore.CollectionReference<any>;
     initialized: boolean;
 
     commandMap: { [id: string]: BotCommandExecute };
@@ -94,8 +94,8 @@ class Bot {
                     statistics[totalKey] = (totalKey in statistics) ? (statistics[totalKey] + 1) : 1;
                     statistics[commandKey] = (commandKey in statistics) ? (statistics[commandKey]) + 1 : 1;
 
-                    console.log("Updating statistics for command " + command);
-                    console.log(statistics);
+                    //console.log("Updating statistics for command " + command);
+                    //console.log(statistics);
 
                     document.set(statistics);
                 }
@@ -150,7 +150,8 @@ class Bot {
             return;
         }
 
-        console.log("Command accepted: " + key);
+        const userName = message.from ? (message.from.username ? message.from.username : message.from.first_name) : "No-User";
+        console.log(`Command accepted: ${key} chat_id: ${message.chat.id} user_id: ${userName}`);
 
         this.incrementCommandStatistics(this.data, key);
 

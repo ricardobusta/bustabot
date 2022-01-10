@@ -2,8 +2,13 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import BotData from "../../bot_core/Bot/bot_data";
 
 const statisticsDocName = "statistics";
+
+class CountData extends BotData {
+    command_count: number;
+}
 
 class Count extends BotCommand {
     keys = ["count", "++"];
@@ -18,7 +23,7 @@ class Count extends BotCommand {
             .then(doc => {
                 let currentCount = 0;
                 if (doc.exists) {
-                    currentCount = doc.data().command_count;
+                    currentCount = (doc.data() as CountData).command_count;
                     console.log(`Current count: ${currentCount}`);
                 }
 

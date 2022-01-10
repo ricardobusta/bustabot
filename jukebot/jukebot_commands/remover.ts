@@ -38,7 +38,7 @@ class Remover extends BotCommand {
             .then(doc => {
                 let data: JukebotDoc = new JukebotDoc();
                 if (doc.exists) {
-                    data = doc.data();
+                    data = doc.data() as JukebotDoc;
                 }
 
                 let msg = "";

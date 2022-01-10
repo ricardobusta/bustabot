@@ -1,4 +1,6 @@
-class JukebotDoc {
+import BotData from "../bot_core/Bot/bot_data";
+
+class JukebotDoc extends BotData {
     users: Array<string>;
     pool: Array<string>;
     past: Array<string>;
@@ -6,6 +8,7 @@ class JukebotDoc {
     timestamp: string;
 
     constructor() {
+        super();
         this.users = [];
         this.pool = [];
         this.past = [];

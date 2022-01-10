@@ -2,6 +2,7 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import jb = require("../jukebot_common");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import JukebotDoc from "../jukebot_doc";
 
 class Adicionar extends BotCommand {
     keys = ["adicionar"];
@@ -35,11 +36,10 @@ class Adicionar extends BotCommand {
         let document = ctx.data.doc(jb.docName + chatId);
         document.get()
             .then(doc => {
-                let docData = {
-                    users: [],
-                }
+                let docData: JukebotDoc = new JukebotDoc();
+
                 if (doc.exists) {
-                    docData = doc.data();
+                    docData = doc.data() as JukebotDoc;
                 }
 
                 if (docData.users.indexOf(userName) > -1) {
