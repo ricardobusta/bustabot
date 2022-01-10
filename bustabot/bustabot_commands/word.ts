@@ -146,7 +146,7 @@ class Word extends BotCommand {
                     let r = "";
                     const size = Math.min(guessedWords.length, players.length);
                     for (var i = 0; i < size; i++) {
-                        r = `<code>${guessedWords[i]}</code> ${resultStringFromGuess(guessedWords[i], word)} - ${players[i]}\n` + r;
+                        r = `<code>${guessedWords[i]}</code> ${resultStringFromGuess(word, guessedWords[i])} - ${players[i]}\n` + r;
                     }
                     return r;
                 }
