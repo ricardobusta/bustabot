@@ -11,15 +11,15 @@ const wrongGuess: string = "⬛️";
 const misplacedGuess: string = "🟨";
 const rightGuess: string = "🟩";
 
-const date0 = new Date(2022, 0, 9); // Jan is month 0
+const date0 = new Date(2022, 1, 19); // Jan is month 0
 const dateOffset = 1;
 
 function splitStringRemoveEmpty(s: string, splitter: RegExp | string): string[] {
     return s.split(splitter).map(function (i) { return i.trim(); }).filter(function (i) { return i; });
 }
 
-const database = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/database_ptbr_src.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
-const wordList = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/database_ptbr.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
+const vocabulary = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/vocabulary_ptbr.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
+const wordOfDayList = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/word_of_day_ptbr.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
 
 function formatTime(value: number): string {
     return value.toString().padStart(2, '0');
@@ -156,7 +156,7 @@ class Word extends BotCommand {
 
                 ensureData(data);
 
-                const word = wordList[todayIndex].toUpperCase();
+                const word = wordOfDayList[todayIndex].toUpperCase();
                 const normalizedWord = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
                 let timeRemaining = endOfDay.getTime() - now.getTime();
@@ -229,7 +229,7 @@ class Word extends BotCommand {
                     return;
                 }
 
-                if (!database.includes(guess)) {
+                if (!vocabulary.includes(guess)) {
                     sendMessage(formatString("Mande uma palavra <b>válida</b> de 5 letras.\n"));
                     return;
                 }
