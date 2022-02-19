@@ -11,7 +11,7 @@ const wrongGuess: string = "⬛️";
 const misplacedGuess: string = "🟨";
 const rightGuess: string = "🟩";
 
-const date0 = new Date(2022, 1, 19); // Jan is month 0
+const date0 = new Date(2022, 0, 9); // Jan is month 0
 const dateOffset = 1;
 
 function splitStringRemoveEmpty(s: string, splitter: RegExp | string): string[] {
@@ -55,6 +55,9 @@ function ensureData(data: WordData) {
     }
     if (!data.guesses) {
         data.guesses = "";
+    }
+    if (!data.wordOverride) {
+        data.wordOverride = "";
     }
 }
 
@@ -160,7 +163,7 @@ class Word extends BotCommand {
                 ensureData(data);
 
                 let wordOfDay = wordOfDayList[todayIndex].toUpperCase();
-                if (data.wordOverride != "") {
+                if (data.wordOverride && data.wordOverride != "") {
                     wordOfDay = data.wordOverride;
                 }
                 const normalizedWordOfDay = wordOfDay.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
