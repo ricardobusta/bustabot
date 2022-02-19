@@ -21,7 +21,7 @@ def add_line(s):
 
 output_file = open('./database_ptbr_out.txt', 'w', encoding='utf8')
 
-for line in open('./database_ptbr.txt', 'r', encoding='utf8'):
+for line in open('./database_ptbr_src.txt', 'r', encoding='utf8'):
     add_line(line)
     #stripped_line = strip_accents(line)
     # add_line(stripped_line)
