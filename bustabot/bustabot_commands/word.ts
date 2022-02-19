@@ -30,6 +30,7 @@ class WordData extends BotData {
     dayIndex: number;
     guesses: string;
     players: string;
+    wordOverride: string;
 }
 
 function toFirestore(data: WordData): FirebaseFirestore.DocumentData {
@@ -37,7 +38,8 @@ function toFirestore(data: WordData): FirebaseFirestore.DocumentData {
         lastSentMessage: data.lastSentMessage,
         dayIndex: data.dayIndex,
         players: data.players,
-        guesses: data.guesses
+        guesses: data.guesses,
+        wordOverride: data.wordOverride
     };
 }
 
@@ -136,6 +138,7 @@ class Word extends BotCommand {
                     data = new WordData();
                     data.dayIndex = todayIndex;
                     data.lastSentMessage = null;
+                    data.wordOverride = "";
                 }
 
                 function sendMessage(msg: string) {
@@ -156,8 +159,11 @@ class Word extends BotCommand {
 
                 ensureData(data);
 
-                const word = wordOfDayList[todayIndex].toUpperCase();
-                const normalizedWord = word.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                let wordOfDay = wordOfDayList[todayIndex].toUpperCase();
+                if (data.wordOverride != "") {
+                    wordOfDay = data.wordOverride;
+                }
+                const normalizedWordOfDay = wordOfDay.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                 const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
                 let timeRemaining = endOfDay.getTime() - now.getTime();
                 const remainingHours = Math.floor(timeRemaining / (1000 * 60 * 60));
@@ -168,6 +174,7 @@ class Word extends BotCommand {
                 const statusString = `Dia <code>${todayIndex}</code>. Próxima palavra em: <code>${formatTime(remainingHours)}:${formatTime(remainingMinutes)}:${formatTime(remainingSeconds)}</code>`;
 
                 const guessedWords = splitStringRemoveEmpty(data.guesses.toUpperCase(), ",");
+                const normalizedGuessedWords = guessedWords.map(w => w.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
                 const players = splitStringRemoveEmpty(data.players, ",");
                 const lastGuess = guessedWords.length > 0 ? guessedWords[guessedWords.length - 1] : "";
 
@@ -175,7 +182,7 @@ class Word extends BotCommand {
                     let r = "";
                     const size = Math.min(guessedWords.length, players.length);
                     for (var i = 0; i < size; i++) {
-                        r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(word, guessedWords[i])} - ${players[i]}\n`;
+                        r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
                     }
                     return r;
                 }
@@ -186,10 +193,10 @@ class Word extends BotCommand {
                     let count = 0;
                     for (let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
                         const c = String.fromCharCode(i);
-                        if (!data.guesses.includes(c)) {
+                        if (!normalizedGuessedWords.includes(c)) {
                             m += `${c} `;
                             count++;
-                        } else if (word.includes(c)) {
+                        } else if (normalizedWordOfDay.includes(c)) {
                             mm += `[${c}] `;
                         }
 
@@ -205,9 +212,9 @@ class Word extends BotCommand {
                     return message + "\n" + resultString() + afterResult + missingCharacters() + "\n" + statusString;
                 }
 
-                if (lastGuess == word) {
+                if (lastGuess == wordOfDay) {
                     const lastPlayer = guessedWords.length > 0 && guessedWords.length <= players.length ? players[guessedWords.length - 1] : "";
-                    sendMessage(formatString(`${lastPlayer} já adivinhou a palavra de hoje! A palavra é <code>${word}</code>!\n`));
+                    sendMessage(formatString(`${lastPlayer} já adivinhou a palavra de hoje! A palavra é <code>${wordOfDay}</code>!\n`));
                     return;
                 }
 
@@ -216,38 +223,38 @@ class Word extends BotCommand {
                     return;
                 }
 
-                const guess = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
-                const normalizedGuess = guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                const playerGuess = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
+                const normalizedGuess = playerGuess.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-                if (data.guesses.includes(normalizedGuess)) {
+                if (normalizedGuessedWords.includes(normalizedGuess)) {
                     sendMessage(formatString("Palavra já enviada.\n"))
                     return;
                 }
 
-                if (guess.length != 5) {
+                if (normalizedGuess.length != 5) {
                     sendMessage(formatString("Mande uma palavra <b>válida</b> de 5 letras.\n"));
                     return;
                 }
 
-                if (!vocabulary.includes(guess)) {
+                if (!vocabulary.includes(playerGuess)) {
                     sendMessage(formatString("Mande uma palavra <b>válida</b> de 5 letras.\n"));
                     return;
                 }
 
-                const result = resultStringFromGuess(normalizedWord, normalizedGuess);
+                const result = resultStringFromGuess(normalizedWordOfDay, normalizedGuess);
 
                 const userName = getUsername(ctx.message.from);
 
-                data.guesses = data.guesses.toUpperCase() + "," + normalizedGuess;
+                data.guesses = data.guesses.toUpperCase() + "," + guessedWords;
                 data.players = data.players + "," + userName;
 
                 document.set(toFirestore(data));
 
                 if (result == "🟩🟩🟩🟩🟩") {
-                    sendMessage(formatString(`${userName} acertou! A palavra era <code>${word}</code>.\n`,
-                        `<code>${word}</code> ${result} - ${userName}\n`));
+                    sendMessage(formatString(`${userName} acertou! A palavra era <code>${wordOfDay}</code>.\n`,
+                        `<code>${wordOfDay}</code> ${result} - ${userName}\n`));
                 } else {
-                    sendMessage(formatString("", `<code>${guess}</code> ${result} - ${userName}\n`));
+                    sendMessage(formatString("", `<code>${playerGuess}</code> ${result} - ${userName}\n`));
                 }
             })
             .catch(err => {
