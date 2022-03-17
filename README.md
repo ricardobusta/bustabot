@@ -34,3 +34,8 @@ tsc --build --clean
 
 ## Run Npm Commands
 npm run <_command_>
+
+## Clean Cloud Storage
+
+gsutil rm -r gs://<_bucketname_>/*
+gsutil rb gs://<_bucketname_>/*

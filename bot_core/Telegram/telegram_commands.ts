@@ -18,14 +18,14 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
     });
 };
 
-export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null): void {
+export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
                 method: "sendMessage",
                 chat_id: chatId,
                 text: text,
-                parse_mode: "HTML",
+                parse_mode: parseMode,
                 reply_to_message_id: replyId != null ? replyId : ""
             }
         },
