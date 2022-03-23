@@ -172,7 +172,7 @@ class Word extends BotCommand {
                 const remainingMinutes = Math.floor(timeRemaining / (1000 * 60))
                 timeRemaining -= remainingMinutes * (1000 * 60);
                 const remainingSeconds = Math.floor(timeRemaining / (1000))
-                const statusString = `Dia <pre>${todayIndex}</pre>. Próxima palavra em: <pre>${formatTime(remainingHours)}:${formatTime(remainingMinutes)}:${formatTime(remainingSeconds)}</pre>`;
+                const statusString = `Próxima palavra em: <code>${formatTime(remainingHours)}:${formatTime(remainingMinutes)}:${formatTime(remainingSeconds)}</code>`;
 
                 const guessedWords = splitStringRemoveEmpty(data.guesses.toUpperCase(), ",");
                 const normalizedGuessedWords = guessedWords.map(w => normalizeString(w));
@@ -183,7 +183,7 @@ class Word extends BotCommand {
                     let r = `@bustabot /word #${todayIndex}\n`;
                     const size = Math.min(guessedWords.length, players.length);
                     for (var i = 0; i < size; i++) {
-                        r = r + `<pre>${guessedWords[i]}</pre> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
+                        r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
                     }
                     return r;
                 }
@@ -206,7 +206,7 @@ class Word extends BotCommand {
                             count = 0;
                         }
                     }
-                    return `Letras disponíveis:\n<pre>${mm.trim()}\n${m.trim()}</pre>`;
+                    return `Letras disponíveis:\n<code>${mm.trim()}\n${m.trim()}</code>`;
                 }
 
                 function formatString(message: string, afterResult: string = ""): string {
@@ -240,7 +240,7 @@ class Word extends BotCommand {
 
                 if (lastGuess == wordOfDay) {
                     const lastPlayer = guessedWords.length > 0 && guessedWords.length <= players.length ? players[guessedWords.length - 1] : "";
-                    sendMessage(formatString(`${lastPlayer} já adivinhou a palavra de hoje! A palavra é <pre>${wordOfDay}</pre>!\nUse <pre>/word -share</pre> para compartilhar.\n`));
+                    sendMessage(formatString(`${lastPlayer} já adivinhou a palavra de hoje! A palavra é <code>${wordOfDay}</code>!\nUse <code>/word -share</code> para compartilhar.\n`));
                     return;
                 }
 
@@ -277,10 +277,10 @@ class Word extends BotCommand {
                 document.set(toFirestore(data));
 
                 if (result == "🟩🟩🟩🟩🟩") {
-                    sendMessage(formatString(`${userName} acertou! A palavra era <pre>${wordOfDay}</pre>.\n`,
-                        `<pre>${wordOfDay}</pre> ${result} - ${userName}\nUse <pre>/word -share</pre> para compartilhar.\n`));
+                    sendMessage(formatString(`${userName} acertou! A palavra era <code>${wordOfDay}</code>.\n`,
+                        `<code>${wordOfDay}</code> ${result} - ${userName}\nUse <code>/word -share</code> para compartilhar.\n`));
                 } else {
-                    sendMessage(formatString("", `<pre>${playerGuess}</pre> ${result} - ${userName}\n`));
+                    sendMessage(formatString("", `<code>${playerGuess}</code> ${result} - ${userName}\n`));
                 }
             })
             .catch(err => {
