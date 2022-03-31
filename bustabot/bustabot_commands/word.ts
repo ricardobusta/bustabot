@@ -122,7 +122,7 @@ function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, today
 }
 
 class Word extends BotCommand {
-    keys = ["word"];
+    keys = ["word", "wor", "wo", "w"];
     description = "Adivinhe a palavra";
     execute = function (ctx: BotExecuteContext): void {
         const now = new Date(Date.now());
@@ -180,7 +180,7 @@ class Word extends BotCommand {
                 const lastGuess = guessedWords.length > 0 ? guessedWords[guessedWords.length - 1] : "";
 
                 function resultString(): string {
-                    let r = `@bustabot /word #${todayIndex}\n`;
+                    let r = data.wordOverride != "" ? `@bustabot /word <code>Custom</code>\n` : `@bustabot /word #${todayIndex}\n`;
                     const size = Math.min(guessedWords.length, players.length);
                     for (var i = 0; i < size; i++) {
                         r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
@@ -235,6 +235,25 @@ class Word extends BotCommand {
                             const spoilerWord = wordOfDayList[index];
                             sendMessage(`Spoiler: <tg-spoiler>${spoilerWord}</tg-spoiler>`);
                             return;
+                        case "-set":
+                            if (ctx.params.length < 3) {
+                                sendMessage(`Envie uma palavra`);
+                                return;
+                            }
+                            if (normalizeString(lastGuess) != normalizedWordOfDay) {
+                                sendMessage(`Ultima palavra não foi adivinhada ainda!`);
+                                return;
+                            }
+                            var input = ctx.params[2].trim();
+                            if (input.length != 5) {
+                                sendMessage(`A palavra precisa ter 5 caracteres!`);
+                                return;
+                            }
+                            data.wordOverride = input;
+                            data.guesses = "";
+                            data.players = "";
+                            sendMessage(`Word set to <tg-spoiler>${input}</tg-spoiler> by ${getUsername(ctx.message.from)}`)
+                            return;
                     }
                 }
 
@@ -262,7 +281,7 @@ class Word extends BotCommand {
                     return;
                 }
 
-                if (!vocabulary.includes(playerGuess)) {
+                if (!vocabulary.includes(playerGuess) && !wordOfDayList.includes(playerGuess) && playerGuess!) {
                     sendMessage(formatString("Mande uma palavra <b>válida</b> de 5 letras.\n"));
                     return;
                 }
