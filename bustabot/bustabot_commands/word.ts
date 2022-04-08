@@ -244,15 +244,21 @@ class Word extends BotCommand {
                                 sendMessage(`Ultima palavra não foi adivinhada ainda!`);
                                 return;
                             }
-                            var input = ctx.params[2].trim();
+                            const input = ctx.params[2].trim();
                             if (input.length != 5) {
                                 sendMessage(`A palavra precisa ter 5 caracteres!`);
+                                return;
+                            }
+                            const normalizedInput = normalizeString(input);
+                            if (normalizedInput.match(new RegExp("[a-zA-Z]{5}")) == null) {
+                                sendMessage(`A palavra deve conter apenas letras.`);
                                 return;
                             }
                             data.wordOverride = input;
                             data.guesses = "";
                             data.players = "";
-                            sendMessage(`Word set to <tg-spoiler>${input}</tg-spoiler> by ${getUsername(ctx.message.from)}`)
+                            data.lastSentMessage = null;
+                            sendMessage(`Word set by ${getUsername(ctx.message.from)}`)
                             return;
                     }
                 }
@@ -281,7 +287,7 @@ class Word extends BotCommand {
                     return;
                 }
 
-                if (!vocabulary.includes(playerGuess) && !wordOfDayList.includes(playerGuess) && playerGuess!) {
+                if (!vocabulary.includes(playerGuess) && !wordOfDayList.includes(playerGuess) && normalizedGuess != normalizedWordOfDay) {
                     sendMessage(formatString("Mande uma palavra <b>válida</b> de 5 letras.\n"));
                     return;
                 }
