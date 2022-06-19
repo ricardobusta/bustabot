@@ -1,6 +1,5 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
 import Random from "../../bot_core/random";
 import rpgv1 from "./rpgv1";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
@@ -11,31 +10,31 @@ type CharAttributes = Array<number>;
 type GeneratorOutput = { version: number, race: CharRace, job: CharJob, age: number, attributes: CharAttributes, name: string };
 
 const classes: Array<CharJob> = [
-    { name: "🧙‍ Mago", url: "https://pt.wikipedia.org/wiki/Mago_(RPG)" },
-    { name: "🗡️ Ladino", url: "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)" },
-    { name: "🐺 Druida", url: "https://pt.wikipedia.org/wiki/Druida_(RPG)" },
-    { name: "🏹 Ranger", url: "https://pt.wikipedia.org/wiki/Ranger_(classe_de_personagem)" },
-    { name: "✝️ Clérigo", url: "https://pt.wikipedia.org/wiki/Cl%C3%A9rigo_(classe_de_personagem)" },
-    { name: "🛡️ Paladino", url: "https://pt.wikipedia.org/wiki/Paladino_(classe_de_personagem)" },
-    { name: "🧙‍♀️ Feiticeiro", url: "https://pt.wikipedia.org/wiki/Feiticeiro_(RPG)" },
-    { name: "⚔️ Bárbaro", url: "https://pt.wikipedia.org/wiki/B%C3%A1rbaro_(RPG)" },
-    { name: "☯️ Monge", url: "https://pt.wikipedia.org/wiki/Monge_(RPG)" },
-    { name: "🎸 Bardo", url: "https://pt.wikipedia.org/wiki/Bardo_(RPG)" },
-    { name: "💃 Dançarino", url: "https://pt.wikipedia.org/wiki/Dan%C3%A7a" },
-    { name: "💸 Mendigo", url: "https://pt.wikipedia.org/wiki/Mendigo" },
-    { name: "🗡️ Algoz", url: "https://pt.wikipedia.org/wiki/Antipaladino" },
-    { name: "⚗️ Alquimista", url: "https://pt.wikipedia.org/wiki/Alquimista_(classe_de_personagem)" },
-    { name: "🐴 Cavaleiro", url: "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)" },
+    {name: "🧙‍ Mago", url: "https://pt.wikipedia.org/wiki/Mago_(RPG)"},
+    {name: "🗡️ Ladino", url: "https://pt.wikipedia.org/wiki/Ladino_(classe_de_personagem)"},
+    {name: "🐺 Druida", url: "https://pt.wikipedia.org/wiki/Druida_(RPG)"},
+    {name: "🏹 Ranger", url: "https://pt.wikipedia.org/wiki/Ranger_(classe_de_personagem)"},
+    {name: "✝️ Clérigo", url: "https://pt.wikipedia.org/wiki/Cl%C3%A9rigo_(classe_de_personagem)"},
+    {name: "🛡️ Paladino", url: "https://pt.wikipedia.org/wiki/Paladino_(classe_de_personagem)"},
+    {name: "🧙‍♀️ Feiticeiro", url: "https://pt.wikipedia.org/wiki/Feiticeiro_(RPG)"},
+    {name: "⚔️ Bárbaro", url: "https://pt.wikipedia.org/wiki/B%C3%A1rbaro_(RPG)"},
+    {name: "☯️ Monge", url: "https://pt.wikipedia.org/wiki/Monge_(RPG)"},
+    {name: "🎸 Bardo", url: "https://pt.wikipedia.org/wiki/Bardo_(RPG)"},
+    {name: "💃 Dançarino", url: "https://pt.wikipedia.org/wiki/Dan%C3%A7a"},
+    {name: "💸 Mendigo", url: "https://pt.wikipedia.org/wiki/Mendigo"},
+    {name: "🗡️ Algoz", url: "https://pt.wikipedia.org/wiki/Antipaladino"},
+    {name: "⚗️ Alquimista", url: "https://pt.wikipedia.org/wiki/Alquimista_(classe_de_personagem)"},
+    {name: "🐴 Cavaleiro", url: "https://pt.wikipedia.org/wiki/Cavaleiro_(RPG)"},
 ];
 
 const races: Array<CharRace> = [
-    { name: "Humano", min_age: 12, max_age: 90 },
-    { name: "Anão", min_age: 18, max_age: 350 },
-    { name: "Elfo", min_age: 100, max_age: 750 },
-    { name: "Halfling", min_age: 20, max_age: 250 },
-    { name: "Gnomo", min_age: 20, max_age: 400 },
-    { name: "Meio Orc", min_age: 14, max_age: 75 },
-    { name: "Meio Elfo", min_age: 20, max_age: 18 }
+    {name: "Humano", min_age: 12, max_age: 90},
+    {name: "Anão", min_age: 18, max_age: 350},
+    {name: "Elfo", min_age: 100, max_age: 750},
+    {name: "Halfling", min_age: 20, max_age: 250},
+    {name: "Gnomo", min_age: 20, max_age: 400},
+    {name: "Meio Orc", min_age: 14, max_age: 75},
+    {name: "Meio Elfo", min_age: 20, max_age: 18}
 ];
 
 const syllabes: Array<string> = [
@@ -79,7 +78,9 @@ function generateCharV2(seed: number): GeneratorOutput {
 
     let nameRng = new Random(seedStr);
 
-    let transform = function (t: number): number { return Math.sin(t * Math.PI); };
+    let transform = function (t: number): number {
+        return Math.sin(t * Math.PI);
+    };
     let nameSyllabes = nameRng.getTransformInt(1, 5, transform);
     let surnameSyllabes = nameRng.getTransformInt(1, 5, transform);
 
@@ -95,7 +96,7 @@ function generateCharV2(seed: number): GeneratorOutput {
     }
     secondName = firstLetterUcase(secondName);
     let name = `${firstName} ${secondName}`;
-    return { version: 2, race, job, age, attributes, name }
+    return {version: 2, race, job, age, attributes, name}
 }
 
 class Rpg extends BotCommand {
@@ -108,7 +109,7 @@ class Rpg extends BotCommand {
         } else {
             let userName = ctx.message.from.first_name;
 
-            let { version, race, job, age, attributes, name } = generateCharV2(ctx.message.from.id);
+            let {version, race, job, age, attributes, name} = generateCharV2(ctx.message.from.id);
 
             text = `FICHA DO PERSONAGEM (v${version})\n` +
                 `<b>Jogador:</b> ${userName}\n` +

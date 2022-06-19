@@ -1,5 +1,5 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import TelegramBot = require("node-telegram-bot-api");
+
 let seedrandom = require("seedrandom");
 
 const syllabes = [

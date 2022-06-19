@@ -10,7 +10,7 @@ class Stats extends BotCommand {
         let document = ctx.data.doc("statistics");
         document.get()
             .then(doc => {
-                let json = JSON.stringify(doc.data()).replace(/[\{\}]/, "").split(",").join(",\n");
+                let json = JSON.stringify(doc.data()).replace(/[{}]/, "").split(",").join(",\n");
                 telegramCommands.sendMessage(
                     ctx.botKey,
                     ctx.message.chat.id,

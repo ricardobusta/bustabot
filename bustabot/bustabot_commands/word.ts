@@ -2,9 +2,8 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
-import { readFileSync } from 'fs';
+import {readFileSync} from 'fs';
 import BotData from "../../bot_core/Bot/bot_data";
-import guess from "./guess";
 
 const wordCommandDocument = "word";
 
@@ -16,11 +15,21 @@ const date0 = new Date(2022, 0, 9); // Jan is month 0
 const dateOffset = 1;
 
 function splitStringRemoveEmpty(s: string, splitter: RegExp | string): string[] {
-    return s.split(splitter).map(function (i) { return i.trim(); }).filter(function (i) { return i; });
+    return s.split(splitter).map(function (i) {
+        return i.trim();
+    }).filter(function (i) {
+        return i;
+    });
 }
 
-const vocabulary = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/vocabulary_ptbr.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
-const wordOfDayList = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/word_of_day_ptbr.txt", { encoding: 'utf8', flag: 'r' }), /\s+/);
+const vocabulary = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/vocabulary_ptbr.txt", {
+    encoding: 'utf8',
+    flag: 'r'
+}), /\s+/);
+const wordOfDayList = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/word_of_day_ptbr.txt", {
+    encoding: 'utf8',
+    flag: 'r'
+}), /\s+/);
 
 function formatTime(value: number): string {
     return value.toString().padStart(2, '0');
@@ -113,7 +122,8 @@ function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, today
                         let d = docData.exists ? docData.data() as WordData : null;
                         if (d && todayIndex > d.dayIndex) {
                             console.log(`Deleting old doc ${doc.id}\n`);
-                            doc.delete();
+                            doc.delete().then(r => {
+                            });
                         }
                     });
             }
@@ -152,7 +162,8 @@ class Word extends BotCommand {
                                 telegramCommands.deleteMessage(ctx.botKey, ctx.message.chat.id, data.lastSentMessage)
                             }
                             data.lastSentMessage = res.message_id;
-                            document.set(toFirestore(data));
+                            document.set(toFirestore(data)).then(r => {
+                            });
                         },
                         parseMode
                     );
@@ -299,7 +310,8 @@ class Word extends BotCommand {
                 data.guesses = data.guesses.toUpperCase() + "," + playerGuess;
                 data.players = data.players + "," + userName;
 
-                document.set(toFirestore(data));
+                document.set(toFirestore(data)).then(r => {
+                });
 
                 if (result == "🟩🟩🟩🟩🟩") {
                     sendMessage(formatString(`${userName} acertou! A palavra era <code>${wordOfDay}</code>.\n`,

@@ -14,7 +14,7 @@ class Count extends BotCommand {
     keys = ["count", "++"];
     description = "Counts how many times the command was invoked";
     execute = function (ctx: BotExecuteContext): void {
-        if (ctx.data == undefined || ctx.data == null) {
+        if (ctx.data == undefined) {
             console.log("Data not set.");
             return;
         }
