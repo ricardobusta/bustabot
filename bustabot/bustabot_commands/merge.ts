@@ -36,8 +36,8 @@ class Birl extends BotCommand {
             return;
         }
 
-        let customBattlerUrl = `https://aegide.github.io/CustomBattlers/${n1}.${n2}.png`
-        let fusionSpriteUrl = `https://raw.githubusercontent.com/Aegide/FusionSprites/master/Japeal/${n1}/${n1}.${n2}.png`
+        let customBattlerUrl = `https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/${n1}.${n2}.png`
+        let fusionSpriteUrl = `https://raw.githubusercontent.com/Aegide/autogen-fusion-sprites/master/Battlers/1/${n1}/${n1}.${n2}.png`
 
         telegramCommands.executeIfUrlExist(customBattlerUrl,
             function () {
