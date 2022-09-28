@@ -10,3 +10,4 @@ export const jukebot: BotInfoEntry = {
 };
 export const projectId = 'google project id';
 export const webhook = 'google project url';
+export const replicateApiToken = 'https://replicate.com/account';

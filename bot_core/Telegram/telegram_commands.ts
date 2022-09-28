@@ -16,7 +16,19 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
             onNotExist();
         }
     });
-};
+}
+
+function messageCallback(error, body, callback) {
+    if (error) {
+        console.log(error);
+        return;
+    }
+    const response = (body && body.ok) ? (body.result as TelegramBot.Message) : null;
+    console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
+    if (callback) {
+        callback(response);
+    }
+}
 
 export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
     request.post(getBotApiURL(botKey, "sendMessage"),
@@ -28,19 +40,22 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
                 parse_mode: parseMode,
                 reply_to_message_id: replyId != null ? replyId : ""
             }
+        }, (error, _res, body) => messageCallback(error, body, callBack));
+}
+
+export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML") {
+    request.post(getBotApiURL(botKey, "editMessageText"),
+        {
+            json: {
+                method: "deleteMessage",
+                chat_id: chatId,
+                message_id: messageId,
+                parse_mode: parseMode,
+                text: text
+            }
         },
-        (error, _res, body) => {
-            if (error) {
-                console.log(error);
-                return;
-            }
-            const response = (body && body.ok) ? (body.result as TelegramBot.Message) : null;
-            console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
-            if (callBack) {
-                callBack(response);
-            }
-        });
-};
+        (error, _res, body) => messageCallback(error, body, callBack));
+}
 
 export function deleteMessage(botKey: string, chatId: number, messageId: number) {
     request.post(getBotApiURL(botKey, "deleteMessage"),
