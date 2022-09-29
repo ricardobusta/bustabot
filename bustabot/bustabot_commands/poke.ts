@@ -6,6 +6,9 @@ import * as botKey from "../../bot_key";
 
 const request = require("request");
 
+const maxNumberOfAttempts: number = 100;
+const attemptDelayMs: number = 3000;
+
 const headers = {
     'Authorization': 'Token ' + botKey.replicateApiToken,
     'Content-Type': 'application/json',
@@ -36,6 +39,7 @@ class PokeResponse {
     input: PokeInput;
     output: string;
     error: string;
+    detail: string;
 }
 
 class FinalResponse {
@@ -81,10 +85,10 @@ function TryGetResult(ctx: BotExecuteContext, getUrl: string, baseMsg: string, m
             let finalResponse: FinalResponse = JSON.parse(body.toString());
 
             count++;
-            if (finalResponse.status == "processing") {
-                if (count < 1000) { // max num of attempts
+            if (finalResponse.status == "starting" || finalResponse.status == "processing") {
+                if (count < maxNumberOfAttempts) { // max num of attempts
                     editMessage(baseMsg + finalResponse.status + ". " + count);
-                    setTimeout(() => TryGetResult(ctx, getUrl, baseMsg, msgId, editMessage), 1000); // retry every second
+                    setTimeout(() => TryGetResult(ctx, getUrl, baseMsg, msgId, editMessage), attemptDelayMs); // retry every second
                     return;
                 } else {
                     executing = false;
@@ -100,7 +104,7 @@ function TryGetResult(ctx: BotExecuteContext, getUrl: string, baseMsg: string, m
                     }
                     return;
                 } else {
-                    editMessage(baseMsg + "fail" + finalResponse.error);
+                    editMessage(baseMsg + "fail. " + getUrl + " " + finalResponse.status + " " + finalResponse.error);
                     console.log(finalResponse);
                     return;
                 }
@@ -135,7 +139,7 @@ class Poke extends BotCommand {
 
         executing = true;
 
-        let prompt = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim();
+        let prompt = ctx.message.text.substring(ctx.params[0].length).trim();
 
         let baseMsg = "Prompt: <i>" + prompt + "</i>. Status: ";
         count = 0;
@@ -169,7 +173,17 @@ class Poke extends BotCommand {
 
                     const response: PokeResponse = JSON.parse(body);
 
-                    TryGetResult(ctx, response.urls.get, baseMsg, msgId, editMessage);
+                    if(response.urls.get) {
+                        TryGetResult(ctx, response.urls.get, baseMsg, msgId, editMessage);
+                    }else{
+                        if(response.status) {
+                            editMessage(baseMsg + "fail. " + response.status);
+                            return;
+                        }
+                        if(response.detail){
+                            editMessage(baseMsg + "fail. " + response.detail);
+                        }
+                    }
                 });
         });
     }

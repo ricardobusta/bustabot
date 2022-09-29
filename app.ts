@@ -8,6 +8,7 @@ import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
 let debugString: string = "1";
+const version: number = 3;
 
 process.argv.forEach(function name(val, index, arr) {
     if (val === "prod") {
@@ -69,6 +70,11 @@ if (isProd) {
     // Start the server
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
+        console.log("=========================================");
+        console.log("=");
+        console.log("=   STARTING NEW BOT RUN v:" + version);
+        console.log("=");
+        console.log("=========================================");
         console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
