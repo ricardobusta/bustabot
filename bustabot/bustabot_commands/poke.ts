@@ -65,7 +65,49 @@ function GenRequestBody(prompt: string): string {
         JSON.stringify(body) + '}';
 }
 
-let executing : boolean = false;
+let executing: boolean = false;
+
+let count: number = 0;
+
+function TryGetResult(ctx: BotExecuteContext, getUrl: string, baseMsg: string, msgId: number, editMessage: any) {
+    request.get(
+        {url: getUrl, headers: headers},
+        (error, res, body) => {
+            if (error) {
+                console.log(error);
+                return;
+            }
+
+            let finalResponse: FinalResponse = JSON.parse(body.toString());
+
+            count++;
+            if (finalResponse.status == "processing") {
+                if (count < 1000) { // max num of attempts
+                    editMessage(baseMsg + finalResponse.status + ". " + count);
+                    setTimeout(() => TryGetResult(ctx, getUrl, baseMsg, msgId, editMessage), 1000); // retry every second
+                    return;
+                } else {
+                    executing = false;
+                    editMessage(baseMsg + "failed.");
+                    return;
+                }
+            } else {
+                executing = false;
+                if (finalResponse.status == "succeeded") {
+                    editMessage(baseMsg + "success in " + finalResponse.metrics.predict_time);
+                    if (finalResponse && finalResponse.output.length > 0) {
+                        telegramCommands.sendPhoto(ctx.botKey, ctx.message.chat.id, msgId, finalResponse.output[0]);
+                    }
+                    return;
+                } else {
+                    editMessage(baseMsg + "fail" + finalResponse.error);
+                    console.log(finalResponse);
+                    return;
+                }
+            }
+        }
+    );
+}
 
 class Poke extends BotCommand {
     keys = ["poke", "pok", "po", "p"];
@@ -81,25 +123,12 @@ class Poke extends BotCommand {
             );
         }
 
-        function editMessage(msgId: number, msg: string) {
-            telegramCommands.editMessageText(
-                ctx.botKey,
-                ctx.message.chat.id,
-                msgId,
-                msg
-            );
-        }
-
-        function debug(msg: string){
-            console.log(msg);
-        }
-
         if (ctx.params.length < 2) {
             sendMessage("Input something.");
             return;
         }
 
-        if(this.executing){
+        if (this.executing) {
             sendMessage("Bot is currently processing something. Wait a moment.");
             return;
         }
@@ -109,10 +138,19 @@ class Poke extends BotCommand {
         let prompt = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim();
 
         let baseMsg = "Prompt: <i>" + prompt + "</i>. Status: ";
-        let count = 0;
+        count = 0;
 
         sendMessage(baseMsg + "processing. " + count, (res) => {
             let msgId = res.message_id;
+
+            function editMessage(msg: string) {
+                telegramCommands.editMessageText(
+                    ctx.botKey,
+                    ctx.message.chat.id,
+                    msgId,
+                    msg
+                );
+            }
 
             request.post({url: apiUrl, headers: headers, body: GenRequestBody(prompt)},
                 (error, res, body) => {
@@ -127,40 +165,11 @@ class Poke extends BotCommand {
                     }
 
                     count++;
-                    editMessage(msgId, baseMsg + "processing. " + count);
+                    editMessage(baseMsg + "processing. " + count);
 
                     const response: PokeResponse = JSON.parse(body);
 
-                    function TryGetResult() {
-                        request.get(
-                            {url: response.urls.get, headers: headers},
-                            (error, res, body) => {
-                                let finalResponse: FinalResponse = JSON.parse(body);
-
-                                count++;
-                                if (finalResponse.status == "processing") {
-                                    if (count < 1000) {
-                                        editMessage(msgId, baseMsg + finalResponse.status + ". " + count);
-                                        setTimeout(TryGetResult, 1000); // retry
-                                    } else {
-                                        executing = false;
-                                        editMessage(msgId, baseMsg + "failed.");
-                                    }
-                                } else {
-                                    executing = false;
-                                    if(finalResponse.status == "succeeded") {
-                                        editMessage(msgId, baseMsg + "success");
-                                        telegramCommands.sendPhoto(ctx.botKey, ctx.message.chat.id, msgId, finalResponse.output[0])
-                                    }else{
-                                        editMessage(msgId, baseMsg + "fail");
-                                        debug(body);
-                                    }
-                                }
-                            }
-                        );
-                    }
-
-                    TryGetResult();
+                    TryGetResult(ctx, response.urls.get, baseMsg, msgId, editMessage);
                 });
         });
     }
