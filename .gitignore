@@ -5,3 +5,4 @@ bot_key.*
 google_key.json
 *.js
 *.map
+.idea/sonarlint/
