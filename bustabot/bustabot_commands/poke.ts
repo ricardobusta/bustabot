@@ -116,76 +116,78 @@ function TryGetResult(ctx: BotExecuteContext, getUrl: string, baseMsg: string, m
 class Poke extends BotCommand {
     keys = ["poke", "pok", "po", "p"];
     description = "Generate pokemon with the power of AI";
+    wip = true;
     execute = function (ctx: BotExecuteContext): void {
-        function sendMessage(msg: string, callback: (res: TelegramBot.Message) => void = null) {
-            telegramCommands.sendMessage(
-                ctx.botKey,
-                ctx.message.chat.id,
-                null,
-                msg,
-                callback
-            );
-        }
-
-        if (ctx.params.length < 2) {
-            sendMessage("Input something.");
-            return;
-        }
-
-        if (this.executing) {
-            sendMessage("Bot is currently processing something. Wait a moment.");
-            return;
-        }
-
-        executing = true;
-
-        let prompt = ctx.message.text.substring(ctx.params[0].length).trim();
-
-        let baseMsg = "Prompt: <i>" + prompt + "</i>. Status: ";
-        count = 0;
-
-        sendMessage(baseMsg + "processing. " + count, (res) => {
-            let msgId = res.message_id;
-
-            function editMessage(msg: string) {
-                telegramCommands.editMessageText(
-                    ctx.botKey,
-                    ctx.message.chat.id,
-                    msgId,
-                    msg
-                );
-            }
-
-            request.post({url: apiUrl, headers: headers, body: GenRequestBody(prompt)},
-                (error, res, body) => {
-                    if (error) {
-                        console.log(error);
-                        return;
-                    }
-
-                    if (!body) {
-                        console.log("response body is invalid");
-                        return;
-                    }
-
-                    count++;
-                    editMessage(baseMsg + "processing. " + count);
-
-                    const response: PokeResponse = JSON.parse(body);
-
-                    if(response.urls.get) {
-                        TryGetResult(ctx, response.urls.get, baseMsg, msgId, editMessage);
-                    }else{
-                        if(response.status) {
-                            editMessage(baseMsg + "fail. " + response.status);
-                            return;
-                        }
-                        if(response.detail){
-                            editMessage(baseMsg + "fail. " + response.detail);
-                        }
-                    }
-                });
-        });
+        return;
+        // function sendMessage(msg: string, callback: (res: TelegramBot.Message) => void = null) {
+        //     telegramCommands.sendMessage(
+        //         ctx.botKey,
+        //         ctx.message.chat.id,
+        //         null,
+        //         msg,
+        //         callback
+        //     );
+        // }
+        //
+        // if (ctx.params.length < 2) {
+        //     sendMessage("Input something.");
+        //     return;
+        // }
+        //
+        // if (this.executing) {
+        //     sendMessage("Bot is currently processing something. Wait a moment.");
+        //     return;
+        // }
+        //
+        // executing = true;
+        //
+        // let prompt = ctx.message.text.substring(ctx.params[0].length).trim();
+        //
+        // let baseMsg = "Prompt: <i>" + prompt + "</i>. Status: ";
+        // count = 0;
+        //
+        // sendMessage(baseMsg + "processing. " + count, (res) => {
+        //     let msgId = res.message_id;
+        //
+        //     function editMessage(msg: string) {
+        //         telegramCommands.editMessageText(
+        //             ctx.botKey,
+        //             ctx.message.chat.id,
+        //             msgId,
+        //             msg
+        //         );
+        //     }
+        //
+        //     request.post({url: apiUrl, headers: headers, body: GenRequestBody(prompt)},
+        //         (error, res, body) => {
+        //             if (error) {
+        //                 console.log(error);
+        //                 return;
+        //             }
+        //
+        //             if (!body) {
+        //                 console.log("response body is invalid");
+        //                 return;
+        //             }
+        //
+        //             count++;
+        //             editMessage(baseMsg + "processing. " + count);
+        //
+        //             const response: PokeResponse = JSON.parse(body);
+        //
+        //             if(response.urls.get) {
+        //                 TryGetResult(ctx, response.urls.get, baseMsg, msgId, editMessage);
+        //             }else{
+        //                 if(response.status) {
+        //                     editMessage(baseMsg + "fail. " + response.status);
+        //                     return;
+        //                 }
+        //                 if(response.detail){
+        //                     editMessage(baseMsg + "fail. " + response.detail);
+        //                 }
+        //             }
+        //         });
+        // });
     }
 }
 

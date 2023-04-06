@@ -2,6 +2,7 @@ import BotCommand from "../bot_core/Bot/bot_command"
 import Bot from "../bot_core/Bot/bot";
 
 import about from "./bustabot_commands/about"
+import acende from "./bustabot_commands/acende"
 import benedict from "./bustabot_commands/benedict"
 import birl from "./bustabot_commands/birl"
 import cat from "./bustabot_commands/cat"
@@ -11,7 +12,6 @@ import match from "./bustabot_commands/match"
 import merge from "./bustabot_commands/merge"
 import moo from "./bustabot_commands/moo"
 import ovo from "./bustabot_commands/ovo"
-import poke from "./bustabot_commands/poke"
 import roll from "./bustabot_commands/roll"
 import rpg from "./bustabot_commands/rpg"
 import stats from "./bustabot_commands/stats"
@@ -20,6 +20,7 @@ import word from "./bustabot_commands/word"
 
 const commands: Array<BotCommand> = [
     about,
+    acende,
     benedict,
     birl,
     cat,
@@ -29,7 +30,6 @@ const commands: Array<BotCommand> = [
     merge,
     moo,
     ovo,
-    poke,
     roll,
     rpg,
     stats,
