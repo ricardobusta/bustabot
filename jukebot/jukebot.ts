@@ -18,5 +18,5 @@ const commands: Array<BotCommand> = [
     rodada
 ];
 
-const jukebot = new Bot("jukebot", commands);
+const jukebot = new Bot("jukebot", 0, commands);
 export default jukebot;

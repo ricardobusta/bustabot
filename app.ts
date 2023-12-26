@@ -8,7 +8,7 @@ import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
 let debugString: string = "1";
-const version: number = 3;
+const version: number = 4;
 
 process.argv.forEach(function name(val, index, arr) {
     if (val === "prod") {

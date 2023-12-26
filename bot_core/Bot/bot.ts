@@ -10,16 +10,18 @@ class Bot {
     botAlias: string;
     botName: string;
     botKey: string;
+    version: number;
     commands: Array<BotCommand>;
     data: FirebaseFirestore.CollectionReference<any>;
     initialized: boolean;
 
     commandMap: { [id: string]: BotCommandExecute };
 
-    constructor(botAlias: string, commands: Array<BotCommand>) {
+    constructor(botAlias: string, version: number, commands: Array<BotCommand>) {
         this.initialized = false;
         this.botAlias = botAlias;
         this.commands = [...commands];
+        this.version = version;
 
         this.commandMap = {
             "help": this.printHelpCommand,
@@ -45,6 +47,7 @@ class Bot {
         console.log("Logging Help!");
 
         let helpString = `<b>${this.botName} Help:</b>\n`;
+        helpString += `Version: ${context.version}`;
         for (let i in this.commands) {
             let command = this.commands[i];
             if (command.wip) {
@@ -164,7 +167,8 @@ class Bot {
             botKey: this.botKey,
             params: splitText,
             message: message,
-            data: this.data
+            data: this.data,
+            version: this.version
         };
         command(context);
     };
