@@ -1,10 +1,8 @@
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
-import TelegramBot = require("node-telegram-bot-api");
 import * as botKey from "../../bot_key";
-
-const request = require("request");
+import bent = require("bent");
 
 const maxNumberOfAttempts: number = 100;
 const attemptDelayMs: number = 3000;
@@ -73,9 +71,17 @@ let executing: boolean = false;
 
 let count: number = 0;
 
+async function RequestGet(url: string, headers: any, handle) : Promise<void>{
+    const get: bent.RequestFunction<any> = bent(url, 'GET', 'json', 200);
+    const response = await get('', "", headers);
+
+    handle(response.errorMessage, response, response.body)
+}
+
 function TryGetResult(ctx: BotExecuteContext, getUrl: string, baseMsg: string, msgId: number, editMessage: any) {
-    request.get(
-        {url: getUrl, headers: headers},
+    RequestGet(
+        getUrl,
+        headers,
         (error, res, body) => {
             if (error) {
                 console.log(error);

@@ -1,18 +1,29 @@
-import request = require("request");
+import bent = require("bent");
 import TelegramBot = require("node-telegram-bot-api");
+import {RequestBody} from "bent";
 
-function getBotApiURL(botKey: string, command: string) {
+function getBotApiURL(botKey: string, command: string): string {
     return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
-export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    const urlExists = checkUrl => new Promise((resolve, reject) =>
-        request.head(checkUrl).on("response", res => resolve(res.statusCode.toString()[0] === "2")));
+async function RequestHead(url: string): Promise<number> {
+    const head: bent.RequestFunction<any> = bent(url, 'HEAD', 'json', 200);
+    const response = await head('');
+    return response.status;
+}
 
-    urlExists(url).then(exists => {
-        if (exists) {
+async function RequestPost(url: string, body: RequestBody, handle) : Promise<void>{
+    const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
+    const response = await post('', body);
+
+    handle(response.errorMessage, response, response.body)
+}
+
+export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
+    RequestHead(url).then(status => {
+        if(status.toString()[0] === "2"){
             onExist();
-        } else {
+        }else{
             onNotExist();
         }
     });
@@ -31,7 +42,7 @@ function messageCallback(error, body, callback) {
 }
 
 export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
-    request.post(getBotApiURL(botKey, "sendMessage"),
+    RequestPost(getBotApiURL(botKey, "sendMessage"),
         {
             json: {
                 method: "sendMessage",
@@ -44,7 +55,7 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
 }
 
 export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML") {
-    request.post(getBotApiURL(botKey, "editMessageText"),
+    RequestPost(getBotApiURL(botKey, "editMessageText"),
         {
             json: {
                 method: "deleteMessage",
@@ -58,7 +69,7 @@ export function editMessageText(botKey: string, chatId: number, messageId: numbe
 }
 
 export function deleteMessage(botKey: string, chatId: number, messageId: number) {
-    request.post(getBotApiURL(botKey, "deleteMessage"),
+    RequestPost(getBotApiURL(botKey, "deleteMessage"),
         {
             json: {
                 method: "deleteMessage",
@@ -75,7 +86,7 @@ export function deleteMessage(botKey: string, chatId: number, messageId: number)
 }
 
 export function sendPhoto(botKey: string, chatId: number, replyId: number, photoId: string, callBack: () => void = null): void {
-    request.post(getBotApiURL(botKey, "sendPhoto"),
+    RequestPost(getBotApiURL(botKey, "sendPhoto"),
         {
             json: {
                 method: "sendPhoto",
@@ -98,7 +109,7 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
 }
 
 export function pinMessage(botKey: string, chatId: number, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
-    request.post(getBotApiURL(botKey, "pinChatMessage"),
+    RequestPost(getBotApiURL(botKey, "pinChatMessage"),
         {
             json: {
                 method: "pinChatMessage",
@@ -123,7 +134,7 @@ export function setWebhook(url: string, botKey: string) {
     let hookUrl = encodeURIComponent(`${url}/bot${botKey}`);
     let requestUrl = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
     console.log(`With request url: ${requestUrl}`)
-    request.post(requestUrl,
+    RequestPost(requestUrl,
         {},
         (error, res, body) => {
             if (error) {
@@ -140,7 +151,7 @@ export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCo
     let requestUrl = `${getBotApiURL(botKey, "setMyCommands")}`;
     let commands = JSON.stringify(botCommands);
     console.log(`Setting bot commands: ${commands}`);
-    request.post(requestUrl,
+    RequestPost(requestUrl,
         {
             json: {
                 method: "setMyCommands",

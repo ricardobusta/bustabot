@@ -136,10 +136,10 @@ class Bot {
         }
 
         // And it is a somewhat valid command
-        let splitText = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
+        let splitText: RegExpMatchArray = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
         if (!splitText) return;
-        splitText = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
-        let key = splitText[0];
+        let splitTextResult: string[] = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
+        let key: string = splitTextResult.at(0);
         if (key == null || key == "") return;
 
         // And that command is not directed to another bot
