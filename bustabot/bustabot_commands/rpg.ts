@@ -7,7 +7,14 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 type CharJob = { name: string, url: string };
 type CharRace = { name: string, min_age: number, max_age: number };
 type CharAttributes = Array<number>;
-type GeneratorOutput = { version: number, race: CharRace, job: CharJob, age: number, attributes: CharAttributes, name: string };
+type GeneratorOutput = {
+    version: number,
+    race: CharRace,
+    job: CharJob,
+    age: number,
+    attributes: CharAttributes,
+    name: string
+};
 
 const classes: Array<CharJob> = [
     {name: "🧙‍ Mago", url: "https://pt.wikipedia.org/wiki/Mago_(RPG)"},
@@ -63,26 +70,26 @@ function firstLetterUcase(str: string): string {
 }
 
 function generateCharV2(seed: number): GeneratorOutput {
-    let seedStr = seed.toString();
-    let statRng = new Random(seedStr);
+    let seedStr: string = seed.toString();
+    let statRng: Random = new Random(seedStr);
     let attributes: CharAttributes = new Array<number>(6);
-    let totalAtrib = statRng.getRangeInt(25, 35);
+    let totalAtrib: number = statRng.getRangeInt(25, 35);
     for (let i = 0; i < totalAtrib; i++) {
         attributes[i] = statRng.getRangeInt(1, 10);
     }
 
-    let infoRng = new Random(seedStr);
-    let job = infoRng.getArrayRange(classes);
-    let race = infoRng.getArrayRange(races);
-    let age = infoRng.getRangeInt(race.min_age, race.max_age);
+    let infoRng: Random = new Random(seedStr);
+    let job: CharJob = infoRng.getArrayRange(classes);
+    let race: CharRace = infoRng.getArrayRange(races);
+    let age: number = infoRng.getRangeInt(race.min_age, race.max_age);
 
-    let nameRng = new Random(seedStr);
+    let nameRng: Random = new Random(seedStr);
 
-    let transform = function (t: number): number {
+    let transform: (t: number) => number = function (t: number): number {
         return Math.sin(t * Math.PI);
     };
-    let nameSyllabes = nameRng.getTransformInt(1, 5, transform);
-    let surnameSyllabes = nameRng.getTransformInt(1, 5, transform);
+    let nameSyllabes: number = nameRng.getTransformInt(1, 5, transform);
+    let surnameSyllabes: number = nameRng.getTransformInt(1, 5, transform);
 
     let firstName: string = "";
     for (let i = 0; i < nameSyllabes; i++) {
@@ -95,21 +102,21 @@ function generateCharV2(seed: number): GeneratorOutput {
         secondName += nameRng.getArrayRange(syllabes);
     }
     secondName = firstLetterUcase(secondName);
-    let name = `${firstName} ${secondName}`;
+    let name: string = `${firstName} ${secondName}`;
     return {version: 2, race, job, age, attributes, name}
 }
 
 class Rpg extends BotCommand {
-    keys = ["rpg", "rpgv1", "rpgv2"];
-    description = "Gera seu personagem de RPG";
-    execute = function (ctx: BotExecuteContext): void {
+    keys: string[] = ["rpg", "rpgv1", "rpgv2"];
+    description: string = "Gera seu personagem de RPG";
+    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         let text: string;
         if (ctx.commandKey == "rpgv1") {
             text = rpgv1.execute(ctx.message, races, classes);
         } else {
-            let userName = ctx.message.from.first_name;
+            let userName: string = ctx.message.from.first_name;
 
-            let {version, race, job, age, attributes, name} = generateCharV2(ctx.message.from.id);
+            let {version, race, job, age, attributes, name}: GeneratorOutput = generateCharV2(ctx.message.from.id);
 
             text = `FICHA DO PERSONAGEM (v${version})\n` +
                 `<b>Jogador:</b> ${userName}\n` +

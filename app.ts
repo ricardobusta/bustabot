@@ -70,7 +70,7 @@ bots.forEach(bot => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 18080;
+const PORT: string | number = process.env.PORT || 18080;
 app.listen(PORT, () => {
     console.log("=========================================");
     console.log("=");

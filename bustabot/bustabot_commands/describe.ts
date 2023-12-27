@@ -3,9 +3,9 @@ import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Describe extends BotCommand {
-    keys = ["desc", "descreve"];
-    description = "Descreve uma imagem";
-    execute = function (ctx: BotExecuteContext): void {
+    keys: string[] = ["desc", "descreve"];
+    description: string = "Descreve uma imagem";
+    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         telegramCommands.sendMessage(
             ctx.botKey,
             ctx.message.chat.id,

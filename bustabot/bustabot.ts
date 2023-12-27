@@ -37,5 +37,5 @@ const commands: Array<BotCommand> = [
     word
 ];
 
-const bustabot = new Bot("bustabot", commands);
+const bustabot: Bot = new Bot("bustabot", commands);
 export default bustabot;

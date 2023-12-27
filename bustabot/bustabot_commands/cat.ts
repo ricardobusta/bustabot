@@ -32,13 +32,13 @@ class Cat extends BotCommand {
 
         let url: string = `https://http.cat/${code}`;
 
-        if(await telegramCommands.IsValidUrl(url)){
+        if (await telegramCommands.IsValidUrl(url)) {
             telegramCommands.sendPhoto(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,
                 url);
-        }else{
+        } else {
             telegramCommands.sendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,

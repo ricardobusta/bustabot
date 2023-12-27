@@ -5,5 +5,11 @@ export const bustabot: BotInfoEntry = {
     token: 'key from telegram api',
 };
 
+export const dev_bustabot: BotInfoEntry = {
+    username: 'bot username',
+    token: 'key from telegram api',
+};
+
 export const projectId = 'google project id';
 export const webhook = 'google project url';
+export const dev_webhook: string = 'dev webhook';

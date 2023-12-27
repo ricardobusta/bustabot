@@ -5,28 +5,28 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import {readFileSync} from 'fs';
 import BotData from "../../bot_core/Bot/bot_data";
 
-const wordCommandDocument = "word";
+const wordCommandDocument: string = "word";
 
 const wrongGuess: string = "⬛️";
 const misplacedGuess: string = "🟨";
 const rightGuess: string = "🟩";
 
-const date0 = new Date(2022, 0, 9); // Jan is month 0
-const dateOffset = 1;
+const date0: Date = new Date(2022, 0, 9); // Jan is month 0
+const dateOffset: number = 1;
 
 function splitStringRemoveEmpty(s: string, splitter: RegExp | string): string[] {
-    return s.split(splitter).map(function (i) {
+    return s.split(splitter).map(function (i: string): string {
         return i.trim();
-    }).filter(function (i) {
+    }).filter(function (i: string): string {
         return i;
     });
 }
 
-const vocabulary = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/vocabulary_ptbr.txt", {
+const vocabulary: string[] = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/vocabulary_ptbr.txt", {
     encoding: 'utf8',
     flag: 'r'
 }), /\s+/);
-const wordOfDayList = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/word_of_day_ptbr.txt", {
+const wordOfDayList: string[] = splitStringRemoveEmpty(readFileSync("./bustabot/word_data/word_of_day_ptbr.txt", {
     encoding: 'utf8',
     flag: 'r'
 }), /\s+/);
@@ -43,7 +43,7 @@ class WordData extends BotData {
     wordOverride: string;
 }
 
-function normalizeString(s: string) {
+function normalizeString(s: string): string {
     return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
@@ -57,7 +57,7 @@ function toFirestore(data: WordData): FirebaseFirestore.DocumentData {
     };
 }
 
-function ensureData(data: WordData) {
+function ensureData(data: WordData): void {
     if (!data.lastSentMessage) {
         data.lastSentMessage = null;
     }
@@ -80,7 +80,7 @@ function replaceCharAt(str: string, index: number, char: string): string {
 }
 
 function resultStringFromGuess(word: string, guess: string): string {
-    let charResult = "WWWWW";
+    let charResult: string = "WWWWW";
     let missingCharacters: string[] = [];
     for (let i = 0; i < 5; i++) {
         if (word[i] === guess[i]) {
@@ -91,14 +91,14 @@ function resultStringFromGuess(word: string, guess: string): string {
     }
 
     for (let i = 0; i < 5; i++) {
-        let index = missingCharacters.indexOf(guess[i]);
+        let index: number = missingCharacters.indexOf(guess[i]);
         if (charResult[i] != "R" && index > -1) {
             charResult = replaceCharAt(charResult, i, "M");
             missingCharacters.splice(index, 1)
         }
     }
 
-    let result = "";
+    let result: string = "";
     for (let i = 0; i < 5; i++) {
         result += charResult[i] == "W" ? wrongGuess : charResult[i] == "M" ? misplacedGuess : rightGuess;
     }
@@ -106,23 +106,23 @@ function resultStringFromGuess(word: string, guess: string): string {
     return result;
 }
 
-function getUsername(user: TelegramBot.User) {
-    let username = user ? (user.username ? user.username : user.first_name) : "someone";
+function getUsername(user: TelegramBot.User): string {
+    let username: string = user ? (user.username ? user.username : user.first_name) : "someone";
     return username.replace(",", ".");
 }
 
-function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, todayIndex: number) {
+function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, todayIndex: number): void {
     console.log("Cleaning up data");
 
-    data.listDocuments().then(docs => {
-        docs.forEach(doc => {
+    data.listDocuments().then((docs): void => {
+        docs.forEach((doc): void => {
             if (doc.id.startsWith(wordCommandDocument)) {
                 doc.get()
-                    .then(docData => {
-                        let d = docData.exists ? docData.data() as WordData : null;
+                    .then((docData): void => {
+                        let d: WordData = docData.exists ? docData.data() as WordData : null;
                         if (d && todayIndex > d.dayIndex) {
                             console.log(`Deleting old doc ${doc.id}\n`);
-                            doc.delete().then(r => {
+                            doc.delete().then((r): void => {
                             });
                         }
                     });
@@ -132,16 +132,16 @@ function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, today
 }
 
 class Word extends BotCommand {
-    keys = ["word", "wor", "wo", "w"];
-    description = "Adivinhe a palavra";
-    execute = function (ctx: BotExecuteContext): void {
-        const now = new Date(Date.now());
-        const dateDiff = now.getTime() - date0.getTime();
-        const todayIndex = Math.floor(dateDiff / (1000 * 3600 * 24)) + dateOffset;
+    keys: string[] = ["word", "wor", "wo", "w"];
+    description: string = "Adivinhe a palavra";
+    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+        const now: Date = new Date(Date.now());
+        const dateDiff: number = now.getTime() - date0.getTime();
+        const todayIndex: number = Math.floor(dateDiff / (1000 * 3600 * 24)) + dateOffset;
 
-        let document = ctx.data.doc(`${wordCommandDocument}[${ctx.message.chat.id}]`)
+        let document: FirebaseFirestore.DocumentReference<BotData> = ctx.data.doc(`${wordCommandDocument}[${ctx.message.chat.id}]`)
         document.get()
-            .then(doc => {
+            .then((doc): void => {
                 let data: WordData = doc.exists ? doc.data() as WordData : new WordData();
 
                 if (todayIndex > data.dayIndex) {
@@ -151,18 +151,18 @@ class Word extends BotCommand {
                     data.wordOverride = "";
                 }
 
-                function sendMessage(msg: string, parseMode: string = "HTML") {
+                function sendMessage(msg: string, parseMode: string = "HTML"): void {
                     telegramCommands.sendMessage(
                         ctx.botKey,
                         ctx.message.chat.id,
                         null,
                         msg,
-                        function (res) {
+                        function (res: TelegramBot.Message): void {
                             if (data && data.lastSentMessage) {
                                 telegramCommands.deleteMessage(ctx.botKey, ctx.message.chat.id, data.lastSentMessage)
                             }
                             data.lastSentMessage = res.message_id;
-                            document.set(toFirestore(data)).then(r => {
+                            document.set(toFirestore(data)).then((r): void => {
                             });
                         },
                         parseMode
@@ -171,40 +171,40 @@ class Word extends BotCommand {
 
                 ensureData(data);
 
-                let wordOfDay = wordOfDayList[todayIndex].toUpperCase();
+                let wordOfDay: string = wordOfDayList[todayIndex].toUpperCase();
                 if (data.wordOverride && data.wordOverride != "") {
                     wordOfDay = data.wordOverride.trim().toUpperCase();
                 }
-                const normalizedWordOfDay = normalizeString(wordOfDay);
-                const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-                let timeRemaining = endOfDay.getTime() - now.getTime();
-                const remainingHours = Math.floor(timeRemaining / (1000 * 60 * 60));
+                const normalizedWordOfDay: string = normalizeString(wordOfDay);
+                const endOfDay: Date = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+                let timeRemaining: number = endOfDay.getTime() - now.getTime();
+                const remainingHours: number = Math.floor(timeRemaining / (1000 * 60 * 60));
                 timeRemaining -= remainingHours * (1000 * 60 * 60);
-                const remainingMinutes = Math.floor(timeRemaining / (1000 * 60))
+                const remainingMinutes: number = Math.floor(timeRemaining / (1000 * 60))
                 timeRemaining -= remainingMinutes * (1000 * 60);
-                const remainingSeconds = Math.floor(timeRemaining / (1000))
-                const statusString = `Próxima palavra em: <code>${formatTime(remainingHours)}:${formatTime(remainingMinutes)}:${formatTime(remainingSeconds)}</code>`;
+                const remainingSeconds: number = Math.floor(timeRemaining / (1000))
+                const statusString: string = `Próxima palavra em: <code>${formatTime(remainingHours)}:${formatTime(remainingMinutes)}:${formatTime(remainingSeconds)}</code>`;
 
-                const guessedWords = splitStringRemoveEmpty(data.guesses.toUpperCase(), ",");
-                const normalizedGuessedWords = guessedWords.map(w => normalizeString(w));
-                const players = splitStringRemoveEmpty(data.players, ",");
-                const lastGuess = guessedWords.length > 0 ? guessedWords[guessedWords.length - 1] : "";
+                const guessedWords: string[] = splitStringRemoveEmpty(data.guesses.toUpperCase(), ",");
+                const normalizedGuessedWords: string[] = guessedWords.map((w): string => normalizeString(w));
+                const players: string[] = splitStringRemoveEmpty(data.players, ",");
+                const lastGuess: string = guessedWords.length > 0 ? guessedWords[guessedWords.length - 1] : "";
 
                 function resultString(): string {
-                    let r = data.wordOverride != "" ? `@bustabot /word <code>Custom</code>\n` : `@bustabot /word #${todayIndex}\n`;
-                    const size = Math.min(guessedWords.length, players.length);
+                    let r: string = data.wordOverride != "" ? `@bustabot /word <code>Custom</code>\n` : `@bustabot /word #${todayIndex}\n`;
+                    const size: number = Math.min(guessedWords.length, players.length);
                     for (var i = 0; i < size; i++) {
                         r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
                     }
                     return r;
                 }
 
-                function missingCharacters() {
-                    let m = "";
-                    let mm = "";
-                    let count = 0;
+                function missingCharacters(): string {
+                    let m: string = "";
+                    let mm: string = "";
+                    let count: number = 0;
                     for (let i = "A".charCodeAt(0); i <= "Z".charCodeAt(0); i++) {
-                        const c = String.fromCharCode(i);
+                        const c: string = String.fromCharCode(i);
                         if (!normalizeString(data.guesses).includes(c)) {
                             m += `${c} `;
                             count++;
@@ -231,19 +231,19 @@ class Word extends BotCommand {
                             sendMessage("Cleaning up old bot data.");
                             return;
                         case "-share":
-                            let msg = `t.me/bustabot /word #${todayIndex}\n`;
-                            const size = Math.min(guessedWords.length, players.length);
+                            let msg: string = `t.me/bustabot /word #${todayIndex}\n`;
+                            const size: number = Math.min(guessedWords.length, players.length);
                             for (var i = 0; i < size; i++) {
                                 msg += `${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
                             }
                             sendMessage(msg);
                             return;
                         case "-spoiler":
-                            var index = todayIndex;
+                            var index: number = todayIndex;
                             if (ctx.params.length >= 3) {
                                 index = parseInt(ctx.params[2]);
                             }
-                            const spoilerWord = wordOfDayList[index];
+                            const spoilerWord: string = wordOfDayList[index];
                             sendMessage(`Spoiler: <tg-spoiler>${spoilerWord}</tg-spoiler>`);
                             return;
                         case "-set":
@@ -255,12 +255,12 @@ class Word extends BotCommand {
                                 sendMessage(`Ultima palavra não foi adivinhada ainda!`);
                                 return;
                             }
-                            const input = ctx.params[2].trim();
+                            const input: string = ctx.params[2].trim();
                             if (input.length != 5) {
                                 sendMessage(`A palavra precisa ter 5 caracteres!`);
                                 return;
                             }
-                            const normalizedInput = normalizeString(input);
+                            const normalizedInput: string = normalizeString(input);
                             if (normalizedInput.match(new RegExp("[a-zA-Z]{5}")) == null) {
                                 sendMessage(`A palavra deve conter apenas letras.`);
                                 return;
@@ -275,7 +275,7 @@ class Word extends BotCommand {
                 }
 
                 if (lastGuess == wordOfDay) {
-                    const lastPlayer = guessedWords.length > 0 && guessedWords.length <= players.length ? players[guessedWords.length - 1] : "";
+                    const lastPlayer: string = guessedWords.length > 0 && guessedWords.length <= players.length ? players[guessedWords.length - 1] : "";
                     sendMessage(formatString(`${lastPlayer} já adivinhou a palavra de hoje! A palavra é <code>${wordOfDay}</code>!\nUse <code>/word -share</code> para compartilhar.\n`));
                     return;
                 }
@@ -285,8 +285,8 @@ class Word extends BotCommand {
                     return;
                 }
 
-                const playerGuess = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
-                const normalizedGuess = normalizeString(playerGuess);
+                const playerGuess: string = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
+                const normalizedGuess: string = normalizeString(playerGuess);
 
                 if (normalizedGuessedWords.includes(normalizedGuess)) {
                     sendMessage(formatString("Palavra já enviada.\n"))
@@ -303,14 +303,14 @@ class Word extends BotCommand {
                     return;
                 }
 
-                const result = resultStringFromGuess(normalizedWordOfDay, normalizedGuess);
+                const result: string = resultStringFromGuess(normalizedWordOfDay, normalizedGuess);
 
-                const userName = getUsername(ctx.message.from);
+                const userName: string = getUsername(ctx.message.from);
 
                 data.guesses = data.guesses.toUpperCase() + "," + playerGuess;
                 data.players = data.players + "," + userName;
 
-                document.set(toFirestore(data)).then(r => {
+                document.set(toFirestore(data)).then((r): void => {
                 });
 
                 if (result == "🟩🟩🟩🟩🟩") {
@@ -320,7 +320,7 @@ class Word extends BotCommand {
                     sendMessage(formatString("", `<code>${playerGuess}</code> ${result} - ${userName}\n`));
                 }
             })
-            .catch(err => {
+            .catch((err): void => {
                 console.log("Error getting document", err);
             });
     }

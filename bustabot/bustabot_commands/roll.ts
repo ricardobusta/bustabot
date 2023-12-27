@@ -2,14 +2,14 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
-function RandomRange(min: number, max: number) {
+function RandomRange(min: number, max: number): number {
     return Math.floor((Math.random() * (max - min + 1) + min));
 }
 
 class Roll extends BotCommand {
-    keys = ["roll", "dice"];
-    description = "Rolls a dice.";
-    execute = function (ctx: BotExecuteContext): void {
+    keys: string[] = ["roll", "dice"];
+    description: string = "Rolls a dice.";
+    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         telegramCommands.sendMessage(
             ctx.botKey,
             ctx.message.chat.id,
