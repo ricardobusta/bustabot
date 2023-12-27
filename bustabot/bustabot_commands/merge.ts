@@ -2,13 +2,12 @@ import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
-const fusionSpriteUrl = "https://raw.githubusercontent.com/Aegide/FusionSprites/master/Japeal/3/3.3.png";
-
-class Birl extends BotCommand {
-    keys = ["merge"];
-    description = "Merge Pokemon";
-    execute = function (ctx: BotExecuteContext): void {
-        function sendMessage(text: string) {
+class Merge extends BotCommand {
+    keys: string[] = ["merge"];
+    description: string = "Merge Pokemon";
+    wip: boolean = true;
+    execute: (ctx: BotExecuteContext) => Promise<void> = async function (ctx: BotExecuteContext): Promise<void> {
+        function sendMessage(text: string): void {
             telegramCommands.sendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
@@ -16,7 +15,7 @@ class Birl extends BotCommand {
                 text);
         }
 
-        function sendPicture(url: string) {
+        function sendPicture(url: string): void {
             telegramCommands.sendPhoto(
                 ctx.botKey,
                 ctx.message.chat.id,
@@ -29,30 +28,25 @@ class Birl extends BotCommand {
             return;
         }
 
-        let n1 = parseInt(ctx.params[1]);
-        let n2 = parseInt(ctx.params[2]);
+        let n1: number = parseInt(ctx.params[1]);
+        let n2: number = parseInt(ctx.params[2]);
         if (isNaN(n1) || isNaN(n2)) {
             sendMessage("Both parameters must be valid numbers.");
             return;
         }
 
-        let customBattlerUrl = `https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/${n1}.${n2}.png`
-        let fusionSpriteUrl = `https://raw.githubusercontent.com/Aegide/autogen-fusion-sprites/master/Battlers/1/${n1}/${n1}.${n2}.png`
+        let customBattlerUrl: string = `https://raw.githubusercontent.com/Aegide/custom-fusion-sprites/main/CustomBattlers/${n1}.${n2}.png`
+        let fusionSpriteUrl: string = `https://raw.githubusercontent.com/Aegide/autogen-fusion-sprites/master/Battlers/1/${n1}/${n1}.${n2}.png`
 
-        telegramCommands.executeIfUrlExist(customBattlerUrl,
-            function () {
-                sendPicture(customBattlerUrl);
-            },
-            function () {
-                telegramCommands.executeIfUrlExist(fusionSpriteUrl,
-                    function () {
-                        sendPicture(fusionSpriteUrl);
-                    },
-                    function () {
-                        sendMessage("Image not found");
-                    });
-            });
+
+        if (await telegramCommands.IsValidUrl(customBattlerUrl)) {
+            sendPicture(customBattlerUrl);
+        } else if (await telegramCommands.IsValidUrl(fusionSpriteUrl)) {
+            sendPicture(fusionSpriteUrl);
+        } else {
+            sendMessage("Image not found");
+        }
     }
 }
 
-export default new Birl();
+export default new Merge();

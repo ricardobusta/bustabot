@@ -29,14 +29,9 @@ async function RequestPost(url: string, body: object, handle): Promise<void> {
     }
 }
 
-export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    RequestHead(url).then((response: string): void => {
-        if (response?.startsWith("2")) {
-            onExist();
-        } else {
-            onNotExist();
-        }
-    });
+export async function IsValidUrl(url: string): Promise<boolean> {
+    let response = await RequestHead(url);
+    return response?.startsWith("2");
 }
 
 function messageCallback(error, res, callback): void {

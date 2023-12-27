@@ -1,5 +1,4 @@
 import TelegramBot = require("node-telegram-bot-api");
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotExecuteContext from "./bot_execute_data";
 
 export type BotCommandExecute = (context: BotExecuteContext) => void;
@@ -17,7 +16,7 @@ abstract class BotCommand {
         return message.text.substring(params0.length, params0.length + 20).trim().toUpperCase();
     }
 
-    wip = false;
+    wip: boolean = false;
 }
 
 export default BotCommand;
