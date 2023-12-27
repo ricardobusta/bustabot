@@ -10,7 +10,7 @@ class About extends BotCommand {
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
-            "BustaBot version 1.0 - Build #N\nMade by Ricardo Bustamante <ricardo@busta.dev>\nhttps://github.com/ricardobusta/bustabot"
+            `BustaBot version ${ctx.version}\nMade by Ricardo Bustamante &lt;ricardo@busta.dev&gt;\nhttps://github.com/ricardobusta/bustabot`,
         );
     }
 }

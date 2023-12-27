@@ -16,12 +16,9 @@ async function RequestPost(url: string, body: object, handle): Promise<void> {
     const bodyJson: string = JSON.stringify(body);
     console.log(`Will POST request.\nURL: ${url}\nBODY: ${bodyJson}`)
     const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
-    try {
-        const response: any = await post('', body);
-        handle(response.errorMessage, response, await response.json())
-    } catch (e) {
-        console.log(`Request Exception: ${await e.responseBody}`);
-    }
+
+    const response: any = await post('', body);
+    handle(await response.errorMessage, response, await response.json())
 }
 
 export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {

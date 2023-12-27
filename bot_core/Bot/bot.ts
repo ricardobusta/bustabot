@@ -45,8 +45,7 @@ class Bot {
     printHelpCommand(context: BotExecuteContext): void {
         console.log("Logging Help!");
 
-        let helpString = `<b>${this.botName} Help:</b>\n`;
-        helpString += `Version: ${context.version}`;
+        let helpString = `<b>${this.botName} v${context.version} Help:</b>\n`;
         for (let i in this.commands) {
             let command = this.commands[i];
             if (command.wip) {

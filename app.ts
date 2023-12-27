@@ -6,9 +6,8 @@ import Bot from './bot_core/Bot/bot';
 import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
-let debugString: string = "1";
 const version_major: number = 1;
-const version_minor: number = 1;
+const version_minor: number = 2;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
@@ -42,7 +41,7 @@ if (isProd) {
     app.get("/", (req, res) => {
         res
             .status(200)
-            .send(debugString)
+            .send(version)
             .end();
     });
 
@@ -71,7 +70,7 @@ if (isProd) {
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
         for(let i=0;i<50;i++){
-            console.log("");
+            console.log("\n");
         }
         console.log("=========================================");
         console.log("=");
