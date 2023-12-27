@@ -7,11 +7,13 @@ function getBotApiURL(botKey: string, command: string): string {
 }
 
 async function RequestHead(url: string): Promise<any> {
+    console.log(`Will HEAD request.\nURL: ${url}`)
     const head: bent.RequestFunction<any> = bent(url, 'HEAD', 'json', 200);
     return await head('');
 }
 
 async function RequestPost(url: string, body: RequestBody, handle) : Promise<void>{
+    console.log(`Will POST request.\nURL: ${url}\nBODY: ${body.toString()}`)
     const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
     const response: any = await post('', body);
 
