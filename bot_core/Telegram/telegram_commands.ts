@@ -1,29 +1,37 @@
 import bent = require("bent");
 import TelegramBot = require("node-telegram-bot-api");
-import {RequestBody} from "bent";
 
 function getBotApiURL(botKey: string, command: string): string {
     return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
-async function RequestHead(url: string): Promise<any> {
-    console.log(`Will HEAD request.\nURL: ${url}`)
-    const head: bent.RequestFunction<any> = bent(url, 'HEAD', 'json', 200);
-    return await head('');
+async function RequestHead(url: string): Promise<string> {
+    const head: bent.RequestFunction<any> = bent(url, 'HEAD');
+    try {
+        const response: any = await head('');
+        return response.statusCode.toString();
+    }catch(e){
+        if(e?.statusCode){
+            return e?.statusCode.toString();
+        }else{
+            return "0";
+        }
+    }
 }
 
 async function RequestPost(url: string, body: object, handle): Promise<void> {
-    const bodyJson: string = JSON.stringify(body);
-    console.log(`Will POST request.\nURL: ${url}\nBODY: ${bodyJson}`)
     const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
-
-    const response: any = await post('', body);
-    handle(await response.errorMessage, response, await response.json())
+    try {
+        const response: any = await post('', body);
+        handle(response?.errorMessage, response, await response?.json())
+    }catch(e){
+        console.log(`Error: ${e}`);
+    }
 }
 
 export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    RequestHead(url).then((response): void => {
-        if (response?.status?.toString()[0] === "2") {
+    RequestHead(url).then((response: string): void => {
+        if (response?.startsWith("2")) {
             onExist();
         } else {
             onNotExist();
@@ -143,10 +151,8 @@ export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCo
     console.log(`Setting bot commands: ${commands}`);
     RequestPost(requestUrl,
         {
-            json: {
-                method: "setMyCommands",
-                commands: commands
-            }
+            method: "setMyCommands",
+            commands: commands
         },
         (error, res, body): void => {
             if (error) {
