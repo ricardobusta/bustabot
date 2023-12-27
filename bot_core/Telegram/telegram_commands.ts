@@ -1,16 +1,37 @@
-import request = require("request");
+import bent = require("bent");
 import TelegramBot = require("node-telegram-bot-api");
 
-function getBotApiURL(botKey: string, command: string) {
+function getBotApiURL(botKey: string, command: string): string {
     return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
-export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    const urlExists = checkUrl => new Promise((resolve, reject) =>
-        request.head(checkUrl).on("response", res => resolve(res.statusCode.toString()[0] === "2")));
+async function RequestHead(url: string): Promise<string> {
+    const head: bent.RequestFunction<any> = bent(url, 'HEAD');
+    try {
+        const response: any = await head('');
+        return response.statusCode.toString();
+    }catch(e){
+        if(e?.statusCode){
+            return e?.statusCode.toString();
+        }else{
+            return "0";
+        }
+    }
+}
 
-    urlExists(url).then(exists => {
-        if (exists) {
+async function RequestPost(url: string, body: object, handle): Promise<void> {
+    const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
+    try {
+        const response: any = await post('', body);
+        handle(response?.errorMessage, response, await response?.json())
+    }catch(e){
+        console.log(`Error: ${e}`);
+    }
+}
+
+export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
+    RequestHead(url).then((response: string): void => {
+        if (response?.startsWith("2")) {
             onExist();
         } else {
             onNotExist();
@@ -18,12 +39,12 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
     });
 }
 
-function messageCallback(error, body, callback) {
+function messageCallback(error, body, callback): void {
     if (error) {
         console.log(error);
         return;
     }
-    const response = (body && body.ok) ? (body.result as TelegramBot.Message) : null;
+    const response: TelegramBot.Message = (body?.ok) ? (body.result as TelegramBot.Message) : null;
     console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
     if (callback) {
         callback(response);
@@ -31,61 +52,51 @@ function messageCallback(error, body, callback) {
 }
 
 export function sendMessage(botKey: string, chatId: number, replyId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
-    request.post(getBotApiURL(botKey, "sendMessage"),
-        {
-            json: {
-                method: "sendMessage",
-                chat_id: chatId,
-                text: text,
-                parse_mode: parseMode,
-                reply_to_message_id: replyId != null ? replyId : ""
-            }
-        }, (error, _res, body) => messageCallback(error, body, callBack));
+    RequestPost(getBotApiURL(botKey, "sendMessage"), {
+        method: "sendMessage",
+        chat_id: chatId,
+        text: text,
+        parse_mode: parseMode,
+        reply_to_message_id: replyId ?? ""
+    }, (error, _res, body): void => messageCallback(error, body, callBack)).then();
 }
 
-export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML") {
-    request.post(getBotApiURL(botKey, "editMessageText"),
+export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
+    RequestPost(getBotApiURL(botKey, "editMessageText"),
         {
-            json: {
-                method: "deleteMessage",
-                chat_id: chatId,
-                message_id: messageId,
-                parse_mode: parseMode,
-                text: text
-            }
+            method: "deleteMessage",
+            chat_id: chatId,
+            message_id: messageId,
+            parse_mode: parseMode,
+            text: text
         },
-        (error, _res, body) => messageCallback(error, body, callBack));
+        (error, _res, body): void => messageCallback(error, body, callBack)).then();
 }
 
-export function deleteMessage(botKey: string, chatId: number, messageId: number) {
-    request.post(getBotApiURL(botKey, "deleteMessage"),
+export function deleteMessage(botKey: string, chatId: number, messageId: number): void {
+    RequestPost(getBotApiURL(botKey, "deleteMessage"),
         {
-            json: {
-                method: "deleteMessage",
-                chat_id: chatId,
-                message_id: messageId
-            }
+            method: "deleteMessage",
+            chat_id: chatId,
+            message_id: messageId
         },
-        (error, _res, _body) => {
+        (error, _res, _body): void => {
             if (error) {
                 console.log(error);
-                return;
             }
-        });
+        }).then();
 }
 
 export function sendPhoto(botKey: string, chatId: number, replyId: number, photoId: string, callBack: () => void = null): void {
-    request.post(getBotApiURL(botKey, "sendPhoto"),
+    RequestPost(getBotApiURL(botKey, "sendPhoto"),
         {
-            json: {
-                method: "sendPhoto",
-                chat_id: chatId,
-                photo: photoId,
-                parse_mode: "HTML",
-                reply_to_message_id: replyId != null ? replyId : ""
-            }
+            method: "sendPhoto",
+            chat_id: chatId,
+            photo: photoId,
+            parse_mode: "HTML",
+            reply_to_message_id: replyId ?? ""
         },
-        (error, _res, body) => {
+        (error, _res, body): void => {
             if (error) {
                 console.log(error);
                 return;
@@ -94,20 +105,18 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
             if (callBack) {
                 callBack();
             }
-        });
+        }).then();
 }
 
 export function pinMessage(botKey: string, chatId: number, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
-    request.post(getBotApiURL(botKey, "pinChatMessage"),
+    RequestPost(getBotApiURL(botKey, "pinChatMessage"),
         {
-            json: {
-                method: "pinChatMessage",
-                chat_id: chatId,
-                message_id: messageId,
-                disable_notification: disableNotification,
-            }
+            method: "pinChatMessage",
+            chat_id: chatId,
+            message_id: messageId,
+            disable_notification: disableNotification,
         },
-        (error, _res, body) => {
+        (error, _res, body): void => {
             if (error) {
                 console.log(error);
                 return;
@@ -116,44 +125,42 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
             if (callBack) {
                 callBack();
             }
-        });
+        }).then();
 }
 
-export function setWebhook(url: string, botKey: string) {
-    let hookUrl = encodeURIComponent(`${url}/bot${botKey}`);
-    let requestUrl = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
+export function setWebhook(url: string, botKey: string): void {
+    let hookUrl: string = encodeURIComponent(`${url}/bot${botKey}`);
+    let requestUrl: string = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
     console.log(`With request url: ${requestUrl}`)
-    request.post(requestUrl,
+    RequestPost(requestUrl,
         {},
-        (error, res, body) => {
+        (error, res, body): void => {
             if (error) {
                 console.log(error);
                 return;
             }
             if (res) {
-                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
+                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${JSON.stringify(body)}`);
             }
-        });
+        }).then();
 }
 
-export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>) {
-    let requestUrl = `${getBotApiURL(botKey, "setMyCommands")}`;
-    let commands = JSON.stringify(botCommands);
+export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>): void {
+    let requestUrl: string = `${getBotApiURL(botKey, "setMyCommands")}`;
+    let commands: string = JSON.stringify(botCommands);
     console.log(`Setting bot commands: ${commands}`);
-    request.post(requestUrl,
+    RequestPost(requestUrl,
         {
-            json: {
-                method: "setMyCommands",
-                commands: commands
-            }
+            method: "setMyCommands",
+            commands: commands
         },
-        (error, res, body) => {
+        (error, res, body): void => {
             if (error) {
                 console.log(error);
                 return;
             }
             if (res) {
-                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
+                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${JSON.stringify(body)}`);
             }
-        });
+        }).then();
 }

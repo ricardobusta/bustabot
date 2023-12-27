@@ -26,6 +26,9 @@ gcloud app logs tail -s default
 ## Together
 gcloud app deploy;gcloud app logs tail -s default
 
+## No cache
+gcloud app deploy --no-cache;gcloud app logs tail -s default
+
 ## Check for compilation errors
 tsc -p .
 

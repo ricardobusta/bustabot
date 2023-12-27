@@ -1,14 +1,15 @@
 const express = require('express');
 import bustabot from './bustabot/bustabot';
-import jukebot from './jukebot/jukebot';
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
 import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
-let debugString: string = "1";
-const version: number = 3;
+const version_major: number = 1;
+const version_minor: number = 2;
+const version_patch: number = 0;
+const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
 process.argv.forEach(function name(val, index, arr) {
     if (val === "prod") {
@@ -18,7 +19,6 @@ process.argv.forEach(function name(val, index, arr) {
 
 const bots: Bot[] = [
     bustabot,
-    jukebot
 ]
 
 try {
@@ -27,8 +27,7 @@ try {
         keyFilename: "google_key.json",
     });
 
-    bustabot.init(db, botKey.bustabot, botKey.webhook);
-    jukebot.init(db, botKey.jukebot, botKey.webhook);
+    bustabot.init(db, botKey.bustabot, botKey.webhook, version);
 } catch (error) {
     console.log(error);
 }
@@ -42,7 +41,7 @@ if (isProd) {
     app.get("/", (req, res) => {
         res
             .status(200)
-            .send(debugString)
+            .send(version)
             .end();
     });
 
@@ -70,14 +69,15 @@ if (isProd) {
     // Start the server
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
+        for(let i=0;i<50;i++){
+            console.log("\n");
+        }
         console.log("=========================================");
         console.log("=");
-        console.log("=   STARTING NEW BOT RUN v:" + version);
+        console.log("=   STARTING NEW BOT RUN ver " + version);
         console.log("=");
         console.log("=========================================");
         console.log(`App listening on port ${PORT}`);
         console.log("Press Ctrl+C to quit.");
     });
-} else {
-
 }

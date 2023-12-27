@@ -10,6 +10,7 @@ class Bot {
     botAlias: string;
     botName: string;
     botKey: string;
+    version: string;
     commands: Array<BotCommand>;
     data: FirebaseFirestore.CollectionReference<any>;
     initialized: boolean;
@@ -44,7 +45,7 @@ class Bot {
     printHelpCommand(context: BotExecuteContext): void {
         console.log("Logging Help!");
 
-        let helpString = `<b>${this.botName} Help:</b>\n`;
+        let helpString = `<b>${this.botName} v${context.version} Help:</b>\n`;
         for (let i in this.commands) {
             let command = this.commands[i];
             if (command.wip) {
@@ -106,12 +107,13 @@ class Bot {
     }
 
     // Initializes the bot internal state
-    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string) {
+    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string, version: string) {
         if (botInfo === undefined) {
             return;
         }
         this.botName = "@" + botInfo.username;
         this.botKey = botInfo.token;
+        this.version = version;
 
         this.data = db.collection(this.botAlias + "_data");
 
@@ -122,13 +124,13 @@ class Bot {
     };
 
     // The handler for the bot requests made by telegram webhook.
-    handleTelegramUpdate(update: TelegramBot.Update) {
-        const message = update?.message;
+    handleTelegramUpdate(update: TelegramBot.Update): void {
+        const message: TelegramBot.Message = update?.message;
         // Ensure the message contains body
-        if (!message || !message.text) {
+        if (!message?.text) {
             return;
         }
-        let text = message.text;
+        let text: string = message.text;
 
         // And the message is a bot command
         if (!text.startsWith("/")) {
@@ -136,14 +138,14 @@ class Bot {
         }
 
         // And it is a somewhat valid command
-        let splitText = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
+        let splitText: RegExpMatchArray = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
         if (!splitText) return;
-        splitText = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
-        let key = splitText[0];
+        let splitTextResult: string[] = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
+        let key: string = splitTextResult.at(0);
         if (key == null || key == "") return;
 
         // And that command is not directed to another bot
-        let commandKey = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
+        let commandKey: string = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
 
         // Not a valid command or directed to another bot
         if (!(key in this.commandMap)) {
@@ -164,7 +166,8 @@ class Bot {
             botKey: this.botKey,
             params: splitText,
             message: message,
-            data: this.data
+            data: this.data,
+            version: this.version
         };
         command(context);
     };

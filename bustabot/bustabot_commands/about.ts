@@ -3,14 +3,14 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 
 class About extends BotCommand {
-    keys = ["about"];
-    description = "About @BustaBot";
-    execute = function (ctx: BotExecuteContext): void {
+    keys: string[] = ["about"];
+    description: string = "About @BustaBot";
+    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         telegramCommands.sendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
-            "BustaBot version 1.0 - Build #N\nMade by Ricardo Bustamante <ricardo@busta.dev>\nhttps://github.com/ricardobusta/bustabot"
+            `BustaBot version ${ctx.version}\nMade by Ricardo Bustamante &lt;ricardo@busta.dev&gt;\nhttps://github.com/ricardobusta/bustabot`,
         );
     }
 }

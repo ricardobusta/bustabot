@@ -7,6 +7,7 @@ class BotExecuteContext {
     params: string[];
     message: TelegramBot.Message;
     data: FirebaseFirestore.CollectionReference<BotData>;
+    version: string;
 }
 
 export default BotExecuteContext;
