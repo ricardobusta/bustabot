@@ -50,7 +50,7 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
                 parse_mode: parseMode,
                 reply_to_message_id: replyId != null ? replyId : ""
             }
-        }, (error, _res, body) => messageCallback(error, body, callBack));
+        }, (error, _res, body) => messageCallback(error, body, callBack)).then();
 }
 
 export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML") {
@@ -64,7 +64,7 @@ export function editMessageText(botKey: string, chatId: number, messageId: numbe
                 text: text
             }
         },
-        (error, _res, body) => messageCallback(error, body, callBack));
+        (error, _res, body) => messageCallback(error, body, callBack)).then();
 }
 
 export function deleteMessage(botKey: string, chatId: number, messageId: number) {
@@ -81,7 +81,7 @@ export function deleteMessage(botKey: string, chatId: number, messageId: number)
                 console.log(error);
                 return;
             }
-        });
+        }).then();
 }
 
 export function sendPhoto(botKey: string, chatId: number, replyId: number, photoId: string, callBack: () => void = null): void {
@@ -104,7 +104,7 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
             if (callBack) {
                 callBack();
             }
-        });
+        }).then();
 }
 
 export function pinMessage(botKey: string, chatId: number, messageId: number, disableNotification: boolean, callBack: () => void = null): void {
@@ -126,7 +126,7 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
             if (callBack) {
                 callBack();
             }
-        });
+        }).then();
 }
 
 export function setWebhook(url: string, botKey: string) {
@@ -143,7 +143,7 @@ export function setWebhook(url: string, botKey: string) {
             if (res) {
                 console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
             }
-        });
+        }).then();
 }
 
 export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>) {
@@ -165,5 +165,5 @@ export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCo
             if (res) {
                 console.log(`Response: ${res.statusCode} ${res.statusMessage} ${body.toString()}`);
             }
-        });
+        }).then();
 }
