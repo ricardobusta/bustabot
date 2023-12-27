@@ -13,13 +13,13 @@ async function RequestHead(url: string): Promise<any> {
 
 async function RequestPost(url: string, body: RequestBody, handle) : Promise<void>{
     const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
-    const response = await post('', body);
+    const response: any = await post('', body);
 
     handle(response.errorMessage, response, response.body)
 }
 
 export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    RequestHead(url).then(response => {
+    RequestHead(url).then((response): void => {
         if(response && response.statusCode.toString()[0] === "2"){
             onExist();
         }else{
@@ -28,12 +28,12 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
     });
 }
 
-function messageCallback(error, body, callback) {
+function messageCallback(error, body, callback): void {
     if (error) {
         console.log(error);
         return;
     }
-    const response = (body && body.ok) ? (body.result as TelegramBot.Message) : null;
+    const response: TelegramBot.Message = (body?.ok) ? (body.result as TelegramBot.Message) : null;
     console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
     if (callback) {
         callback(response);
@@ -48,12 +48,12 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
                 chat_id: chatId,
                 text: text,
                 parse_mode: parseMode,
-                reply_to_message_id: replyId != null ? replyId : ""
+                reply_to_message_id: replyId ?? ""
             }
-        }, (error, _res, body) => messageCallback(error, body, callBack)).then();
+        }, (error, _res, body): void => messageCallback(error, body, callBack)).then();
 }
 
-export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML") {
+export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
     RequestPost(getBotApiURL(botKey, "editMessageText"),
         {
             json: {
@@ -64,10 +64,10 @@ export function editMessageText(botKey: string, chatId: number, messageId: numbe
                 text: text
             }
         },
-        (error, _res, body) => messageCallback(error, body, callBack)).then();
+        (error, _res, body): void => messageCallback(error, body, callBack)).then();
 }
 
-export function deleteMessage(botKey: string, chatId: number, messageId: number) {
+export function deleteMessage(botKey: string, chatId: number, messageId: number): void {
     RequestPost(getBotApiURL(botKey, "deleteMessage"),
         {
             json: {
@@ -76,10 +76,9 @@ export function deleteMessage(botKey: string, chatId: number, messageId: number)
                 message_id: messageId
             }
         },
-        (error, _res, _body) => {
+        (error, _res, _body): void => {
             if (error) {
                 console.log(error);
-                return;
             }
         }).then();
 }
@@ -92,10 +91,10 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
                 chat_id: chatId,
                 photo: photoId,
                 parse_mode: "HTML",
-                reply_to_message_id: replyId != null ? replyId : ""
+                reply_to_message_id: replyId ?? ""
             }
         },
-        (error, _res, body) => {
+        (error, _res, body): void => {
             if (error) {
                 console.log(error);
                 return;
@@ -117,7 +116,7 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
                 disable_notification: disableNotification,
             }
         },
-        (error, _res, body) => {
+        (error, _res, body): void => {
             if (error) {
                 console.log(error);
                 return;
@@ -129,13 +128,13 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
         }).then();
 }
 
-export function setWebhook(url: string, botKey: string) {
-    let hookUrl = encodeURIComponent(`${url}/bot${botKey}`);
-    let requestUrl = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
+export function setWebhook(url: string, botKey: string): void {
+    let hookUrl: string = encodeURIComponent(`${url}/bot${botKey}`);
+    let requestUrl: string = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
     console.log(`With request url: ${requestUrl}`)
     RequestPost(requestUrl,
         {},
-        (error, res, body) => {
+        (error, res, body): void => {
             if (error) {
                 console.log(error);
                 return;
@@ -146,9 +145,9 @@ export function setWebhook(url: string, botKey: string) {
         }).then();
 }
 
-export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>) {
-    let requestUrl = `${getBotApiURL(botKey, "setMyCommands")}`;
-    let commands = JSON.stringify(botCommands);
+export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>): void {
+    let requestUrl: string = `${getBotApiURL(botKey, "setMyCommands")}`;
+    let commands: string = JSON.stringify(botCommands);
     console.log(`Setting bot commands: ${commands}`);
     RequestPost(requestUrl,
         {
@@ -157,7 +156,7 @@ export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCo
                 commands: commands
             }
         },
-        (error, res, body) => {
+        (error, res, body): void => {
             if (error) {
                 console.log(error);
                 return;
