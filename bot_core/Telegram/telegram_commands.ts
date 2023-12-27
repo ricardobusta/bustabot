@@ -23,9 +23,9 @@ async function RequestPost(url: string, body: object, handle): Promise<void> {
     const post: bent.RequestFunction<any> = bent(url, 'POST', 'json', 200);
     try {
         const response: any = await post('', body);
-        handle(response?.errorMessage, response, await response?.json())
+        handle(await response?.errorMessage, response);
     }catch(e){
-        console.log(`Error: ${e}`);
+        console.log(`Error: ${e} -- ${url} -- ${JSON.stringify(body)}`);
     }
 }
 
@@ -39,12 +39,12 @@ export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: 
     });
 }
 
-function messageCallback(error, body, callback): void {
+function messageCallback(error, res, callback): void {
     if (error) {
         console.log(error);
         return;
     }
-    const response: TelegramBot.Message = (body?.ok) ? (body.result as TelegramBot.Message) : null;
+    const response: TelegramBot.Message = (res.ok) ? (res.result as TelegramBot.Message) : null;
     console.log(`Res: ${response ? response.message_id : "Invalid Response"}`);
     if (callback) {
         callback(response);
@@ -58,7 +58,7 @@ export function sendMessage(botKey: string, chatId: number, replyId: number, tex
         text: text,
         parse_mode: parseMode,
         reply_to_message_id: replyId ?? ""
-    }, (error, _res, body): void => messageCallback(error, body, callBack)).then();
+    }, (error, res): void => messageCallback(error, res, callBack)).then();
 }
 
 export function editMessageText(botKey: string, chatId: number, messageId: number, text: string, callBack: (res: TelegramBot.Message) => void = null, parseMode: string = "HTML"): void {
@@ -70,7 +70,7 @@ export function editMessageText(botKey: string, chatId: number, messageId: numbe
             parse_mode: parseMode,
             text: text
         },
-        (error, _res, body): void => messageCallback(error, body, callBack)).then();
+        (error, res): void => messageCallback(error, res, callBack)).then();
 }
 
 export function deleteMessage(botKey: string, chatId: number, messageId: number): void {
@@ -80,7 +80,7 @@ export function deleteMessage(botKey: string, chatId: number, messageId: number)
             chat_id: chatId,
             message_id: messageId
         },
-        (error, _res, _body): void => {
+        (error, _res): void => {
             if (error) {
                 console.log(error);
             }
@@ -96,12 +96,12 @@ export function sendPhoto(botKey: string, chatId: number, replyId: number, photo
             parse_mode: "HTML",
             reply_to_message_id: replyId ?? ""
         },
-        (error, _res, body): void => {
+        (error, res): void => {
             if (error) {
                 console.log(error);
                 return;
             }
-            console.log(`Photo Sent:\n${body}`);
+            console.log(`Photo Sent:\n${JSON.stringify(res)}`);
             if (callBack) {
                 callBack();
             }
@@ -116,31 +116,31 @@ export function pinMessage(botKey: string, chatId: number, messageId: number, di
             message_id: messageId,
             disable_notification: disableNotification,
         },
-        (error, _res, body): void => {
+        (error, res): void => {
             if (error) {
                 console.log(error);
                 return;
             }
-            console.log(`Message pinned:\n${body}`);
+            console.log(`Message pinned:\n${res}`);
             if (callBack) {
                 callBack();
             }
         }).then();
 }
 
-export function setWebhook(url: string, botKey: string): void {
+export async function setWebhook(url: string, botKey: string): Promise<void> {
     let hookUrl: string = encodeURIComponent(`${url}/bot${botKey}`);
     let requestUrl: string = `${getBotApiURL(botKey, "setWebhook")}?url=${hookUrl}`;
-    console.log(`With request url: ${requestUrl}`)
+    console.log(`Set Webhook with request url: ${requestUrl}`)
     RequestPost(requestUrl,
         {},
-        (error, res, body): void => {
+        (error, res): void => {
             if (error) {
                 console.log(error);
                 return;
             }
             if (res) {
-                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${JSON.stringify(body)}`);
+                console.log(`Set Webhook Response: ${res.ok}`);
             }
         }).then();
 }
@@ -148,18 +148,19 @@ export function setWebhook(url: string, botKey: string): void {
 export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>): void {
     let requestUrl: string = `${getBotApiURL(botKey, "setMyCommands")}`;
     let commands: string = JSON.stringify(botCommands);
+    console.log(`Set Commands with request url: ${requestUrl}`)
     RequestPost(requestUrl,
         {
             method: "setMyCommands",
             commands: commands
         },
-        (error, res, body): void => {
+        (error, res): void => {
             if (error) {
                 console.log(error);
                 return;
             }
             if (res) {
-                console.log(`Response: ${res.statusCode} ${res.statusMessage} ${JSON.stringify(body)}`);
+                console.log(`Set Commands Response: ${res.ok}`);
             }
         }).then();
 }

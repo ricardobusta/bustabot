@@ -117,7 +117,7 @@ class Bot {
 
         this.initialized = true;
 
-        telegramCommands.setWebhook(url, this.botKey);
+        telegramCommands.setWebhook(url, this.botKey).then();
         telegramCommands.setCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
     };
 
