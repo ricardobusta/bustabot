@@ -6,10 +6,9 @@ function getBotApiURL(botKey: string, command: string): string {
     return `https://api.telegram.org/bot${botKey}/${command}`
 }
 
-async function RequestHead(url: string): Promise<number> {
+async function RequestHead(url: string): Promise<any> {
     const head: bent.RequestFunction<any> = bent(url, 'HEAD', 'json', 200);
-    const response = await head('');
-    return response.status;
+    return await head('');
 }
 
 async function RequestPost(url: string, body: RequestBody, handle) : Promise<void>{
@@ -20,8 +19,8 @@ async function RequestPost(url: string, body: RequestBody, handle) : Promise<voi
 }
 
 export function executeIfUrlExist(url: string, onExist: () => void, onNotExist: () => void): void {
-    RequestHead(url).then(status => {
-        if(status.toString()[0] === "2"){
+    RequestHead(url).then(response => {
+        if(response && response.statusCode.toString()[0] === "2"){
             onExist();
         }else{
             onNotExist();
