@@ -37,8 +37,6 @@ class Bot {
                 this.commandMap[key] = command.execute;
             }
         }
-
-        console.log(this);
     }
 
     // Used to print the /help command.

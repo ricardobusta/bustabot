@@ -27,57 +27,60 @@ try {
         keyFilename: "google_key.json",
     });
 
-    bustabot.init(db, botKey.bustabot, botKey.webhook, version);
+    if (isProd) {
+        bustabot.init(db, botKey.bustabot, botKey.webhook, version);
+    } else {
+        bustabot.init(db, botKey.dev_bustabot, botKey.dev_webhook, version);
+    }
 } catch (error) {
     console.log(error);
 }
 
-if (isProd) {
-    const app = express();
+const app = express();
 
-    app.use(express.json());
+app.use(express.json());
 
-    // Default request. Just to check if the bot is up.
-    app.get("/", (req, res) => {
+// Default request. Just to check if the bot is up.
+app.get("/", (req, res) => {
+    res
+        .status(200)
+        .send(version)
+        .end();
+});
+
+bots.forEach(bot => {
+    if (!bot.initialized) {
+        return;
+    }
+    // Check if the proper key is set. Just make a request with the bot key appended.
+    app.get(`/${bot.botKey}`, (req, res) => {
         res
             .status(200)
-            .send(version)
+            .send(`${bot.botName} is Working!`)
             .end();
     });
 
-    bots.forEach(bot => {
-        if (!bot.initialized) {
-            return;
-        }
-        // Check if the proper key is set. Just make a request with the bot key appended.
-        app.get(`/${bot.botKey}`, (req, res) => {
-            res
-                .status(200)
-                .send(`${bot.botName} is Working!`)
-                .end();
-        });
-
-        // Actual bot requests.
-        app.post(`/bot${bot.botKey}`, (req, res) => {
-            bot.handleTelegramUpdate(req.body as TelegramBot.Update)
-            res
-                .status(200)
-                .end();
-        });
+    // Actual bot requests.
+    app.post(`/bot${bot.botKey}`, (req, res) => {
+        bot.handleTelegramUpdate(req.body as TelegramBot.Update)
+        res
+            .status(200)
+            .end();
     });
+});
 
-    // Start the server
-    const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => {
-        for(let i=0;i<50;i++){
-            console.log("\n");
-        }
-        console.log("=========================================");
-        console.log("=");
-        console.log("=   STARTING NEW BOT RUN ver " + version);
-        console.log("=");
-        console.log("=========================================");
-        console.log(`App listening on port ${PORT}`);
-        console.log("Press Ctrl+C to quit.");
-    });
-}
+// Start the server
+const PORT = process.env.PORT || 18080;
+app.listen(PORT, () => {
+    console.log("=========================================");
+    console.log("=");
+    console.log("=   STARTING NEW BOT RUN ver " + version);
+    if(!isProd){
+        console.log('= DEVELOPMENT MODE');
+    }
+    console.log("=");
+    console.log("=========================================");
+    console.log(`App listening on port ${PORT}`);
+    console.log("Press Ctrl+C to quit.");
+});
+

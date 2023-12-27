@@ -148,7 +148,6 @@ export function setWebhook(url: string, botKey: string): void {
 export function setCommands(botKey: string, botCommands: Array<TelegramBot.BotCommand>): void {
     let requestUrl: string = `${getBotApiURL(botKey, "setMyCommands")}`;
     let commands: string = JSON.stringify(botCommands);
-    console.log(`Setting bot commands: ${commands}`);
     RequestPost(requestUrl,
         {
             method: "setMyCommands",
