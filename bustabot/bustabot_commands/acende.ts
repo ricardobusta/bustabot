@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -46,16 +45,17 @@ class Countdown extends BotCommand {
     execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         let papocoCount: number = RandomInt(papocoMin, papocoMax, 1);
         let delay: number = 0;
-        telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, null, PapocoString(1, 3));
+        let telegram = this.telegram;
+        telegram.SendMessage(ctx.botKey, ctx.message.chat.id, null, PapocoString(1, 3));
         for (let i = 0; i < papocoCount; i++) {
             delay += RandomInt(300, 600, 1);
             setTimeout(function (): void {
-                telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, null, PapocoString(i == Math.ceil(papocoCount / 2) ? 3 : 1, 7));
+                telegram.SendMessage(ctx.botKey, ctx.message.chat.id, null, PapocoString(i == Math.ceil(papocoCount / 2) ? 3 : 1, 7));
             }, delay);
         }
         delay += 3000;
         setTimeout(function (): void {
-            telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, null, PowString(1, 4));
+            telegram.SendMessage(ctx.botKey, ctx.message.chat.id, null, PowString(1, 4));
         }, delay);
     }
 }

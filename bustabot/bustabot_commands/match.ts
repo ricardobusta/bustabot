@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -26,7 +25,7 @@ class Match extends BotCommand {
             text = `O nível de match é <code>${value}%</code>. Deu match? ${value > 60 ? "❤️ <code>Sim</code>!!!" : "💔 <code>Não</code>..."}`;
         }
 
-        telegramCommands.sendMessage(
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,

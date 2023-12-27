@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -68,7 +67,7 @@ class Benedict extends BotCommand {
         let userName: string = ctx.message.from.first_name;
         let result: string = `${first_names[fn]} ${last_names[ln]}`;
 
-        telegramCommands.sendMessage(
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,

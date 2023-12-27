@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -7,7 +6,7 @@ class Grito extends BotCommand {
     description: string = "Shout a phrase";
     execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
         if (ctx.params.length < 2) {
-            telegramCommands.sendMessage(
+            this.telegram.SendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,
@@ -25,7 +24,7 @@ class Grito extends BotCommand {
 
         text += "</code>"
 
-        telegramCommands.sendMessage(
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,

@@ -1,6 +1,4 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
 class Stats extends BotCommand {
@@ -11,7 +9,7 @@ class Stats extends BotCommand {
         document.get()
             .then((doc): void => {
                 let json: string = JSON.stringify(doc.data()).replace(/[{}]/, "").split(",").join(",\n");
-                telegramCommands.sendMessage(
+                this.telegram.SendMessage(
                     ctx.botKey,
                     ctx.message.chat.id,
                     ctx.message.message_id,

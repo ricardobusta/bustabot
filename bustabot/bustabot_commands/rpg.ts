@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import Random from "../../bot_core/random";
 import rpgv1 from "./rpgv1";
@@ -135,7 +134,7 @@ class Rpg extends BotCommand {
             console.log(text);
         }
 
-        telegramCommands.sendMessage(
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,

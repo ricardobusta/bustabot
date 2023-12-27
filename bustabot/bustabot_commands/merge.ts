@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -8,7 +7,7 @@ class Merge extends BotCommand {
     wip: boolean = true;
     execute: (ctx: BotExecuteContext) => Promise<void> = async function (ctx: BotExecuteContext): Promise<void> {
         function sendMessage(text: string): void {
-            telegramCommands.sendMessage(
+            this.telegram.SendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
                 null,
@@ -16,7 +15,7 @@ class Merge extends BotCommand {
         }
 
         function sendPicture(url: string): void {
-            telegramCommands.sendPhoto(
+            this.telegram.SendPhoto(
                 ctx.botKey,
                 ctx.message.chat.id,
                 null,
@@ -39,9 +38,9 @@ class Merge extends BotCommand {
         let fusionSpriteUrl: string = `https://raw.githubusercontent.com/Aegide/autogen-fusion-sprites/master/Battlers/1/${n1}/${n1}.${n2}.png`
 
 
-        if (await telegramCommands.IsValidUrl(customBattlerUrl)) {
+        if (await this.telegram.IsValidUrl(customBattlerUrl)) {
             sendPicture(customBattlerUrl);
-        } else if (await telegramCommands.IsValidUrl(fusionSpriteUrl)) {
+        } else if (await this.telegram.IsValidUrl(fusionSpriteUrl)) {
             sendPicture(fusionSpriteUrl);
         } else {
             sendMessage("Image not found");

@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import BotData from "../../bot_core/Bot/bot_data";
@@ -28,7 +27,7 @@ class Count extends BotCommand {
 
                 let text: string = `Contei até ${currentCount + 1}!`;
 
-                telegramCommands.sendMessage(
+                this.telegram.SendMessage(
                     ctx.botKey,
                     ctx.message.chat.id,
                     ctx.message.message_id,
@@ -38,7 +37,7 @@ class Count extends BotCommand {
                 let text: string = "Foi mal, esqueci..."
                 console.log("Error getting document", err);
 
-                telegramCommands.sendMessage(
+                this.telegram.SendMessage(
                     ctx.botKey,
                     ctx.message.chat.id,
                     ctx.message.message_id,

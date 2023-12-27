@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
@@ -152,14 +151,15 @@ class Word extends BotCommand {
                 }
 
                 function sendMessage(msg: string, parseMode: string = "HTML"): void {
-                    telegramCommands.sendMessage(
+                    let telegram = this.telegram;
+                    telegram.SendMessage(
                         ctx.botKey,
                         ctx.message.chat.id,
                         null,
                         msg,
                         function (res: TelegramBot.Message): void {
-                            if (data && data.lastSentMessage) {
-                                telegramCommands.deleteMessage(ctx.botKey, ctx.message.chat.id, data.lastSentMessage)
+                            if (data?.lastSentMessage) {
+                                telegram.DeleteMessage(ctx.botKey, ctx.message.chat.id, data.lastSentMessage)
                             }
                             data.lastSentMessage = res.message_id;
                             document.set(toFirestore(data)).then((r): void => {

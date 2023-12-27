@@ -1,10 +1,14 @@
 import BotCommand, { BotCommandExecute } from "./bot_command"
-import * as telegramCommands from "../Telegram/telegram_commands";
 import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "./bot_execute_data";
+import TelegramService from "./telegram_service";
+import RequestService from "./request_service";
 
-const statisticsDocumentName = "statistics";
+const statisticsDocumentName: string = "statistics";
+
+const requestService: RequestService = new RequestService();
+const telegramService: TelegramService = new TelegramService(requestService);
 
 class Bot {
     botAlias: string;
@@ -27,9 +31,9 @@ class Bot {
         };
 
         for (let i in commands) {
-            let command = commands[i];
+            let command: BotCommand = commands[i];
             for (let j in command.keys) {
-                let key = command.keys[j];
+                let key: string = command.keys[j];
                 if (key in this.commandMap) {
                     console.log(`Duplicated command: ${key}. Will ignore.`);
                     continue;
@@ -43,16 +47,16 @@ class Bot {
     printHelpCommand(context: BotExecuteContext): void {
         console.log("Logging Help!");
 
-        let helpString = `<b>${this.botName} v${context.version} Help:</b>\n`;
+        let helpString: string = `<b>${this.botName} v${context.version} Help:</b>\n`;
         for (let i in this.commands) {
-            let command = this.commands[i];
+            let command: BotCommand = this.commands[i];
             if (command.wip) {
                 continue;
             }
             helpString += `/${command.keys[0]} - ${command.description}\n`;
         }
 
-        telegramCommands.sendMessage(
+        telegramService.SendMessage(
             context.botKey,
             context.message.chat.id,
             context.message.message_id,
@@ -69,7 +73,7 @@ class Bot {
             comString += `${command.keys[0]} - ${command.description}\n`;
         }
 
-        telegramCommands.sendMessage(
+        telegramService.SendMessage(
             context.botKey,
             context.message.chat.id,
             context.message.message_id,
@@ -93,9 +97,6 @@ class Bot {
                     statistics[totalKey] = (totalKey in statistics) ? (statistics[totalKey] + 1) : 1;
                     statistics[commandKey] = (commandKey in statistics) ? (statistics[commandKey]) + 1 : 1;
 
-                    //console.log("Updating statistics for command " + command);
-                    //console.log(statistics);
-
                     document.set(statistics);
                 }
             })
@@ -117,8 +118,8 @@ class Bot {
 
         this.initialized = true;
 
-        telegramCommands.setWebhook(url, this.botKey).then();
-        telegramCommands.setCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
+        telegramService.SetWebhook(url, this.botKey).then();
+        telegramService.SetCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
     };
 
     // The handler for the bot requests made by telegram webhook.
@@ -150,7 +151,7 @@ class Bot {
             return;
         }
 
-        const userName = message.from ? (message.from.username ? message.from.username : message.from.first_name) : "No-User";
+        const userName: string = message.from ? (message.from.username ?? message.from.first_name) : "No-User";
         console.log(`Command accepted: ${key} chat_id: ${message.chat.id} user_id: ${userName}`);
 
         this.incrementCommandStatistics(this.data, key);
@@ -158,7 +159,7 @@ class Bot {
         // Call the command
         // Thanks github.com/spectraldani for figuring out.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
-        let command = this.commandMap[key].bind(this);
+        let command: any = this.commandMap[key].bind(this);
         let context: BotExecuteContext = {
             commandKey: commandKey,
             botKey: this.botKey,

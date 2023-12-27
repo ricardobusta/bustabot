@@ -1,4 +1,3 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 
@@ -15,7 +14,7 @@ class Cat extends BotCommand {
     description: string = "Returns a HTTP status cat.";
     execute: (ctx: BotExecuteContext) => Promise<void> = async function (ctx: BotExecuteContext): Promise<void> {
         if (ctx.params.length > 2) {
-            telegramCommands.sendMessage(
+            this.telegram.SendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,
@@ -32,14 +31,14 @@ class Cat extends BotCommand {
 
         let url: string = `https://http.cat/${code}`;
 
-        if (await telegramCommands.IsValidUrl(url)) {
-            telegramCommands.sendPhoto(
+        if (await this.telegram.IsValidUrl(url)) {
+            this.telegram.SendPhoto(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,
                 url);
         } else {
-            telegramCommands.sendMessage(
+            this.telegram.SendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,

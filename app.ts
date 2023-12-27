@@ -1,31 +1,41 @@
-const express = require('express');
-import bustabot from './bustabot/bustabot';
+const express: any = require('express');
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
 import TelegramBot = require('node-telegram-bot-api');
+import bustabot from './bustabot/bustabot';
 
-let isProd: boolean = false;
 const version_major: number = 1;
 const version_minor: number = 2;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
-process.argv.forEach(function name(val, index, arr) {
-    if (val === "prod") {
-        isProd = true;
-    }
-})
+function CheckIsProd(): boolean {
+    let isProd: boolean = false;
+    process.argv.forEach(function name(val: string, _index: number, _arr: string[]): void {
+        if (val === "prod") {
+            isProd = true;
+        }
+    })
+    return isProd;
+}
+
+const isProd: boolean = CheckIsProd();
 
 const bots: Bot[] = [
     bustabot,
 ]
 
-try {
+function GetFirebaseDatabase(): FirebaseFirestore.Firestore {
     let db: FirebaseFirestore.Firestore = new FirebaseFirestore.Firestore({
         projectId: botKey.projectId,
         keyFilename: "google_key.json",
     });
+    return db;
+}
+
+try {
+    let db = GetFirebaseDatabase();
 
     if (isProd) {
         bustabot.init(db, botKey.bustabot, botKey.webhook, version);
