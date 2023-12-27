@@ -7,7 +7,10 @@ import TelegramBot = require('node-telegram-bot-api');
 
 let isProd: boolean = false;
 let debugString: string = "1";
-const version: number = 4;
+const version_major: number = 1;
+const version_minor: number = 1;
+const version_patch: number = 0;
+const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
 process.argv.forEach(function name(val, index, arr) {
     if (val === "prod") {
@@ -25,7 +28,7 @@ try {
         keyFilename: "google_key.json",
     });
 
-    bustabot.init(db, botKey.bustabot, botKey.webhook);
+    bustabot.init(db, botKey.bustabot, botKey.webhook, version);
 } catch (error) {
     console.log(error);
 }
@@ -67,9 +70,12 @@ if (isProd) {
     // Start the server
     const PORT = process.env.PORT || 8080;
     app.listen(PORT, () => {
+        for(let i=0;i<50;i++){
+            console.log("");
+        }
         console.log("=========================================");
         console.log("=");
-        console.log("=   STARTING NEW BOT RUN v:" + version);
+        console.log("=   STARTING NEW BOT RUN ver " + version);
         console.log("=");
         console.log("=========================================");
         console.log(`App listening on port ${PORT}`);

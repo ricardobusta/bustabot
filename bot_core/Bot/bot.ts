@@ -10,18 +10,17 @@ class Bot {
     botAlias: string;
     botName: string;
     botKey: string;
-    version: number;
+    version: string;
     commands: Array<BotCommand>;
     data: FirebaseFirestore.CollectionReference<any>;
     initialized: boolean;
 
     commandMap: { [id: string]: BotCommandExecute };
 
-    constructor(botAlias: string, version: number, commands: Array<BotCommand>) {
+    constructor(botAlias: string, commands: Array<BotCommand>) {
         this.initialized = false;
         this.botAlias = botAlias;
         this.commands = [...commands];
-        this.version = version;
 
         this.commandMap = {
             "help": this.printHelpCommand,
@@ -109,12 +108,13 @@ class Bot {
     }
 
     // Initializes the bot internal state
-    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string) {
+    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string, version: string) {
         if (botInfo === undefined) {
             return;
         }
         this.botName = "@" + botInfo.username;
         this.botKey = botInfo.token;
+        this.version = version;
 
         this.data = db.collection(this.botAlias + "_data");
 
@@ -125,13 +125,13 @@ class Bot {
     };
 
     // The handler for the bot requests made by telegram webhook.
-    handleTelegramUpdate(update: TelegramBot.Update) {
-        const message = update?.message;
+    handleTelegramUpdate(update: TelegramBot.Update): void {
+        const message: TelegramBot.Message = update?.message;
         // Ensure the message contains body
-        if (!message || !message.text) {
+        if (!message?.text) {
             return;
         }
-        let text = message.text;
+        let text: string = message.text;
 
         // And the message is a bot command
         if (!text.startsWith("/")) {
@@ -146,7 +146,7 @@ class Bot {
         if (key == null || key == "") return;
 
         // And that command is not directed to another bot
-        let commandKey = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
+        let commandKey: string = key = key.substring(1, key.toLowerCase().endsWith(this.botName.toLowerCase()) ? key.length - this.botName.length : key.length)
 
         // Not a valid command or directed to another bot
         if (!(key in this.commandMap)) {
