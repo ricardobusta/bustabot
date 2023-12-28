@@ -1,4 +1,4 @@
-const express: any = require('express');
+import express from "express";
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
