@@ -1,9 +1,8 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import TelegramBot = require("node-telegram-bot-api");
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import {readFileSync} from 'fs';
-import BotData from "../../bot_core/Bot/bot_data";
 import TelegramService from "../../bot_core/Bot/telegram_service";
+import BotData from "../../bot_core/Bot/bot_data";
 
 const wordCommandDocument: string = "word";
 
@@ -135,7 +134,7 @@ class Word extends BotCommand {
     keys: string[] = ["word", "wor", "wo", "w"];
     description: string = "Adivinhe a palavra";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         const now: Date = new Date(Date.now());
         const dateDiff: number = now.getTime() - date0.getTime();
         const todayIndex: number = Math.floor(dateDiff / (1000 * 3600 * 24)) + dateOffset;
@@ -195,7 +194,7 @@ class Word extends BotCommand {
                 function resultString(): string {
                     let r: string = data.wordOverride != "" ? `@bustabot /word <code>Custom</code>\n` : `@bustabot /word #${todayIndex}\n`;
                     const size: number = Math.min(guessedWords.length, players.length);
-                    for (var i = 0; i < size; i++) {
+                    for (let i = 0; i < size; i++) {
                         r = r + `<code>${guessedWords[i]}</code> ${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
                     }
                     return r;
@@ -227,52 +226,51 @@ class Word extends BotCommand {
                 }
 
                 if (ctx.params.length >= 2 && ctx.params[1].startsWith("-")) {
-                    switch (ctx.params[1]) {
-                        case "-cleanup":
-                            dataCleanup(ctx.data, todayIndex);
-                            sendMessage("Cleaning up old bot data.");
+                    if (ctx.params[1] === "-cleanup") {
+                        dataCleanup(ctx.data, todayIndex);
+                        sendMessage("Cleaning up old bot data.");
+                        return;
+                    } else if (ctx.params[1] === "-share") {
+                        let msg: string = `t.me/bustabot /word #${todayIndex}\n`;
+                        const size: number = Math.min(guessedWords.length, players.length);
+                        for (let i = 0; i < size; i++) {
+                            msg += `${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
+                        }
+                        sendMessage(msg);
+                        return;
+                    } else if (ctx.params[1] === "-spoiler") {
+                        let index: number = todayIndex;
+                        if (ctx.params.length >= 3) {
+                            index = parseInt(ctx.params[2]);
+                        }
+                        const spoilerWord: string = wordOfDayList[index];
+                        sendMessage(`Spoiler: <tg-spoiler>${spoilerWord}</tg-spoiler>`);
+                        return;
+                    } else if (ctx.params[1] === "-set") {
+                        if (ctx.params.length < 3) {
+                            sendMessage(`Envie uma palavra`);
                             return;
-                        case "-share":
-                            let msg: string = `t.me/bustabot /word #${todayIndex}\n`;
-                            const size: number = Math.min(guessedWords.length, players.length);
-                            for (var i = 0; i < size; i++) {
-                                msg += `${resultStringFromGuess(normalizedWordOfDay, normalizedGuessedWords[i])} - ${players[i]}\n`;
-                            }
-                            sendMessage(msg);
+                        }
+                        if (normalizeString(lastGuess) != normalizedWordOfDay) {
+                            sendMessage(`Ultima palavra não foi adivinhada ainda!`);
                             return;
-                        case "-spoiler":
-                            var index: number = todayIndex;
-                            if (ctx.params.length >= 3) {
-                                index = parseInt(ctx.params[2]);
-                            }
-                            const spoilerWord: string = wordOfDayList[index];
-                            sendMessage(`Spoiler: <tg-spoiler>${spoilerWord}</tg-spoiler>`);
+                        }
+                        const input: string = ctx.params[2].trim();
+                        if (input.length != 5) {
+                            sendMessage(`A palavra precisa ter 5 caracteres!`);
                             return;
-                        case "-set":
-                            if (ctx.params.length < 3) {
-                                sendMessage(`Envie uma palavra`);
-                                return;
-                            }
-                            if (normalizeString(lastGuess) != normalizedWordOfDay) {
-                                sendMessage(`Ultima palavra não foi adivinhada ainda!`);
-                                return;
-                            }
-                            const input: string = ctx.params[2].trim();
-                            if (input.length != 5) {
-                                sendMessage(`A palavra precisa ter 5 caracteres!`);
-                                return;
-                            }
-                            const normalizedInput: string = normalizeString(input);
-                            if (normalizedInput.match(new RegExp("[a-zA-Z]{5}")) == null) {
-                                sendMessage(`A palavra deve conter apenas letras.`);
-                                return;
-                            }
-                            data.wordOverride = input;
-                            data.guesses = "";
-                            data.players = "";
-                            data.lastSentMessage = null;
-                            sendMessage(`Word set by ${getUsername(ctx.message.from)}`)
+                        }
+                        const normalizedInput: string = normalizeString(input);
+                        if (normalizedInput.match(new RegExp("[a-zA-Z]{5}")) == null) {
+                            sendMessage(`A palavra deve conter apenas letras.`);
                             return;
+                        }
+                        data.wordOverride = input;
+                        data.guesses = "";
+                        data.players = "";
+                        data.lastSentMessage = null;
+                        sendMessage(`Word set by ${getUsername(ctx.message.from)}`)
+                        return;
                     }
                 }
 

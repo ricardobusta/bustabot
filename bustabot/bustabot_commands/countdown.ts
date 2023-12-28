@@ -1,11 +1,10 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 class Countdown extends BotCommand {
     keys: string[] = ["countdown", "cd"];
     description: string = "Contagem regressiva até 10 segundos.";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.params.length != 2) {
             this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id,
                 "Número inválido de parâmetros. Tente:\n<code>/cd 3</code>");
@@ -21,7 +20,6 @@ class Countdown extends BotCommand {
             }, (value - i) * 1000);
         }
     }
-
 }
 
 export default Countdown;

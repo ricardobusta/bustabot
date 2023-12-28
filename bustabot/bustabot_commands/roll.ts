@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 function RandomRange(min: number, max: number): number {
     return Math.floor((Math.random() * (max - min + 1) + min));
@@ -9,7 +8,7 @@ class Roll extends BotCommand {
     keys: string[] = ["roll", "dice"];
     description: string = "Rolls a dice.";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,

@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import TelegramService from "../../bot_core/Bot/telegram_service";
 
 class About extends BotCommand {
@@ -12,7 +11,7 @@ class About extends BotCommand {
         this.version = version;
     }
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,

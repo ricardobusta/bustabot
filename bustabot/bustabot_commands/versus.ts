@@ -1,11 +1,10 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 class Versus extends BotCommand {
     keys: string[] = ["versus", "vs"];
     description: string = "Versus";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let text: string = "";
         if (ctx.params.length <= 2) {
             text = "Número de parâmetros insuficiente. Precisa de pelo menos dois.\n" +

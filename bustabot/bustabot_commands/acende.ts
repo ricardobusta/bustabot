@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 const papocoMin: number = 3;
 const papocoMax: number = 6;
@@ -43,7 +42,7 @@ class Acende extends BotCommand {
     keys: string[] = ["acende", "rojao", "papoco"];
     description: string = "Acende o rojão.";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let papocoCount: number = RandomInt(papocoMin, papocoMax, 1);
         let delay: number = 0;
         let telegram: any = this.telegram;

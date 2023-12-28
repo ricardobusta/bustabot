@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 let seedrandom: any = require("seedrandom");
 
@@ -11,7 +10,7 @@ class Match extends BotCommand {
     keys: string[] = ["match"];
     description: string = "Match";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let text: string = "";
         if (ctx.params.length != 3) {
             text = "Número de parâmetros errado.\n/match @user1 @user2";
@@ -32,7 +31,6 @@ class Match extends BotCommand {
             ctx.message.message_id,
             text);
     }
-
 }
 
 export default Match;

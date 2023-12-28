@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import BotData from "../../bot_core/Bot/bot_data";
 
 const statisticsDocName: string = "statistics";
@@ -12,7 +11,7 @@ class Count extends BotCommand {
     keys: string[] = ["count", "++"];
     description: string = "Counts how many times the command was invoked";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.data == undefined) {
             console.log("Data not set.");
             return;
@@ -45,7 +44,6 @@ class Count extends BotCommand {
                     text);
             });
     }
-
 }
 
 export default Count;

@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import TelegramService from "../../bot_core/Bot/telegram_service";
 import RequestService from "../../bot_core/Bot/request_service";
 
@@ -22,7 +21,7 @@ class Cat extends BotCommand {
         this.request = request;
     }
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.params.length > 2) {
             this.telegram.SendMessage(
                 ctx.botKey,

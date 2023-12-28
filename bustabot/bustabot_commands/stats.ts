@@ -1,11 +1,10 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
-class Stats extends BotCommand {
+export class Stats extends BotCommand {
     keys: string[] = ["stats"];
     description: string = "Estatísticas do bot";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let document: any = ctx.data.doc("statistics");
         document.get()
             .then((doc): void => {
@@ -16,7 +15,7 @@ class Stats extends BotCommand {
                     ctx.message.message_id,
                     "Bot statistics: \n" + json
                 );
-            }).catch((e): void => {
+            }).catch((_e): void => {
             console.log("Failed to get statistics document.");
         });
     }

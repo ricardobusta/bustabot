@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 const first_names: string[] = [
     "Blubberbutt",
@@ -61,7 +60,7 @@ class Benedict extends BotCommand {
     keys: string[] = ["benedict"];
     description: string = "Descubra seu nome Benedict Cumberbatch.";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let fn: number = Math.floor(Math.random() * first_names.length);
         let ln: number = Math.floor(Math.random() * last_names.length);
 

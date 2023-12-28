@@ -1,5 +1,4 @@
-import BotCommand from "./bot_command";
-import BotExecuteContext from "./bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import TelegramService from "./telegram_service";
 
 class HelpCommand extends BotCommand {
@@ -20,7 +19,7 @@ class HelpCommand extends BotCommand {
         this.commands = commands;
     }
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         console.log("Logging Help!");
 
         let helpString: string = `<b>${this.botName} v${this.version} Help:</b>\n`;

@@ -1,7 +1,6 @@
-import BotCommand from "./bot_command"
+import {BotCommand, BotCommandContext} from "./bot_command";
 import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
-import BotExecuteContext from "./bot_execute_data";
 import TelegramService from "./telegram_service";
 import HelpCommand from "./help_command";
 
@@ -123,7 +122,7 @@ class Bot {
 
         // Call the command
         let command: any = this.commandMap[key];
-        let context: BotExecuteContext = {
+        let context: BotCommandContext = {
             commandKey: commandKey,
             botKey: this.botKey,
             params: splitText,

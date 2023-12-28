@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 const phrases: string[] = [
     "30 ovos por 10 reais!",
@@ -18,7 +17,7 @@ class Ovo extends BotCommand {
     description: string = "Cocorecocoooo.";
     wip: boolean = false;
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let index: number = Math.floor(Math.random() * phrases.length);
         this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
     }

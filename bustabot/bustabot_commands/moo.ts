@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 function RandomRange(min, max): number {
     return Math.floor((Math.random() * (max - min + 1) + min));
@@ -9,7 +8,7 @@ class Moo extends BotCommand {
     keys: string[] = ["moo", "muu"];
     description: string = "Moos";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         const cowChance: number = RandomRange(1, 20);
         let text: string;
         if (cowChance < 3) {

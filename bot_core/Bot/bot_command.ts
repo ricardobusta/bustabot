@@ -1,8 +1,16 @@
 import TelegramBot = require("node-telegram-bot-api");
-import BotExecuteContext from "./bot_execute_data";
 import TelegramService from "./telegram_service";
+import BotData from "./bot_data";
 
-abstract class BotCommand {
+export class BotCommandContext {
+    commandKey: string;
+    botKey: string;
+    params: string[];
+    message: TelegramBot.Message;
+    data: FirebaseFirestore.CollectionReference<BotData>;
+}
+
+export abstract class BotCommand {
     abstract keys: Array<string>;
     abstract description: string;
 
@@ -12,7 +20,7 @@ abstract class BotCommand {
         this.telegram = telegram;
     }
 
-    abstract Execute(ctx: BotExecuteContext): Promise<void>;
+    abstract Execute(ctx: BotCommandContext): Promise<void>;
 
     GetTelegramCommand(): TelegramBot.BotCommand {
         return {description: this.description, command: this.keys[0]};
@@ -24,5 +32,3 @@ abstract class BotCommand {
 
     wip: boolean = false;
 }
-
-export default BotCommand;

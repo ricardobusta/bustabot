@@ -1,4 +1,4 @@
-import BotCommand from "../bot_core/Bot/bot_command"
+import {BotCommand} from "../bot_core/Bot/bot_command"
 import Bot from "../bot_core/Bot/bot";
 
 import About from "./bustabot_commands/about"
@@ -8,6 +8,7 @@ import Birl from "./bustabot_commands/birl"
 import Cat from "./bustabot_commands/cat"
 import Count from "./bustabot_commands/count"
 import Grito from "./bustabot_commands/grito"
+import Guess from "./bustabot_commands/guess"
 import Match from "./bustabot_commands/match"
 import Moo from "./bustabot_commands/moo"
 import Ovo from "./bustabot_commands/ovo"
@@ -29,6 +30,7 @@ class BustaBot extends Bot {
             new Cat(telegram, request),
             new Count(telegram),
             new Grito(telegram),
+            new Guess(telegram),
             new Match(telegram),
             new Moo(telegram),
             new Ovo(telegram),

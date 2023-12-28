@@ -1,6 +1,5 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 import Random from "../../bot_core/random";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import RpgV1 from "./rpgv1";
 
 type CharJob = { name: string, url: string };
@@ -111,7 +110,7 @@ class Rpg extends BotCommand {
 
     rpgv1: RpgV1 = new RpgV1();
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let text: string;
         if (ctx.commandKey == "rpgv1") {
             text = this.rpgv1.execute(ctx.message, races, classes);

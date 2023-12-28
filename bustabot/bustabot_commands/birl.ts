@@ -1,5 +1,4 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 const phrases: string[] = [
     "TÁ SAINDO DA JAULA, O <b>MONSTRO</b>!",
@@ -16,11 +15,10 @@ class Birl extends BotCommand {
     keys: string[] = ["birl"];
     description: string = "Birl.";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         let index: number = Math.floor(Math.random() * phrases.length);
         this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
     }
-
 }
 
 export default Birl;

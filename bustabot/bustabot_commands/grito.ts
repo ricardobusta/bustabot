@@ -1,11 +1,10 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
-class Grito extends BotCommand {
+export class Grito extends BotCommand {
     keys: string[] = ["grito", "shout"];
     description: string = "Shout a phrase";
 
-    async Execute(ctx: BotExecuteContext): Promise<void> {
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.params.length < 2) {
             this.telegram.SendMessage(
                 ctx.botKey,
