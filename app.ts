@@ -44,9 +44,9 @@ try {
     let db = GetFirestore();
 
     if (isProd) {
-        bustabot.Init(db, botKey.bustabot, botKey.webhook, version);
+        bustabot.Init(db, botKey.bustabot);
     } else {
-        bustabot.Init(db, botKey.dev_bustabot, botKey.dev_webhook, version);
+        bustabot.Init(db, botKey.dev_bustabot);
     }
 } catch (error) {
     console.log(error);

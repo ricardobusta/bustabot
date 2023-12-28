@@ -18,11 +18,12 @@ class Bot {
 
     commandMap: { [id: string]: BotCommand};
 
-    constructor(botAlias: string, commands: Array<BotCommand>, telegram: TelegramService) {
+    constructor(botAlias: string, commands: Array<BotCommand>, telegram: TelegramService, version: string) {
         this.initialized = false;
         this.botAlias = botAlias;
         this.commands = [...commands];
         this.telegram = telegram;
+        this.version = version;
 
         this.commandMap = {
            "help": new HelpCommand(this.telegram, this.botAlias, this.version),
@@ -45,45 +46,44 @@ class Bot {
     }
 
     IncrementCommandStatistics(data: { doc: (arg0: string) => any; }, command: string): void {
-        let document = data.doc(statisticsDocumentName);
+        let document: any = data.doc(statisticsDocumentName);
         document.get()
-            .then((doc: { exists: any; data: () => any; }) => {
+            .then((doc: { exists: any; data: () => any; }): void => {
                 if (!doc.exists) {
                     console.log("Document not set. Creating empty one.")
                     document.set({
                         total: 0
                     });
                 } else {
-                    let totalKey = "total";
-                    let commandKey = "command_" + command;
+                    let totalKey: string = "total";
+                    let commandKey: string = "command_" + command;
 
-                    let statistics = doc.data();
+                    let statistics: any = doc.data();
                     statistics[totalKey] = (totalKey in statistics) ? (statistics[totalKey] + 1) : 1;
                     statistics[commandKey] = (commandKey in statistics) ? (statistics[commandKey]) + 1 : 1;
 
                     document.set(statistics);
                 }
             })
-            .catch(err => {
+            .catch((err: any): void => {
                 console.log("Error getting document", err);
             })
     }
 
     // Initializes the bot internal state
-    Init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string, version: string): void {
+    Init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry): void {
         if (botInfo === undefined) {
             return;
         }
         this.botName = "@" + botInfo.username;
         this.botKey = botInfo.token;
-        this.version = version;
 
         this.data = db.collection(this.botAlias + "_data");
 
         this.initialized = true;
 
-        this.telegram.SetWebhook(url, this.botKey).then();
-        this.telegram.SetCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
+        this.telegram.SetWebhook(botInfo.webhook, this.botKey).then();
+        this.telegram.SetCommands(this.botKey, this.commands.filter((command: BotCommand): boolean => !command.wip).map((command: BotCommand): TelegramBot.BotCommand => command.GetTelegramCommand()));
     };
 
     // The handler for the bot requests made by telegram webhook.
@@ -103,7 +103,7 @@ class Bot {
         // And it is a somewhat valid command
         let splitText: RegExpMatchArray = text.match(/(?:[^\s'"]+|"[^"]*"|'[^']*')+/g);
         if (!splitText) return;
-        let splitTextResult: string[] = splitText.map(t => t.replace(/^['"](.+)['"]$/, '$1'));
+        let splitTextResult: string[] = splitText.map((t: string): string => t.replace(/^['"](.+)['"]$/, '$1'));
         let key: string = splitTextResult.at(0);
         if (key == null || key == "") return;
 

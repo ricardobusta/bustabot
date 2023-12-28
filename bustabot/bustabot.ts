@@ -41,7 +41,7 @@ class BustaBot extends Bot {
             new Word(telegram)
         ];
 
-        super("bustabot", commands, telegram);
+        super("bustabot", commands, telegram, version);
     }
 }
 
