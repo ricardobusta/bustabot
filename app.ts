@@ -4,7 +4,7 @@ import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
 import RequestService from "./bot_core/Bot/request_service";
 import TelegramService from "./bot_core/Bot/telegram_service";
-import {BustaBot} from "./bustabot/bustabot";
+import BustaBot from "./bustabot/bustabot";
 import TelegramBot = require('node-telegram-bot-api');
 
 const version_major: number = 2;
