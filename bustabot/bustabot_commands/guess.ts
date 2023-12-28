@@ -1,12 +1,12 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 class Guess extends BotCommand {
-    keys = ["guess"];
-    description = "Guess";
-    execute = function (ctx: BotExecuteContext): void {
-        telegramCommands.sendMessage(
+    keys: string[] = ["guess"];
+    description: string = "Guess";
+    wip: boolean = true;
+
+    async Execute(ctx: BotCommandContext): Promise<void> {
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
@@ -14,4 +14,4 @@ class Guess extends BotCommand {
     }
 }
 
-export default new Guess();
+export default Guess;

@@ -1,27 +1,25 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
 class Countdown extends BotCommand {
-    keys = ["countdown", "cd"];
-    description = "Contagem regressiva até 10 segundos.";
-    execute = function (ctx: BotExecuteContext): void {
+    keys: string[] = ["countdown", "cd"];
+    description: string = "Contagem regressiva até 10 segundos.";
+
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.params.length != 2) {
-            telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id,
+            this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id,
                 "Número inválido de parâmetros. Tente:\n<code>/cd 3</code>");
             return;
         }
-        let value = Math.max(Math.min(+ctx.params[1], 10), 1);
+        let value: number = Math.max(Math.min(+ctx.params[1], 10), 1);
 
-        telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, `Contagem Regressiva! ${value}...`);
+        this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, `Contagem Regressiva! ${value}...`);
         for (let i = 0; i < value; i++) {
-            setTimeout(function () {
-                telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, null, i + (i == 0 ? "!" : "..."));
+            setTimeout(function (): void {
+                this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, null, i + (i == 0 ? "!" : "..."));
                 console.log(`Counting down: ${i}`);
             }, (value - i) * 1000);
         }
     }
-
 }
 
-export default new Countdown();
+export default Countdown;

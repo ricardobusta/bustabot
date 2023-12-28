@@ -1,9 +1,6 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
-const phrases = [
+const phrases: string[] = [
     "TÁ SAINDO DA JAULA, O <b>MONSTRO</b>!",
     "<b>BIIIIRRRLLL</b>!!!",
     "É 37 ANOS <b>PORRA</b>!",
@@ -15,13 +12,13 @@ const phrases = [
 ];
 
 class Birl extends BotCommand {
-    keys = ["birl"];
-    description = "Birl.";
-    execute = function (ctx: BotExecuteContext): void {
-        let index = Math.floor(Math.random() * phrases.length);
-        telegramCommands.sendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
-    }
+    keys: string[] = ["birl"];
+    description: string = "Birl.";
 
+    async Execute(ctx: BotCommandContext): Promise<void> {
+        let index: number = Math.floor(Math.random() * phrases.length);
+        this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
+    }
 }
 
-export default new Birl();
+export default Birl;

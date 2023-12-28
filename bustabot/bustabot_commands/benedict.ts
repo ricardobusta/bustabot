@@ -1,9 +1,6 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
-const first_names = [
+const first_names: string[] = [
     "Blubberbutt",
     "Benedict",
     "Benadryl",
@@ -31,7 +28,7 @@ const first_names = [
     "Budapest",
     "Handpicked"];
 
-const last_names = [
+const last_names: string[] = [
     "Calldispatch",
     "Comedicmismatch",
     "Cunningscratch",
@@ -60,16 +57,17 @@ const last_names = [
     "Candygram"];
 
 class Benedict extends BotCommand {
-    keys = ["benedict"];
-    description = "Descubra seu nome Benedict Cumberbatch.";
-    execute = function (ctx: BotExecuteContext): void {
-        let fn = Math.floor(Math.random() * first_names.length);
-        let ln = Math.floor(Math.random() * last_names.length);
+    keys: string[] = ["benedict"];
+    description: string = "Descubra seu nome Benedict Cumberbatch.";
 
-        let userName = ctx.message.from.first_name;
-        let result = `${first_names[fn]} ${last_names[ln]}`;
+    async Execute(ctx: BotCommandContext): Promise<void> {
+        let fn: number = Math.floor(Math.random() * first_names.length);
+        let ln: number = Math.floor(Math.random() * last_names.length);
 
-        telegramCommands.sendMessage(
+        let userName: string = ctx.message.from.first_name;
+        let result: string = `${first_names[fn]} ${last_names[ln]}`;
+
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
@@ -77,4 +75,4 @@ class Benedict extends BotCommand {
     }
 }
 
-export default new Benedict();
+export default Benedict;

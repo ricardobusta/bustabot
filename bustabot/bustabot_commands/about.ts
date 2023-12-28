@@ -1,18 +1,24 @@
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
+import TelegramService from "../../bot_core/Bot/telegram_service";
 
 class About extends BotCommand {
     keys: string[] = ["about"];
     description: string = "About @BustaBot";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
-        telegramCommands.sendMessage(
+    version: string;
+
+    constructor(telegram: TelegramService, version: string) {
+        super(telegram);
+        this.version = version;
+    }
+
+    async Execute(ctx: BotCommandContext): Promise<void> {
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
-            `BustaBot version ${ctx.version}\nMade by Ricardo Bustamante &lt;ricardo@busta.dev&gt;\nhttps://github.com/ricardobusta/bustabot`,
+            `BustaBot version ${this.version}\nMade by Ricardo Bustamante &lt;ricardo@busta.dev&gt;\nhttps://github.com/ricardobusta/bustabot`,
         );
     }
 }
 
-export default new About();
+export default About;

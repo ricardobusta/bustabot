@@ -1,8 +1,8 @@
 import TelegramBot = require("node-telegram-bot-api");
 
-let seedrandom = require("seedrandom");
+let seedrandom: any = require("seedrandom");
 
-const syllabes = [
+const syllabes: string[] = [
     "ta", "te", "ti", "to", "tu",
     "ja", "je", "ji", "jo", "ju",
     "an", "en", "in", "on", "un",
@@ -23,51 +23,51 @@ const syllabes = [
     "da", "de", "di", "do", "du"
 ];
 
-function getRange(rng, min, max) {
+function getRange(rng, min, max): any {
     return min + Math.floor(rng * (max - min + 1));
 }
 
-function getArrayRange(rng, arr) {
+function getArrayRange(rng, arr): any {
     return arr[Math.floor(rng * arr.length)];
 }
 
-function getAttribute(rng) {
+function getAttribute(rng): any {
     return getRange(rng, 1, 10);
 }
 
-function firstLetterUcase(str) {
+function firstLetterUcase(str): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 class RpgV1 {
     execute(message: TelegramBot.Message, races, classes): string {
-        let userName = message.from.first_name;
+        let userName: string = message.from.first_name;
 
         // Keep like this to avoid changing values when changing the text format and order.
-        let rng = seedrandom(message.from.id);
-        let charClassRng = rng();
-        let strRng = rng();
-        let dexRng = rng();
-        let conRng = rng();
-        let intRng = rng();
-        let wisRng = rng();
-        let chaRng = rng();
+        let rng: any = seedrandom(message.from.id);
+        let charClassRng: any = rng();
+        let strRng: any = rng();
+        let dexRng: any = rng();
+        let conRng: any = rng();
+        let intRng: any = rng();
+        let wisRng: any = rng();
+        let chaRng: any = rng();
 
-        let nameCountRng = rng();
-        let surameCountRng = rng();
+        let nameCountRng: any = rng();
+        let surameCountRng: any = rng();
 
-        let genName = (function () {
-            let nameSyllabes = getRange(nameCountRng, 1, 6);
-            let surnameSyllabes = getRange(surameCountRng, 1, 6);
+        let genName: string = (function (): string {
+            let nameSyllabes: any = getRange(nameCountRng, 1, 6);
+            let surnameSyllabes: any = getRange(surameCountRng, 1, 6);
 
-            let name = "";
+            let name: string = "";
 
             for (let i = 0; i < nameSyllabes; i++) {
                 name += getArrayRange(rng(), syllabes);
             }
             name = firstLetterUcase(name);
 
-            let surname = "";
+            let surname: string = "";
             for (let i = 0; i < surnameSyllabes; i++) {
                 surname += getArrayRange(rng(), syllabes);
             }
@@ -75,12 +75,12 @@ class RpgV1 {
             return name + " " + surname;
         })();
 
-        let ageRng = rng();
-        let raceRng = rng();
+        let ageRng: any = rng();
+        let raceRng: any = rng();
 
-        let raceInfo = getArrayRange(raceRng, races);
+        let raceInfo: any = getArrayRange(raceRng, races);
 
-        let text = "FICHA DO PERSONAGEM\n" +
+        let text: string = "FICHA DO PERSONAGEM\n" +
             "<b>Jogador:</b> " + userName + "\n" +
             "<b>Personagem:</b> " + genName + "\n" +
             "<b>Raça:</b> " + raceInfo.name + "\n" +
@@ -97,4 +97,4 @@ class RpgV1 {
     }
 }
 
-export default new RpgV1();
+export default RpgV1;

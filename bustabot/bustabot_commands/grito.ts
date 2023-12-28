@@ -1,13 +1,12 @@
-import telegramCommands = require("../../bot_core/Telegram/telegram_commands");
-import BotCommand from "../../bot_core/Bot/bot_command";
-import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
 
-class Grito extends BotCommand {
-    keys = ["grito", "shout"];
-    description = "Shout a phrase";
-    execute = function (ctx: BotExecuteContext): void {
+export class Grito extends BotCommand {
+    keys: string[] = ["grito", "shout"];
+    description: string = "Shout a phrase";
+
+    async Execute(ctx: BotCommandContext): Promise<void> {
         if (ctx.params.length < 2) {
-            telegramCommands.sendMessage(
+            this.telegram.SendMessage(
                 ctx.botKey,
                 ctx.message.chat.id,
                 ctx.message.message_id,
@@ -15,9 +14,9 @@ class Grito extends BotCommand {
             return;
         }
 
-        let msg = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
+        let msg: string = ctx.message.text.substring(ctx.params[0].length, ctx.params[0].length + 20).trim().toUpperCase();
 
-        let text = "<code>" + msg.split('').join(' ');
+        let text: string = "<code>" + msg.split('').join(' ');
 
         for (let i = 1; i < msg.length; i++) {
             text += "\n" + msg[i] + " ".repeat(i * 2 - 1) + msg[i];
@@ -25,7 +24,7 @@ class Grito extends BotCommand {
 
         text += "</code>"
 
-        telegramCommands.sendMessage(
+        this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
             ctx.message.message_id,
@@ -33,4 +32,4 @@ class Grito extends BotCommand {
     }
 }
 
-export default new Grito();
+export default Grito;

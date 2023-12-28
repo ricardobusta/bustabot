@@ -49,4 +49,5 @@ class Random {
         return this.getFixedArrayRange(this.randomGenerator(), arr);
     }
 }
+
 export default Random;
