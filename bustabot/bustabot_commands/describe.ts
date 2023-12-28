@@ -4,7 +4,8 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 class Describe extends BotCommand {
     keys: string[] = ["desc", "descreve"];
     description: string = "Descreve uma imagem";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
@@ -13,4 +14,4 @@ class Describe extends BotCommand {
     }
 }
 
-export default new Describe();
+export default Describe;

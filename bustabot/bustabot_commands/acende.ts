@@ -39,13 +39,14 @@ function PowString(min: number, max: number): string {
     return result;
 }
 
-class Countdown extends BotCommand {
+class Acende extends BotCommand {
     keys: string[] = ["acende", "rojao", "papoco"];
     description: string = "Acende o rojão.";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let papocoCount: number = RandomInt(papocoMin, papocoMax, 1);
         let delay: number = 0;
-        let telegram = this.telegram;
+        let telegram: any = this.telegram;
         telegram.SendMessage(ctx.botKey, ctx.message.chat.id, null, PapocoString(1, 3));
         for (let i = 0; i < papocoCount; i++) {
             delay += RandomInt(300, 600, 1);
@@ -60,4 +61,4 @@ class Countdown extends BotCommand {
     }
 }
 
-export default new Countdown();
+export default Acende;

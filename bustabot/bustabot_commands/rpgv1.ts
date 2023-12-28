@@ -97,4 +97,4 @@ class RpgV1 {
     }
 }
 
-export default new RpgV1();
+export default RpgV1;

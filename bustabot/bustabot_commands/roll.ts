@@ -8,7 +8,8 @@ function RandomRange(min: number, max: number): number {
 class Roll extends BotCommand {
     keys: string[] = ["roll", "dice"];
     description: string = "Rolls a dice.";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
@@ -17,4 +18,4 @@ class Roll extends BotCommand {
     }
 }
 
-export default new Roll();
+export default Roll;

@@ -4,7 +4,8 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 class Stats extends BotCommand {
     keys: string[] = ["stats"];
     description: string = "Estatísticas do bot";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let document: any = ctx.data.doc("statistics");
         document.get()
             .then((doc): void => {
@@ -21,4 +22,4 @@ class Stats extends BotCommand {
     }
 }
 
-export default new Stats();
+export default Stats;

@@ -4,7 +4,8 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 class Countdown extends BotCommand {
     keys: string[] = ["countdown", "cd"];
     description: string = "Contagem regressiva até 10 segundos.";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         if (ctx.params.length != 2) {
             this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id,
                 "Número inválido de parâmetros. Tente:\n<code>/cd 3</code>");
@@ -23,4 +24,4 @@ class Countdown extends BotCommand {
 
 }
 
-export default new Countdown();
+export default Countdown;

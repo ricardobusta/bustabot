@@ -60,7 +60,8 @@ const last_names: string[] = [
 class Benedict extends BotCommand {
     keys: string[] = ["benedict"];
     description: string = "Descubra seu nome Benedict Cumberbatch.";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let fn: number = Math.floor(Math.random() * first_names.length);
         let ln: number = Math.floor(Math.random() * last_names.length);
 
@@ -75,4 +76,4 @@ class Benedict extends BotCommand {
     }
 }
 
-export default new Benedict();
+export default Benedict;

@@ -11,7 +11,8 @@ class CountData extends BotData {
 class Count extends BotCommand {
     keys: string[] = ["count", "++"];
     description: string = "Counts how many times the command was invoked";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         if (ctx.data == undefined) {
             console.log("Data not set.");
             return;
@@ -47,4 +48,4 @@ class Count extends BotCommand {
 
 }
 
-export default new Count();
+export default Count;

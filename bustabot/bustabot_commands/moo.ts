@@ -8,7 +8,8 @@ function RandomRange(min, max): number {
 class Moo extends BotCommand {
     keys: string[] = ["moo", "muu"];
     description: string = "Moos";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         const cowChance: number = RandomRange(1, 20);
         let text: string;
         if (cowChance < 3) {
@@ -44,4 +45,4 @@ class Moo extends BotCommand {
     }
 }
 
-export default new Moo();
+export default Moo;

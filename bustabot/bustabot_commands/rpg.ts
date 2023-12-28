@@ -1,7 +1,7 @@
 import BotCommand from "../../bot_core/Bot/bot_command";
 import Random from "../../bot_core/random";
-import rpgv1 from "./rpgv1";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import RpgV1 from "./rpgv1";
 
 type CharJob = { name: string, url: string };
 type CharRace = { name: string, min_age: number, max_age: number };
@@ -108,10 +108,13 @@ function generateCharV2(seed: number): GeneratorOutput {
 class Rpg extends BotCommand {
     keys: string[] = ["rpg", "rpgv1", "rpgv2"];
     description: string = "Gera seu personagem de RPG";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    rpgv1: RpgV1 = new RpgV1();
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let text: string;
         if (ctx.commandKey == "rpgv1") {
-            text = rpgv1.execute(ctx.message, races, classes);
+            text = this.rpgv1.execute(ctx.message, races, classes);
         } else {
             let userName: string = ctx.message.from.first_name;
 
@@ -143,4 +146,4 @@ class Rpg extends BotCommand {
     }
 }
 
-export default new Rpg();
+export default Rpg;

@@ -133,7 +133,8 @@ function dataCleanup(data: FirebaseFirestore.CollectionReference<BotData>, today
 class Word extends BotCommand {
     keys: string[] = ["word", "wor", "wo", "w"];
     description: string = "Adivinhe a palavra";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         const now: Date = new Date(Date.now());
         const dateDiff: number = now.getTime() - date0.getTime();
         const todayIndex: number = Math.floor(dateDiff / (1000 * 3600 * 24)) + dateOffset;
@@ -326,4 +327,4 @@ class Word extends BotCommand {
     }
 }
 
-export default new Word();
+export default Word;

@@ -4,7 +4,8 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 class Grito extends BotCommand {
     keys: string[] = ["grito", "shout"];
     description: string = "Shout a phrase";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         if (ctx.params.length < 2) {
             this.telegram.SendMessage(
                 ctx.botKey,
@@ -32,4 +33,4 @@ class Grito extends BotCommand {
     }
 }
 
-export default new Grito();
+export default Grito;

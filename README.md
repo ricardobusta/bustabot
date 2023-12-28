@@ -18,27 +18,48 @@ Set the bot webhook: https://api.telegram.org/bot{my_bot_token}/setWebhook?url=h
 # GCloud Commands
 
 ## Publish
+```
 gcloud app deploy
+```
 
 ## Logs
+```
 gcloud app logs tail -s default
+```
 
 ## Together
+```
 gcloud app deploy;gcloud app logs tail -s default
+```
+
+## Ngrok - redirect https url
+e.g.:
+```
+C:\Projects\ngrok.exe http 18080
+```
 
 ## No cache
+```
 gcloud app deploy --no-cache;gcloud app logs tail -s default
+```
 
 ## Check for compilation errors
+```
 tsc -p .
+```
 
 ## Clean ts build files
+```
 tsc --build --clean
+```
 
 ## Run Npm Commands
+```
 npm run <_command_>
+```
 
 ## Clean Cloud Storage
-
+```
 gsutil rm -r gs://<_bucketname_>/*
 gsutil rb gs://<_bucketname_>/*
+```

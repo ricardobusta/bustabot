@@ -2,11 +2,13 @@ const express: any = require('express');
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
+import RequestService from "./bot_core/Bot/request_service";
+import TelegramService from "./bot_core/Bot/telegram_service";
+import BustaBot from "./bustabot/bustabot";
 import TelegramBot = require('node-telegram-bot-api');
-import bustabot from './bustabot/bustabot';
 
-const version_major: number = 1;
-const version_minor: number = 2;
+const version_major: number = 2;
+const version_minor: number = 0;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
@@ -22,25 +24,29 @@ function CheckIsProd(): boolean {
 
 const isProd: boolean = CheckIsProd();
 
+const request: RequestService = new RequestService();
+const telegram: TelegramService = new TelegramService(request);
+
+const bustabot: BustaBot = new BustaBot(telegram, request, version);
+
 const bots: Bot[] = [
     bustabot,
 ]
 
-function GetFirebaseDatabase(): FirebaseFirestore.Firestore {
-    let db: FirebaseFirestore.Firestore = new FirebaseFirestore.Firestore({
+function GetFirestore(): FirebaseFirestore.Firestore {
+    return new FirebaseFirestore.Firestore({
         projectId: botKey.projectId,
         keyFilename: "google_key.json",
     });
-    return db;
 }
 
 try {
-    let db = GetFirebaseDatabase();
+    let db = GetFirestore();
 
     if (isProd) {
-        bustabot.init(db, botKey.bustabot, botKey.webhook, version);
+        bustabot.Init(db, botKey.bustabot, botKey.webhook, version);
     } else {
-        bustabot.init(db, botKey.dev_bustabot, botKey.dev_webhook, version);
+        bustabot.Init(db, botKey.dev_bustabot, botKey.dev_webhook, version);
     }
 } catch (error) {
     console.log(error);
@@ -51,19 +57,19 @@ const app = express();
 app.use(express.json());
 
 // Default request. Just to check if the bot is up.
-app.get("/", (req, res) => {
+app.get("/", (req, res): void => {
     res
         .status(200)
         .send(version)
         .end();
 });
 
-bots.forEach(bot => {
+bots.forEach((bot): void => {
     if (!bot.initialized) {
         return;
     }
     // Check if the proper key is set. Just make a request with the bot key appended.
-    app.get(`/${bot.botKey}`, (req, res) => {
+    app.get(`/${bot.botKey}`, (req, res): void => {
         res
             .status(200)
             .send(`${bot.botName} is Working!`)
@@ -71,8 +77,8 @@ bots.forEach(bot => {
     });
 
     // Actual bot requests.
-    app.post(`/bot${bot.botKey}`, (req, res) => {
-        bot.handleTelegramUpdate(req.body as TelegramBot.Update)
+    app.post(`/bot${bot.botKey}`, (req, res): void => {
+        bot.HandleTelegramUpdate(req.body as TelegramBot.Update)
         res
             .status(200)
             .end();
@@ -81,7 +87,7 @@ bots.forEach(bot => {
 
 // Start the server
 const PORT: string | number = process.env.PORT || 18080;
-app.listen(PORT, () => {
+app.listen(PORT, (): void => {
     console.log("=========================================");
     console.log("=");
     console.log("=   STARTING NEW BOT RUN ver " + version);

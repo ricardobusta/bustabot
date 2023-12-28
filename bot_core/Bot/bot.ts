@@ -1,14 +1,11 @@
-import BotCommand, { BotCommandExecute } from "./bot_command"
+import BotCommand from "./bot_command"
 import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "./bot_execute_data";
 import TelegramService from "./telegram_service";
-import RequestService from "./request_service";
+import HelpCommand from "./help_command";
 
 const statisticsDocumentName: string = "statistics";
-
-const requestService: RequestService = new RequestService();
-const telegramService: TelegramService = new TelegramService(requestService);
 
 class Bot {
     botAlias: string;
@@ -18,69 +15,37 @@ class Bot {
     commands: Array<BotCommand>;
     data: FirebaseFirestore.CollectionReference<any>;
     initialized: boolean;
+    telegram: TelegramService;
 
-    commandMap: { [id: string]: BotCommandExecute };
+    commandMap: { [id: string]: BotCommand};
 
-    constructor(botAlias: string, commands: Array<BotCommand>) {
+    constructor(botAlias: string, commands: Array<BotCommand>, telegram: TelegramService) {
         this.initialized = false;
         this.botAlias = botAlias;
         this.commands = [...commands];
+        this.telegram = telegram;
 
         this.commandMap = {
-            "help": this.printHelpCommand,
+           "help": new HelpCommand(this.telegram, this.botAlias, this.version),
         };
 
         for (let i in commands) {
             let command: BotCommand = commands[i];
             for (let j in command.keys) {
                 let key: string = command.keys[j];
+                console.log(`Set command ${key}`);
                 if (key in this.commandMap) {
                     console.log(`Duplicated command: ${key}. Will ignore.`);
                     continue;
                 }
-                this.commandMap[key] = command.execute;
+                this.commandMap[key] = command;
             }
         }
+
+        (this.commandMap["help"] as HelpCommand).SetCommands(commands);
     }
 
-    // Used to print the /help command.
-    printHelpCommand(context: BotExecuteContext): void {
-        console.log("Logging Help!");
-
-        let helpString: string = `<b>${this.botName} v${context.version} Help:</b>\n`;
-        for (let i in this.commands) {
-            let command: BotCommand = this.commands[i];
-            if (command.wip) {
-                continue;
-            }
-            helpString += `/${command.keys[0]} - ${command.description}\n`;
-        }
-
-        telegramService.SendMessage(
-            context.botKey,
-            context.message.chat.id,
-            context.message.message_id,
-            helpString);
-    }
-
-    //  Prints the command list using /getcom. Used to configure the bot auto completion list.
-    printCommandList(context: BotExecuteContext): void {
-        console.log("Logging Command list!");
-
-        let comString = "help - Mostra a lista de comandos do bot.\n";
-        for (let i in this.commands) {
-            let command = this.commands[i];
-            comString += `${command.keys[0]} - ${command.description}\n`;
-        }
-
-        telegramService.SendMessage(
-            context.botKey,
-            context.message.chat.id,
-            context.message.message_id,
-            comString);
-    }
-
-    incrementCommandStatistics(data: { doc: (arg0: string) => any; }, command: string) {
+    IncrementCommandStatistics(data: { doc: (arg0: string) => any; }, command: string): void {
         let document = data.doc(statisticsDocumentName);
         document.get()
             .then((doc: { exists: any; data: () => any; }) => {
@@ -106,7 +71,7 @@ class Bot {
     }
 
     // Initializes the bot internal state
-    init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string, version: string) {
+    Init(db: FirebaseFirestore.Firestore, botInfo: BotInfoEntry, url: string, version: string): void {
         if (botInfo === undefined) {
             return;
         }
@@ -118,12 +83,12 @@ class Bot {
 
         this.initialized = true;
 
-        telegramService.SetWebhook(url, this.botKey).then();
-        telegramService.SetCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
+        this.telegram.SetWebhook(url, this.botKey).then();
+        this.telegram.SetCommands(this.botKey, this.commands.filter(command => !command.wip).map(command => command.GetTelegramCommand()));
     };
 
     // The handler for the bot requests made by telegram webhook.
-    handleTelegramUpdate(update: TelegramBot.Update): void {
+    HandleTelegramUpdate(update: TelegramBot.Update): void {
         const message: TelegramBot.Message = update?.message;
         // Ensure the message contains body
         if (!message?.text) {
@@ -154,21 +119,18 @@ class Bot {
         const userName: string = message.from ? (message.from.username ?? message.from.first_name) : "No-User";
         console.log(`Command accepted: ${key} chat_id: ${message.chat.id} user_id: ${userName}`);
 
-        this.incrementCommandStatistics(this.data, key);
+        this.IncrementCommandStatistics(this.data, key);
 
         // Call the command
-        // Thanks github.com/spectraldani for figuring out.
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_objects/Function/bind
-        let command: any = this.commandMap[key].bind(this);
+        let command: any = this.commandMap[key];
         let context: BotExecuteContext = {
             commandKey: commandKey,
             botKey: this.botKey,
             params: splitText,
             message: message,
-            data: this.data,
-            version: this.version
+            data: this.data
         };
-        command(context);
+        command.Execute(context);
     };
 }
 

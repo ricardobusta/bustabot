@@ -15,11 +15,12 @@ const phrases: string[] = [
 class Birl extends BotCommand {
     keys: string[] = ["birl"];
     description: string = "Birl.";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let index: number = Math.floor(Math.random() * phrases.length);
         this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
     }
 
 }
 
-export default new Birl();
+export default Birl;

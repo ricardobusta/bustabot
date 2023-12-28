@@ -10,7 +10,8 @@ function RandomRange(min, max, rng): number {
 class Match extends BotCommand {
     keys: string[] = ["match"];
     description: string = "Match";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let text: string = "";
         if (ctx.params.length != 3) {
             text = "Número de parâmetros errado.\n/match @user1 @user2";
@@ -34,4 +35,4 @@ class Match extends BotCommand {
 
 }
 
-export default new Match();
+export default Match;

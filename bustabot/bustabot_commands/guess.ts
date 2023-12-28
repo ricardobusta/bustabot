@@ -4,7 +4,8 @@ import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 class Guess extends BotCommand {
     keys: string[] = ["guess"];
     description: string = "Guess";
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         this.telegram.SendMessage(
             ctx.botKey,
             ctx.message.chat.id,
@@ -13,4 +14,4 @@ class Guess extends BotCommand {
     }
 }
 
-export default new Guess();
+export default Guess;

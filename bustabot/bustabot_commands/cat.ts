@@ -1,5 +1,7 @@
 import BotCommand from "../../bot_core/Bot/bot_command";
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
+import TelegramService from "../../bot_core/Bot/telegram_service";
+import RequestService from "../../bot_core/Bot/request_service";
 
 const status: number[] = [
     100, 101, 200, 201, 202, 204, 206, 207, 300, 301, 302, 303, 304,
@@ -12,7 +14,15 @@ const status: number[] = [
 class Cat extends BotCommand {
     keys: string[] = ["cat"];
     description: string = "Returns a HTTP status cat.";
-    execute: (ctx: BotExecuteContext) => Promise<void> = async function (ctx: BotExecuteContext): Promise<void> {
+
+    readonly request: RequestService;
+
+    constructor(telegram: TelegramService, request: RequestService) {
+        super(telegram);
+        this.request = request;
+    }
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         if (ctx.params.length > 2) {
             this.telegram.SendMessage(
                 ctx.botKey,
@@ -31,7 +41,9 @@ class Cat extends BotCommand {
 
         let url: string = `https://http.cat/${code}`;
 
-        if (await this.telegram.IsValidUrl(url)) {
+        console.log(`Request: ${this.request}`);
+
+        if (await this.request.IsValidUrl(url)) {
             this.telegram.SendPhoto(
                 ctx.botKey,
                 ctx.message.chat.id,
@@ -45,7 +57,6 @@ class Cat extends BotCommand {
                 "404 cat not found");
         }
     }
-
 }
 
-export default new Cat();
+export default Cat;

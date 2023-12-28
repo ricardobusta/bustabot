@@ -17,10 +17,11 @@ class Ovo extends BotCommand {
     keys: string[] = ["ovo"];
     description: string = "Cocorecocoooo.";
     wip: boolean = false;
-    execute: (ctx: BotExecuteContext) => void = function (ctx: BotExecuteContext): void {
+
+    async Execute(ctx: BotExecuteContext): Promise<void> {
         let index: number = Math.floor(Math.random() * phrases.length);
         this.telegram.SendMessage(ctx.botKey, ctx.message.chat.id, ctx.message.message_id, phrases[index]);
     }
 }
 
-export default new Ovo();
+export default Ovo;
