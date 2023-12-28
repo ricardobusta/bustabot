@@ -3,6 +3,7 @@ import TelegramBot = require("node-telegram-bot-api");
 import BotExecuteContext from "../../bot_core/Bot/bot_execute_data";
 import {readFileSync} from 'fs';
 import BotData from "../../bot_core/Bot/bot_data";
+import TelegramService from "../../bot_core/Bot/telegram_service";
 
 const wordCommandDocument: string = "word";
 
@@ -138,6 +139,7 @@ class Word extends BotCommand {
         const now: Date = new Date(Date.now());
         const dateDiff: number = now.getTime() - date0.getTime();
         const todayIndex: number = Math.floor(dateDiff / (1000 * 3600 * 24)) + dateOffset;
+        const telegram: TelegramService = this.telegram;
 
         let document: FirebaseFirestore.DocumentReference<BotData> = ctx.data.doc(`${wordCommandDocument}[${ctx.message.chat.id}]`)
         document.get()
@@ -152,7 +154,6 @@ class Word extends BotCommand {
                 }
 
                 function sendMessage(msg: string, parseMode: string = "HTML"): void {
-                    let telegram = this.telegram;
                     telegram.SendMessage(
                         ctx.botKey,
                         ctx.message.chat.id,
