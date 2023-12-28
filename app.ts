@@ -7,10 +7,17 @@ import TelegramService from "./bot_core/Bot/telegram_service";
 import BustaBot from "./bustabot/bustabot";
 import TelegramBot = require('node-telegram-bot-api');
 
+function GetRevision(): string{
+    return require('child_process')
+        .execSync('git rev-parse HEAD')
+        .toString().trim();
+}
+
 const version_major: number = 2;
 const version_minor: number = 1;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
+const revision: string = GetRevision()
 
 function CheckIsProd(): boolean {
     let isProd: boolean = false;
@@ -88,14 +95,15 @@ bots.forEach((bot): void => {
 // Start the server
 const PORT: string | number = process.env.PORT || 18080;
 app.listen(PORT, (): void => {
-    console.log("=========================================");
-    console.log("=");
-    console.log("=   STARTING NEW BOT RUN ver " + version);
+    console.log("================================================");
+    console.log("=                                              =");
+    console.log(`=   STARTING NEW BOT RUN ver ${version.padEnd(18, " ")}=`);
+    console.log(`=   ${revision}   =`);
     if(!isProd){
-        console.log('=   DEVELOPMENT MODE');
+        console.log('=   DEVELOPMENT MODE                           =');
     }
-    console.log("=");
-    console.log("=========================================");
+    console.log("=                                              =");
+    console.log("================================================");
     console.log(`App listening on port ${PORT}`);
     console.log("Press Ctrl+C to quit.");
 });
