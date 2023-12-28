@@ -8,7 +8,7 @@ import BustaBot from "./bustabot/bustabot";
 import TelegramBot = require('node-telegram-bot-api');
 
 const version_major: number = 2;
-const version_minor: number = 0;
+const version_minor: number = 1;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 
