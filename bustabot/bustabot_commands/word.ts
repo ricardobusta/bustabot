@@ -1,8 +1,8 @@
 import {BotCommand, BotCommandContext} from "../../bot_core/Bot/bot_command";
-import TelegramBot = require("node-telegram-bot-api");
 import {readFileSync} from 'fs';
 import TelegramService from "../../bot_core/Bot/telegram_service";
 import BotData from "../../bot_core/Bot/bot_data";
+import TelegramBot = require("node-telegram-bot-api");
 
 const wordCommandDocument: string = "word";
 
@@ -168,7 +168,7 @@ class Word extends BotCommand {
                         },
                         parseMode
                     );
-                };
+                }
 
                 ensureData(data);
 

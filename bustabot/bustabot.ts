@@ -11,6 +11,7 @@ import Grito from "./bustabot_commands/grito"
 import Guess from "./bustabot_commands/guess"
 import Match from "./bustabot_commands/match"
 import Moo from "./bustabot_commands/moo"
+import Morph from "./bustabot_commands/morph"
 import Ovo from "./bustabot_commands/ovo"
 import Roll from "./bustabot_commands/roll"
 import Rpg from "./bustabot_commands/rpg"
@@ -33,6 +34,7 @@ class BustaBot extends Bot {
             new Guess(telegram),
             new Match(telegram),
             new Moo(telegram),
+            new Morph(telegram),
             new Ovo(telegram),
             new Roll(telegram),
             new Rpg(telegram),
