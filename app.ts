@@ -1,4 +1,4 @@
-import express from "express";
+import * as express from "express";
 import * as FirebaseFirestore from "@google-cloud/firestore";
 import * as botKey from "./bot_key"
 import Bot from './bot_core/Bot/bot';
@@ -48,7 +48,7 @@ function GetFirestore(): FirebaseFirestore.Firestore {
 }
 
 try {
-    let db = GetFirestore();
+    let db: FirebaseFirestore.Firestore = GetFirestore();
 
     if (isProd) {
         bustabot.Init(db, botKey.bustabot);
@@ -59,7 +59,7 @@ try {
     console.log(error);
 }
 
-const app = express();
+const app: any = express();
 
 app.use(express.json());
 
@@ -71,7 +71,7 @@ app.get("/", (req, res): void => {
         .end();
 });
 
-bots.forEach((bot): void => {
+bots.forEach((bot: Bot): void => {
     if (!bot.initialized) {
         return;
     }
