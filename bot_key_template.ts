@@ -2,7 +2,7 @@ import BotInfoEntry from "./bot_core/Bot/bot_info_entry";
 
 export const bustabot: BotInfoEntry = {
     username: 'bot username',
-    token: 'key from telegram api',
+    token: 'key from telegram api (get from botfather)',
     webhook: 'webhook (google project url)',
 };
 
