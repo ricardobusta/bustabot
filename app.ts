@@ -6,15 +6,23 @@ import RequestService from "./bot_core/Bot/request_service";
 import TelegramService from "./bot_core/Bot/telegram_service";
 import BustaBot from "./bustabot/bustabot";
 import TelegramBot = require('node-telegram-bot-api');
+import * as http from "node:http";
+import { execSync } from "node:child_process";
+import { existsSync } from "node:fs";
 
-function GetRevision(): string{
-    return require('child_process')
-        .execSync('git rev-parse HEAD')
-        .toString().trim();
+function GetRevision(): string {
+    try {
+        if (existsSync(".git")) {
+            return execSync("git rev-parse HEAD").toString().trim();
+        }
+    } catch (err) {
+        // ignore if git not available
+    }
+    return "unknown";
 }
 
-const version_major: number = 2;
-const version_minor: number = 1;
+const version_major: number = 3;
+const version_minor: number = 0;
 const version_patch: number = 0;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 const revision: string = GetRevision()
@@ -94,7 +102,12 @@ bots.forEach((bot: Bot): void => {
 
 // Start the server
 const PORT: string | number = process.env.PORT || 18080;
-app.listen(PORT, (): void => {
+
+const server = http.createServer(app);
+server.maxRequestsPerSocket = 0;
+server.keepAliveTimeout = 5000;
+
+server.listen(PORT, (): void => {
     console.log("================================================");
     console.log("=                                              =");
     console.log(`=   STARTING NEW BOT RUN ver ${version.padEnd(18, " ")}=`);
@@ -107,4 +120,3 @@ app.listen(PORT, (): void => {
     console.log(`App listening on port ${PORT}`);
     console.log("Press Ctrl+C to quit.");
 });
-
