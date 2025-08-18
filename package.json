@@ -15,6 +15,7 @@
     },
     "scripts": {
         "deploy": "gcloud app deploy",
+        "log": "gcloud app logs tail -s default",
         "deploy-and-log": "gcloud app deploy && gcloud app logs tail -s default",
         "start": "node ./app.js prod",
         "start-dev": "tsc -p . && node ./app.js dev",
@@ -25,6 +26,7 @@
     },
     "dependencies": {
         "@google-cloud/firestore": "^7.6.0",
+        "@google-cloud/secret-manager": "^6.1.0",
         "@types/bent": "^7.3.8",
         "@types/express": "^4.17.17",
         "@types/node-telegram-bot-api": "^0.57.7",

@@ -1,7 +1,5 @@
-class BotInfoEntry {
-    token: string;
+export class BotInfoEntry {
     username: string;
+    token: string;
     webhook: string;
 }
-
-export default BotInfoEntry;

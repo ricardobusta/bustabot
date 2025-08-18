@@ -1,8 +1,8 @@
 import {BotCommand, BotCommandContext} from "./bot_command";
-import BotInfoEntry from "./bot_info_entry";
 import TelegramBot = require("node-telegram-bot-api");
 import TelegramService from "./telegram_service";
 import HelpCommand from "./help_command";
+import {BotInfoEntry} from "./bot_info_entry";
 
 const statisticsDocumentName: string = "statistics";
 
