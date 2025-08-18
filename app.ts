@@ -34,7 +34,6 @@ async function AccessSecret(secretId: string, versionId: string = 'latest'): Pro
     try {
         const [version]: [google.cloud.secretmanager.v1.IAccessSecretVersionResponse, google.cloud.secretmanager.v1.IAccessSecretVersionRequest, {}] = await client.accessSecretVersion({name});
         const payload: string = version.payload?.data?.toString();
-        console.log(`Secret value: ${payload}`);
         return payload;
     } catch (error) {
         console.error('Error accessing secret:', error);
@@ -46,7 +45,7 @@ async function AccessSecret(secretId: string, versionId: string = 'latest'): Pro
 
 const version_major: number = 3;
 const version_minor: number = 0;
-const version_patch: number = 0;
+const version_patch: number = 1;
 const version: string = `${version_major}.${version_minor}.${version_patch}`;
 const revision: string = GetRevision()
 
@@ -104,61 +103,60 @@ async function Start() {
     } catch (error) {
         console.log(error);
     }
+
+    const app: any = express();
+
+    app.use(express.json());
+
+    // Default request. Just to check if the bot is up.
+    app.get("/", (req: any, res: any): void => {
+        res
+            .status(200)
+            .send(version)
+            .end();
+    });
+
+    bots.forEach((bot: Bot): void => {
+        if (!bot.initialized) {
+            return;
+        }
+        // Check if the proper key is set. Just make a request with the bot key appended.
+        app.get(`/${bot.botKey}`, (req: any, res: any): void => {
+            res
+                .status(200)
+                .send(`${bot.botName} is Working!`)
+                .end();
+        });
+
+        // Actual bot requests.
+        app.post(`/bot${bot.botKey}`, (req, res): void => {
+            bot.HandleTelegramUpdate(req.body as TelegramBot.Update)
+            res
+                .status(200)
+                .end();
+        });
+    });
+
+    // Start the server
+    const PORT: string | number = process.env.PORT || 18080;
+
+    const server: any = http.createServer(app);
+    server.maxRequestsPerSocket = 0;
+    server.keepAliveTimeout = 5000;
+
+    server.listen(PORT, (): void => {
+        console.log("================================================");
+        console.log("=                                              =");
+        console.log(`=   STARTING NEW BOT RUN ver ${version.padEnd(18, " ")}=`);
+        console.log(`=   ${revision}   =`);
+        if (!isProd) {
+            console.log('=   DEVELOPMENT MODE                           =');
+        }
+        console.log("=                                              =");
+        console.log("================================================");
+        console.log(`App listening on port ${PORT}`);
+        console.log("Press Ctrl+C to quit.");
+    });
 }
 
 Start().then();
-
-
-const app: any = express();
-
-app.use(express.json());
-
-// Default request. Just to check if the bot is up.
-app.get("/", (req: any, res: any): void => {
-    res
-        .status(200)
-        .send(version)
-        .end();
-});
-
-bots.forEach((bot: Bot): void => {
-    if (!bot.initialized) {
-        return;
-    }
-    // Check if the proper key is set. Just make a request with the bot key appended.
-    app.get(`/${bot.botKey}`, (req: any, res: any): void => {
-        res
-            .status(200)
-            .send(`${bot.botName} is Working!`)
-            .end();
-    });
-
-    // Actual bot requests.
-    app.post(`/bot${bot.botKey}`, (req, res): void => {
-        bot.HandleTelegramUpdate(req.body as TelegramBot.Update)
-        res
-            .status(200)
-            .end();
-    });
-});
-
-// Start the server
-const PORT: string | number = process.env.PORT || 18080;
-
-const server: any = http.createServer(app);
-server.maxRequestsPerSocket = 0;
-server.keepAliveTimeout = 5000;
-
-server.listen(PORT, (): void => {
-    console.log("================================================");
-    console.log("=                                              =");
-    console.log(`=   STARTING NEW BOT RUN ver ${version.padEnd(18, " ")}=`);
-    console.log(`=   ${revision}   =`);
-    if (!isProd) {
-        console.log('=   DEVELOPMENT MODE                           =');
-    }
-    console.log("=                                              =");
-    console.log("================================================");
-    console.log(`App listening on port ${PORT}`);
-    console.log("Press Ctrl+C to quit.");
-});
