@@ -25,7 +25,7 @@
         "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
     },
     "dependencies": {
-        "@google-cloud/firestore": "^7.6.0",
+        "@google-cloud/firestore": "^8.7.0",
         "@google-cloud/secret-manager": "^6.1.0",
         "@types/bent": "^7.3.8",
         "@types/express": "^4.17.17",
